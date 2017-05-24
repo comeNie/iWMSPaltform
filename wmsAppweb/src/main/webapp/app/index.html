@@ -1,0 +1,98 @@
+<!doctype html>
+<!--<html lang="zh-cn" manifest="list.manifest" type="text/cache-manifest">-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <meta HTTP-EQUIV="expires" CONTENT="0">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title ng-bind="title">WMS</title>
+    <!--<base href="/app"/>-->
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/Font-Awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.min.css"/>
+
+    <link rel="stylesheet" href="bower_components/kendo/css/common.min.css"/>
+    <link rel="stylesheet" href="bower_components/kendo/css/kendo.bootstrap.css" />
+
+    <link rel="stylesheet" href="styles/selectize.css"/>
+
+    <link rel="stylesheet" href="styles/less/app.css"/>
+
+    <link rel="stylesheet" href="styles/less/wms.css"/>
+
+    <link rel="stylesheet" href="styles/less/version.css"/>
+
+
+    <style>
+        #loading-div {
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            z-index:1000;
+            background-color:grey;
+            opacity: .8;
+            display: none;
+        }
+
+        .ajax-loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -32px; /* -1 * image width / 2 */
+            margin-top: -32px;  /* -1 * image height / 2 */
+            display: block;
+        }
+
+        .k-icon:not(.k-loading), .k-grouping-dropclue, .k-drop-hint, .k-callout, .k-tool-icon, .k-state-hover .k-tool-icon, .k-state-active .k-tool-icon, .k-state-active.k-state-hover .k-tool-icon, .k-state-selected .k-tool-icon, .k-state-selected.k-state-hover .k-tool-icon, .k-column-menu .k-sprite, .k-mobile-list .k-check:checked, .k-mobile-list .k-edit-field [type=checkbox]:checked, .k-mobile-list .k-edit-field [type=radio]:checked {
+            background-image: none;
+        }
+
+    </style>
+
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+
+    <!-- Page styles -->
+
+</head>
+<body>
+<div id="app" class="app app-header-fixed app-aside-fixed" ng-class="{
+    'app-header-fixed':app.settings.headerFixed,
+    'app-aside-fixed':app.settings.asideFixed,
+    'app-aside-folded':app.settings.asideFolded,
+    'app-aside-dock':app.settings.asideDock,
+    'container':app.settings.container }" ng-include="'tmpl/app.html'" ng-controller="mainController">
+  <div style="display: none">
+       <!--pwd-->
+       <div kendo-window="pwdWin" id="pwdWin" k-visible="false">
+          <form id="pwdForm">
+            <div class="p-t-10">
+              <div class="pure-control-group p-b-15 p-l-30"><label>旧密码 </label><input type="password" ng-model="pwd.passwordOld"
+                                                                                      name="old_password"></div>
+              <div class="pure-control-group p-b-15 p-l-30"><label>新密码 </label><input id="new_password" type="password" ng-model="pwd.password"
+                                                                                      name="new_password"></div>
+              <div class="pure-control-group p-b-15 p-l-30"><label>确认新密码 </label><input type="password" ng-model="pwd.confirmNewPwd" data-matches="new_password" data-matches-msg="两次输入的密码不一致，请重新输入"></div>
+              <div class="k-edit-buttons k-state-default k-ext-dialog-buttons">
+                <button type='submit' class="k-button k-button-icontext k-primary k-grid-update" style="margin-right:8px;">
+                  <i class="fa fa-check-circle"></i>保存
+                </button>
+                <button id="pwdCloseBtn" type="button" class="k-button"><i class="fa fa-times-circle"></i>取消</button>
+              </div>
+            </div>
+          </form>
+       </div>
+  </div>
+</div>
+
+<script src="bower_components/requirejs/require.js" data-main="scripts/app-require"></script>
+<script src="scripts/common/LodopFuncs.js"></script>
+</body>
+</html>

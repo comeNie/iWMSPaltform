@@ -1,0 +1,192 @@
+<div class="content-wrap" ng-controller="proPackageController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="proPackageGrid">
+            <div class="panel-group">
+                <label>包装单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+
+            <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>单据状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>库房</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="storageRoomSrc" name="query.storageRoomId" id="query.storageRoomId"></r-select>
+                </div>
+            </div>
+        </panel_heading_search>
+
+        <div class="panel-body">
+                <div kendo-grid="proPackageGrid" options="mainGridOptions">
+                    <div k-detail-template>
+                        <kendo-tabstrip>
+                            <ul>
+                                <li class="k-state-active" ng-click="hideCreate(dataItem)">明细信息</li>
+                                <li>操作日志</li>
+                            </ul>
+                            <!--明细信息-->
+                            <div>
+                                <div kendo-grid="proPackageDetailGrid" k-options="proPackageDetailOptions(dataItem)"></div>
+                            </div>
+                            <!--操作日志-->
+                            <div>
+                                <div kendo-grid k-options="logOptions(dataItem.id,'Propackage')"></div>
+                            </div>
+
+                        </kendo-tabstrip>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+
+<!-- 新增/编辑模版 -->
+<script id="proPackage-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>包装品</label>
+                <input type="hidden" id="skuId" name="skuId"/>
+                <input type="text" ng-if="dataItem.isNew()" id="skuName" name="skuName"   ng-click="windowOpen(this)" readonly="readonly" />
+                <span class="inputDisbled" ng-if="!dataItem.isNew()" ng-bind ="dataItem.skuName"></span>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品编码</label>
+                <input id="sku" name="sku" type="text"  disabled="disabled"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品规格</label>
+                <input id="spec" name="spec" type="text"  disabled="disabled"/>
+            </div>
+
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货主</label>
+                <div class="select-wrapper" ng-if="dataItem.isNew()">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="cargoOwnerId" ui-select-id="cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models) onchange="changetip()" required></wms-ui-select>
+                </div>
+                <span ng-if="!dataItem.isNew()" class="inputDisbled"    ng-model="dataItem.cargoOwnerId"  ng-bind="dataItem.cargoOwnerId|cargoOwnerFormat:'cargoOwnerId'" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>库房</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="storageRoomSrc" name="storageRoomId" id="storageRoomId" required></r-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>包装数量</label>
+                <input id="qty" name="qty" type="number" data-minqty="1"  onlyNumber/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>批次号</label>
+                <input id="workGroupNo" name="workGroupNo"  type="text" required/>
+            </div>
+
+            <div class="pure-control-group ">
+            </div>
+
+            <kendo-tabstrip>
+                <ul>
+                    <li class="k-state-active">商品信息</li>
+                    <li>辅料信息</li>
+                </ul>
+        <div class="edit-form-container">
+            <div class="pure-control-group p-b-5" style=" width:70%">
+                <input type="button" class="k-button  k-grid-edit" ng-click="addRow(this.dataItem)" value="新增" style="margin: 10px 10px 5px"/>
+                <input type="button" class="k-button  k-grid-edit" ng-click="deleteRows(this.dataItem)" value="删除" style="margin: 10px 10px 5px"/>
+            </div>
+
+            <div class="pure-control-group p-b-5" style=" width:100%">
+                <table id="proTable" class="table table-bordered" style="  margin: 5px 10px 10px;width: 98%">
+                    <thead>
+                    <tr>
+                        <th width="20px"><input type="checkbox"  ng-click="chooseAll()" id = "chooseAll"/></th>
+                        <th>商品名称</th>
+                        <th>商品编码</th>
+                        <th>商品规格</th>
+                        <th>商品单位</th>
+                        <th >库房</th>
+                        <th>商品数量</th>
+                        <th hidden="hidden">商品ID</th>
+                        <th hidden="hidden">商品单位</th>
+                        <th hidden="hidden">库存ID</th>
+                        <th hidden="hidden">库房ID</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="edit-form-container">
+            <div class="pure-control-group p-b-5" style=" width:70%">
+                <input type="button" class="k-button  k-grid-edit" ng-click="addFuRow(this.dataItem)" value="新增" style="margin: 10px 10px 5px"/>
+                <input type="button" class="k-button  k-grid-edit" ng-click="deleteFuRows(this.dataItem)" value="删除" style="margin: 10px 10px 5px"/>
+            </div>
+            <div class="pure-control-group p-b-5" style=" width:100%">
+                <table id="fuTable"  class="table table-bordered"   style=" margin: 5px 10px 10px;width: 98%">
+                    <thead>
+                    <tr>
+                        <th width="20px"><input type="checkbox"  ng-click="fuChooseAll()" id = "fuChooseAll"/></th>
+                        <th>辅料名称</th>
+                        <th>辅料编码</th>
+                        <th>辅料规格</th>
+                        <th>辅料单位</th>
+                        <th >库房</th>
+                        <th>辅料数量</th>
+                        <th hidden="hidden">辅料ID</th>
+                        <th hidden="hidden">辅料单位</th>
+                        <th hidden="hidden">库存ID</th>
+                        <th hidden="hidden">库房ID</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+            </kendo-tabstrip>
+        </div>
+    </div>
+</script>
+
+<!--商品选择-->
+<div kendo-window="inventoryCargoOwnerPopup" k-title="'在库商品'" k-modal="true"
+     k-resizable="false"
+     k-width="600" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/inventoryCargoOwner.html' }">
+
+</div>
+
+
+<div kendo-window="skuPopup" k-title="'包装商品选择'" k-modal="true"
+     k-resizable="false"
+     k-width="600" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/sku.html' }">
+</div>

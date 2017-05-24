@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huamengtong.wms.sku.mapper.SkuCargoOwnerMapper">
+
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.sku.TWmsSkuCargoOwnerEntity">
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
+        <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId" />
+        <result column="cargo_owner_barcode" jdbcType="VARCHAR" property="cargoOwnerBarcode" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        sku_id , sku , cargo_owner_id , cargo_owner_barcode
+    </sql>
+
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku_cargo_owner
+    </select>
+
+    <select id="selectBySkuIdAndCargoOwnerId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku_cargo_owner
+        WHERE sku_id = #{skuId,jdbcType=BIGINT}
+        AND   cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+    </select>
+
+
+    <insert id="insertSkuCargoOwner" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuCargoOwnerEntity">
+        insert into t_smart_sku_cargo_owner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.skuId != null">
+                sku_id,
+            </if>
+            <if test="entity.sku != null">
+                sku,
+            </if>
+            <if test="entity.cargoOwnerId != null">
+                cargo_owner_id,
+            </if>
+            <if test="entity.cargoOwnerBarcode != null">
+                cargo_owner_barcode,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.skuId != null">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null">
+                #{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.cargoOwnerId != null">
+                #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerBarcode != null">
+                #{entity.cargoOwnerBarcode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateSkuCargoOwnerBySkuId" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuCargoOwnerEntity">
+        UPDATE  t_smart_sku_cargo_owner
+        <set>
+            <if test="entity.skuId != null">
+                sku_id=#{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null">
+                sku=#{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.cargoOwnerId != null">
+                cargo_owner_id=#{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerBarcode != null">
+                cargo_owner_barcode=#{entity.cargoOwnerBarcode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE sku_id = #{entity.skuId,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByCargoOwnerBarcode" parameterType="java.util.Map" resultType="com.huamengtong.wms.entity.sku.TWmsSkuEntity">
+        SELECT cargo.sku_id AS id, cargo.cargo_owner_id AS cargoOwnerId, cargo.cargo_owner_barcode AS cargoOwnerBarcode ,
+        sku.sku AS sku , sku.upc AS upc , sku.barcode AS barcode , sku.item_name AS itemName , sku.categorys_id AS categorysId ,
+        sku.spec AS spec , sku.unit_type AS unitType , sku.net_weight AS netWeight , sku.gross_weight AS grossWeight , sku.volume AS volume ,
+        sku.warehouse_temp AS warehouseTemp , sku.transport_temp AS transportTemp , sku.cost_price AS  costPrice , sku.is_active AS isActive ,
+        sku.is_del AS isDel , sku.datasource_code AS datasourceCode , sku.producer AS producer , sku.producer_code AS producerCode , sku.origin_place AS originPlace ,
+        sku.price1 AS price1 , sku.price2 AS price2 , sku.price3 AS price3 ,sku.description AS description ,sku.create_user AS create_user ,sku.create_time AS createTime ,
+        sku.update_user AS updateUser , sku.update_time AS updateTime , sku.property AS property
+        FROM t_smart_sku_cargo_owner cargo
+        INNER JOIN t_smart_sku sku ON sku.id = cargo.sku_id
+        WHERE cargo.cargo_owner_barcode = #{cargoOwnerBarcode,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="selectSkuIdByCargoOwnerId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT
+        sku_id
+        FROM t_smart_sku_cargo_owner
+        WHERE cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+    </select>
+    <select id="selectEntitysByCargoOwnerId" resultMap="BaseResultMap" resultType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku_cargo_owner
+        WHERE cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectBysku" resultMap="BaseResultMap" resultType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku_cargo_owner
+        WHERE sku_id = #{skuId,jdbcType=BIGINT}
+    </select>
+
+</mapper>

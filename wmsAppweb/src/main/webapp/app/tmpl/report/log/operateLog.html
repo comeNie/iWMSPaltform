@@ -1,0 +1,39 @@
+<div class="content-wrap" ng-controller="reportOperateLogController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="operateLogGrid">
+            <div class="panel-group">
+                <label>单据类型:</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="OrderType" name="query.orderTypeCode" id="query.orderTypeCode"></l-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>单据编号:</label>
+                <input type="text" ng-model="query.orderNo"/>
+            </div>
+
+            <div class="panel-group">
+                <label>操作类型:</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="OrderOperations" name="query.operationCode" id="query.operationCode"></l-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>创建人:</label>
+                <input type="text" ng-model="query.createUser"/>
+            </div>
+
+            <div class="panel-group">
+                <label>描述</label>
+                <input type="text" ng-model="query.description"/>
+            </div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="operateLogGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>

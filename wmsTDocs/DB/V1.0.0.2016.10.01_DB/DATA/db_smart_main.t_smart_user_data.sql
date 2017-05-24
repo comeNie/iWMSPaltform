@@ -1,0 +1,1 @@
+insert into `t_smart_user` (`tenant_id`, `user_name`, `real_name`, `password`, `email`, `telephone`, `mobile`, `is_admin`, `is_active`, `is_del`, `create_user`, `create_time`, `update_user`, `update_time`) values ('88','admin','管理员','a08cf85fe005695dcaac4cfa24a09e76',NULL,NULL,NULL,'1','1','0',NULL,now(),NULL,now());

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.main.mapper.StorageRoomMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.main.TWmsStorageRoomEntity">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="warehouse_id" property="warehouseId" jdbcType="BIGINT"/>
+        <result column="room_no" property="roomNo" jdbcType="VARCHAR"/>
+        <result column="type_code" property="typeCode" jdbcType="VARCHAR"/>
+        <result column="storage_room_type" property="storageRoomType" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="BIT"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="priority" property="priority" jdbcType="INTEGER"/>
+        <result column="is_default" property="isDefault" jdbcType="BIT"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="BIGINT"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="BIGINT"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`warehouse_id`,`room_no`,`type_code`,`storage_room_type`,`is_active`,`description`,`priority`,`is_default`,
+        `create_user`,`create_time`,`update_user`,`update_time`
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="id !=null and id != 0">
+                AND id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="warehouseId !=null and id != 0">
+                AND warehouse_id = #{warehouseId,jdbcType=BIGINT}
+            </if>
+            <if test="typeCode != null">
+                AND type_code = #{typeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="roomNo != null">
+                AND room_no = #{roomNo,jdbcType=VARCHAR}
+            </if>
+            <if test="storageRoomType != null">
+                AND storage_room_type = #{storageRoomType,jdbcType=VARCHAR}
+            </if>
+            <if test="description != null">
+                AND description = #{description,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="orderBy == null">
+            ORDER BY create_time desc
+        </if>
+
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+            LIMIT ${offset}, ${pageSize}
+        </if>
+    </sql>
+
+    <select id="queryStorageRoomPages" resultMap="BaseResultMap"
+            parameterType="com.huamengtong.wms.entity.main.TWmsStorageRoomEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_storage_room
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="queryStorageRoomPageCount" resultType="java.lang.Integer"
+            parameterType="com.huamengtong.wms.entity.main.TWmsStorageRoomEntity">
+        SELECT count(1) FROM t_smart_storage_room
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from t_smart_storage_room
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from t_smart_storage_room
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insertStorageRoom" parameterType="com.huamengtong.wms.entity.main.TWmsStorageRoomEntity">
+        insert into t_smart_storage_room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="roomNo != null">
+                room_no,
+            </if>
+            <if test="typeCode != null">
+                type_code,
+            </if>
+            <if test="storageRoomType != null">
+                storage_room_type,
+            </if>
+            <if test="isActive != null">
+                is_active,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="priority != null">
+                priority,
+            </if>
+            <if test="isDefault != null">
+                is_default,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId,jdbcType=VARCHAR},
+            </if>
+            <if test="roomNo != null">
+                #{roomNo,jdbcType=VARCHAR},
+            </if>
+            <if test="typeCode != null">
+                #{typeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="storageRoomType != null">
+                #{storageRoomType,jdbcType=VARCHAR},
+            </if>
+            <if test="isActive != null">
+                #{isActive,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="priority != null">
+                #{priority,jdbcType=INTEGER},
+            </if>
+            <if test="isDefault != null">
+                #{isDefault,jdbcType=BIT},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateStorageRoom" parameterType="com.huamengtong.wms.entity.main.TWmsStorageRoomEntity">
+        update t_smart_storage_room
+        set warehouse_id = #{warehouseId,jdbcType=BIGINT},
+        room_no = #{roomNo,jdbcType=VARCHAR},
+        type_code= #{typeCode,jdbcType=VARCHAR},
+        storage_room_type= #{storageRoomType,jdbcType=VARCHAR},
+        is_active= #{isActive,jdbcType=VARCHAR},
+        description = #{description,jdbcType=VARCHAR},
+        priority = #{priority,jdbcType=INTEGER},
+        is_default = #{isDefault,jdbcType=BIT},
+        update_user = #{updateUser,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="queryStorageRoomsBywhId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from t_smart_storage_room
+        <if test="warehouseId !=0">
+            where warehouse_id = #{warehouseId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.util.List">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_smart_storage_room
+        WHERE id in
+        <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </select>
+
+    <select id="selectRoomNoByIds" resultType="java.lang.String" parameterType="java.util.List">
+        SELECT DISTINCT room_no
+        from t_smart_storage_room
+        <if test="ids !=null and ids.size()>0">
+            WHERE id in
+            <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+    </select>
+
+
+</mapper>

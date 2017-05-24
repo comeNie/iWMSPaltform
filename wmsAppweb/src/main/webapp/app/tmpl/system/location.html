@@ -1,0 +1,127 @@
+<div class="content-wrap" ng-controller="locationController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="locationHeaderGrid">
+            <div class="panel-group">
+                <label>货位编号</label><input type="text" ng-model="query.locationNo" /></div>
+            <div class="panel-group">
+                <label>货位描述</label><input type="text" ng-model="query.description" />
+            </div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="locationHeaderGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增/编辑模版 -->
+<script id="location-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="window-form pure-body">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货位编号</label>
+                <input id="locationNo" name="locationNo" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货区</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <!-- ng指令 l-selsct ，详查 directive.js 文件  -->
+                    <r-select src="zoneSrc" name="zoneId" id="zoneId" required></r-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货位描述</label>
+                <input id="description" name="description" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货架类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <!-- ng指令 l-selsct ，详查 directive.js 文件  -->
+                    <l-select src="LocationType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>存货类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <!-- ng指令 l-selsct ，详查 directive.js 文件  -->
+                    <l-select src="LocationClass" name="classCode" id="classCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>操作方式</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <!-- ng指令 l-selsct ，详查 directive.js 文件  -->
+                    <l-select src="LocationHandling" name="handlingCode" id="handlingCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>存放方式</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <!-- ng指令 l-selsct ，详查 directive.js 文件  -->
+                    <l-select src="LocationCategory" name="categoryCode" id="categoryCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>abc分类</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <!-- ng指令 l-selsct ，详查 directive.js 文件  -->
+                    <l-select src="AbcClass" name="abcCode" id="abcCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否启用</label>
+                <input id="isActive" name="isActive" type="checkbox" value="1" checked="checked"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>允许多SKU混放</label>
+                <input id="isMultisku" name="isMultisku" type="checkbox" value="1" checked="checked"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>允许多批次混放</label>
+                <input id="isMultilot" name="isMultilot" type="checkbox" value="1" checked="checked"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>放货次序</label>
+                <input id="putawaySeq" name="putawaySeq" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>拣货次序</label>
+                <input id="pickupSeq" name="pickupSeq" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>容积</label>
+                <input id="volume" name="volume" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>长度</label>
+                <input id="length" name="length" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>宽度</label>
+                <input id="width" name="width" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>高度</label>
+                <input id="height" name="height" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>承重</label>
+                <input id="weightcapacity" name="weightcapacity" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否默认</label>
+                <input id="isDefault" name="isDefault" type="checkbox" value="1" checked="checked"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+            <label>是否可用</label>
+            <input type="checkbox"  name="isUsed" id="isUsed" value="1" checked="checked"/>
+        </div>
+        </div>
+    </div>
+</script>

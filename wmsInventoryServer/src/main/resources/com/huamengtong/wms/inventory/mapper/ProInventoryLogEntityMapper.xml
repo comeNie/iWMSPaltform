@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.inventory.mapper.ProInventoryLogMapper">
+  <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inventory.TWmsProInventoryLogEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+    <result column="pro_inventory_id" jdbcType="BIGINT" property="proInventoryId" />
+    <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+    <result column="sku_spec" jdbcType="VARCHAR" property="skuSpec" />
+    <result column="type_code" jdbcType="VARCHAR" property="typeCode" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="detail_id" jdbcType="BIGINT" property="detailId" />
+    <result column="qty" jdbcType="INTEGER" property="qty" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, tenant_id, warehouse_id, pro_inventory_id, sku_id, sku_spec, type_code, order_id, 
+    detail_id, qty, create_user, create_time, update_user, update_time
+  </sql>
+
+  <!--query Where  语句-->
+  <sql id="queryWhereClause">
+    <where>
+      <if test="entity.id != null and entity.id != 0">
+        AND log.id = #{entity.id,jdbcType =BIGINT}
+      </if>
+      <if test="entity.skuId != null and entity.skuId != 0">
+        AND log.sku_id = #{entity.skuId,jdbcType =BIGINT}
+      </if>
+      <if test="entity.typeCode != null">
+        AND log.type_code = #{entity.typeCode,jdbcType =VARCHAR}
+      </if>
+      <if test="entity.orderId != null and entity.orderId != 0">
+        AND log.order_id = #{entity.orderId,jdbcType =BIGINT}
+      </if>
+      <if test="entity.startTime != null ">
+        AND log.create_time &gt;=#{entity.startTime,jdbcType=BIGINT}
+      </if>
+      <if test="entity.endTime !=null ">
+        AND log.create_time &lt;= #{entity.endTime,jdbcType=BIGINT}
+      </if>
+      <if test="list !=null and list.size() >0">
+        AND log.sku_id IN
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+          #{item,jdbcType=BIGINT}
+        </foreach>
+      </if>
+    </where>
+  </sql>
+
+  <!--query limit 语句-->
+  <sql id="queryLimitClause">
+    <if test="entity.offset != null and entity.offset >= 0 and entity.pageSize != null and entity.pageSize > 0">
+      LIMIT ${entity.offset}, ${entity.pageSize}
+    </if>
+  </sql>
+
+  <!--query orderby 语句-->
+  <sql id="queryOrderByClause">
+    <if test="entity.orderBy != null">
+      ORDER BY ${orderBy}
+    </if>
+    <if test="entity.orderBy == null">
+      ORDER BY log.create_time desc
+    </if>
+  </sql>
+
+
+  <!--查询记录条数-->
+  <select id="queryProInventoryPageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.inventory.TWmsProInventoryLogEntity">
+    SELECT COUNT(1)
+    FROM t_smart_pro_inventory_log log
+    INNER JOIN t_smart_pro_inventory pro ON log.pro_inventory_id = pro.id
+    <include refid="queryWhereClause" />
+    LIMIT 1
+  </select>
+
+  <!--分页查询-->
+  <select id="queryProInventoryPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.inventory.TWmsProInventoryLogEntity">
+    SELECT
+    log.id AS id,log.warehouse_id AS warehouseId , log.pro_inventory_id AS proInventoryId , log.sku_id AS skuId , log.sku_spec AS skuSpec ,
+    log.type_code AS typeCode , log.order_id AS orderId , log.detail_id AS detailId , log.qty AS qty , log.create_user AS createUser ,log.create_time AS createTime ,
+    log.update_user AS updateUser , log.update_time AS updateTime , pro.storage_room_id AS storageRoomId
+    FROM t_smart_pro_inventory_log log
+    INNER JOIN t_smart_pro_inventory pro ON log.pro_inventory_id = pro.id
+    <include refid="queryWhereClause"/>
+    <include refid="queryOrderByClause"/>
+    <include refid="queryLimitClause"/>
+  </select>
+
+
+  <insert id="insertProInventoryLogMapper" parameterType="com.huamengtong.wms.entity.inventory.TWmsProInventoryLogEntity">
+    insert into t_smart_pro_inventory_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="entity.id != null">
+        id,
+      </if>
+      <if test="entity.tenantId != null">
+        tenant_id,
+      </if>
+      <if test="entity.warehouseId != null">
+        warehouse_id,
+      </if>
+      <if test="entity.proInventoryId != null">
+        pro_inventory_id,
+      </if>
+      <if test="entity.skuId != null">
+        sku_id,
+      </if>
+      <if test="entity.skuSpec != null">
+        sku_spec,
+      </if>
+      <if test="entity.typeCode != null">
+        type_code,
+      </if>
+      <if test="entity.orderId != null">
+        order_id,
+      </if>
+      <if test="entity.detailId != null">
+        detail_id,
+      </if>
+      <if test="entity.qty != null">
+        qty,
+      </if>
+      <if test="entity.createUser != null">
+        create_user,
+      </if>
+      <if test="entity.createTime != null">
+        create_time,
+      </if>
+      <if test="entity.updateUser != null">
+        update_user,
+      </if>
+      <if test="entity.updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="entity.id != null">
+        #{entity.id,jdbcType=BIGINT},
+      </if>
+      <if test="entity.tenantId != null">
+        #{entity.tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.warehouseId != null">
+        #{entity.warehouseId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.proInventoryId != null">
+        #{entity.proInventoryId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.skuId != null">
+        #{entity.skuId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.skuSpec != null">
+        #{entity.skuSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.typeCode != null">
+        #{entity.typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.orderId != null">
+        #{entity.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.detailId != null">
+        #{entity.detailId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.qty != null">
+        #{entity.qty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.createUser != null">
+        #{entity.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.createTime != null">
+        #{entity.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.updateUser != null">
+        #{entity.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.updateTime != null">
+        #{entity.updateTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.huamengtong.wms.entity.inventory.TWmsProInventoryLogEntity">
+    update t_smart_pro_inventory_log
+    <set>
+      <if test="entity.tenantId != null">
+        tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.warehouseId != null">
+        warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.proInventoryId != null">
+        pro_inventory_id = #{entity.proInventoryId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.skuId != null">
+        sku_id = #{entity.skuId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.skuSpec != null">
+        sku_spec = #{entity.skuSpec,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.typeCode != null">
+        type_code = #{entity.typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.orderId != null">
+        order_id = #{entity.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.detailId != null">
+        detail_id = #{entity.detailId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.qty != null">
+        qty = #{entity.qty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.createUser != null">
+        create_user = #{entity.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.createTime != null">
+        create_time = #{entity.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.updateUser != null">
+        update_user = #{entity.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.updateTime != null">
+        update_time = #{entity.updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{entity.id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

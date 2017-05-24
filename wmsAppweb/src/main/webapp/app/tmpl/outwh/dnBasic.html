@@ -1,0 +1,68 @@
+<div class="bas-info border-none child-table-main">
+    <div>
+        <form class="wrapper-md">
+            <div class="clearfix">
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">仓库名称</label>
+                    <span class="child-span" ng-bind="dataItem.warehouseId|whFormat"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">通知单号</label>
+                    <span class="child-span" ng-bind="dataItem.id"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">数据来源</label>
+                    <span class="child-span" ng-bind="dataItem.datasourceCode|codeFormat:'DataSource'"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">订单来源</label>
+                    <span class="child-span" ng-bind="dataItem.fromtypeCode|codeFormat:'ShipmentFrom'"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">单据类型</label>
+                    <span class="child-span" >出库通知单</span>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">优先发货</label>
+                    <span class="child-span">
+                        <input type="checkbox" ng-model="dataItem.isUrgent" disabled="true"/>
+                    </span>
+                </div>
+                <!--<div class="panel-group p-r-30 m-b-10">-->
+                <!--<label class="child-lab">是否货到付款</label>-->
+                <!--<span class="child-span">-->
+                <!--<input type="checkbox" ng-model="dataItem.isCod" disabled="true"/>-->
+                <!--</span>-->
+                <!--</div>-->
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">参考单号</label>
+                    <span class="child-span" ng-bind="dataItem.order.referNo"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">交易单号</label>
+                    <span class="child-span" ng-bind="dataItem.order.tradeNo"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">下单日期</label>
+                    <span class="child-span" ng-bind="dataItem.order.orderTime|date:'yyyy-MM-dd'"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">期望发货时间</label>
+                    <span class="child-span" ng-bind="dataItem.order.expectedDate|date:'yyyy-MM-dd'"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">实际发货时间</label>
+                    <span class="child-span" ng-bind="dataItem.deliveryTime|date:'yyyy-MM-dd'"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">运费</label>
+                    <span class="child-span" ng-bind="dataItem.order.postfee"/>
+                </div>
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">支付日期</label>
+                    <span class="child-span" ng-bind="dataItem.order.paymentTime|date:'yyyy-MM-dd'"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

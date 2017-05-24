@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+    ">
+
+    <!--订阅服务-->
+    <dubbo:reference id="shipmentHeaderService" interface="com.huamengtong.wms.outwh.service.IShipmentHeaderService"/>
+    <dubbo:reference id="shipmentDetailService" interface="com.huamengtong.wms.outwh.service.IShipmentDetailService"/>
+    <dubbo:reference id="dnHeaderService" interface="com.huamengtong.wms.outwh.service.IDnHeaderService"/>
+    <dubbo:reference id="dnDetailService" interface="com.huamengtong.wms.outwh.service.IDnDetailService"/>
+    <dubbo:reference id="frozenHeaderService" interface="com.huamengtong.wms.outwh.service.IFrozenHeaderService"/>
+    <dubbo:reference id="frozenDetailService" interface="com.huamengtong.wms.outwh.service.IFrozenDetailService"/>
+    <dubbo:reference id="unfrozenHeaderService" interface="com.huamengtong.wms.outwh.service.IUnfrozenHeaderService"/>
+    <dubbo:reference id="unfrozenDetailService" interface="com.huamengtong.wms.outwh.service.IUnfrozenDetailService"/>
+    <dubbo:reference id="waveService" interface="com.huamengtong.wms.outwh.service.IWaveService"/>
+</beans>

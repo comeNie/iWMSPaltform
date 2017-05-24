@@ -1,0 +1,90 @@
+<div class="content-wrap" ng-controller="cargoOwnerController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="cargoOwnerHeaderGrid">
+            <div class="panel-group">
+                <label>货主编号</label><input type="text" ng-model="query.cargoOwnerNo" /></div>
+            <div class="panel-group">
+                <label>货主简称</label><input type="text" ng-model="query.shortName" /></div>
+            <div class="panel-group">
+                <label>货主全称</label><input type="text" ng-model="query.fullName" /></div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="cargoOwnerHeaderGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 货主新增 ,货主编辑-->
+<script id="cargoOwner-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货主编号</label>
+                <input id="cargoOwnerNo" name="cargoOwnerNo" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>简称</label>
+                <input id="shortName" name="shortName" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>全称</label>
+                <input id="fullName" name="fullName" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货主类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="StorerType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否可用</label>
+                <input id="isActive" name="isActive" type="checkbox" value="1" checked="checked"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>国家</label>
+                <input id="country" name="country" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>省份</label>
+                <input id="province" name="province" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>城市</label>
+                <input id="city" name="city" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>区/县</label>
+                <input id="area" name="area" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>邮政编码</label>
+                <input id="zip" name="zip" type="text" />
+            </div>
+            <div class="pure-control-group ">
+                <label>地址</label>
+                <textarea class="tear-text" clos="50" id="address" name="address" />
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+              <label>联系人</label>
+              <input id="contact" name="contact" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>联系电话</label>
+                <input id="telephone" name="telephone" type="text" />
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>传真</label>
+                <input id="fax" name="fax" type="text" />
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>邮件</label>
+                <input id="email" name="email" type="text" />
+            </div>
+            <div class="pure-control-group ">
+                <label>描述</label>
+                <textarea class="tear-text" clos="50" id="description" name="description" />
+            </div>
+        </div>
+    </div>
+</script>

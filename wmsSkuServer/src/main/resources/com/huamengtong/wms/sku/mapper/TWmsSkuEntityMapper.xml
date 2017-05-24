@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huamengtong.wms.sku.mapper.SkuMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.sku.TWmsSkuEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId"/>
+        <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId"/>
+        <result column="sku" jdbcType="VARCHAR" property="sku"/>
+        <result column="upc" jdbcType="VARCHAR" property="upc"/>
+        <result column="barcode" jdbcType="VARCHAR" property="barcode"/>
+        <result column="item_name" jdbcType="VARCHAR" property="itemName"/>
+        <result column="categorys_id" jdbcType="BIGINT" property="categorysId"/>
+        <result column="spec" jdbcType="VARCHAR" property="spec"/>
+        <result column="unit_type" jdbcType="VARCHAR" property="unitType"/>
+        <result column="net_weight" jdbcType="DECIMAL" property="netWeight"/>
+        <result column="gross_weight" jdbcType="DECIMAL" property="grossWeight"/>
+        <result column="volume" jdbcType="DECIMAL" property="volume"/>
+        <result column="warehouse_temp" jdbcType="DECIMAL" property="warehouseTemp"/>
+        <result column="transport_temp" jdbcType="DECIMAL" property="transportTemp"/>
+        <result column="cost_price" jdbcType="DECIMAL" property="costPrice"/>
+        <result column="is_active" jdbcType="TINYINT" property="isActive"/>
+        <result column="is_del" jdbcType="TINYINT" property="isDel"/>
+        <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode"/>
+        <result column="producer" jdbcType="VARCHAR" property="producer"/>
+        <result column="producer_code" jdbcType="VARCHAR" property="producerCode"/>
+        <result column="origin_place" jdbcType="VARCHAR" property="originPlace"/>
+        <result column="price1" jdbcType="DECIMAL" property="price1"/>
+        <result column="price2" jdbcType="DECIMAL" property="price2"/>
+        <result column="price3" jdbcType="DECIMAL" property="price3"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+        <result column="property" jdbcType="VARCHAR" property="property"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+     id, tenant_id, cargo_owner_id, sku, upc, barcode, item_name, categorys_id, spec,
+    unit_type, net_weight, gross_weight, volume, warehouse_temp, transport_temp, cost_price,
+    is_active, is_del, datasource_code, producer, producer_code, origin_place, price1,
+    price2, price3, description, create_user, create_time, update_user, update_time,property
+  </sql>
+
+    <!--query Where  语句-->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="skuEntity.id != null and skuEntity.id != 0">
+                AND id = #{skuEntity.id,jdbcType =BIGINT}
+            </if>
+            <if test="skuEntity.itemName != null">
+                <bind name="itemName" value="'%' + skuEntity.itemName + '%'"/>
+                AND item_name LIKE #{itemName}
+            </if>
+            <if test="skuEntity.sku != null">
+                AND sku = #{skuEntity.sku,jdbcType =VARCHAR}
+            </if>
+            <if test="skuEntity.upc != null">
+                AND upc = #{skuEntity.upc,jdbcType =VARCHAR}
+            </if>
+            <if test="skuEntity.categorysId != null">
+                AND categorys_id = #{skuEntity.categorysId,jdbcType =VARCHAR}
+            </if>
+            <if test="skuEntity.barcode != null">
+                AND barcode = #{skuEntity.barcode,jdbcType =VARCHAR}
+            </if>
+            <if test="skuEntity.cargoOwnerId != null and skuEntity.cargoOwnerId != 0">
+                AND cargo_owner_id = #{skuEntity.cargoOwnerId,jdbcType =BIGINT}
+            </if>
+        </where>
+    </sql>
+
+    <!--query limit 语句-->
+    <sql id="queryLimitClause">
+        <if test="skuEntity.offset != null and skuEntity.offset >= 0 and skuEntity.pageSize != null and skuEntity.pageSize > 0">
+            LIMIT ${skuEntity.offset}, ${skuEntity.pageSize}
+        </if>
+    </sql>
+
+    <!--query orderby 语句-->
+    <sql id="queryOrderByClause">
+        <if test="skuEntity.orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="skuEntity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!--查询记录条数-->
+    <select id="selectSkuPageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuEntity">
+        SELECT COUNT(1)
+        FROM t_smart_sku
+        <include refid="queryWhereClause" />
+        LIMIT 1
+    </select>
+
+    <!--分页查询-->
+    <select id="selectSkuPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="selectSkuById" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectValidateHasSku" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuEntity" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku
+        WHERE  cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+        AND  barcode = #{barcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectSkuAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku
+    </select>
+
+
+    <insert id="insertBatchSku" useGeneratedKeys="true" parameterType="java.util.List">
+        insert into t_smart_sku
+        (
+                id,
+                tenant_id,
+                cargo_owner_id,
+                categorys_id,
+                sku,
+                upc,
+                barcode,
+                item_name,
+                spec,
+                unit_type,
+                warehouse_temp,
+                transport_temp,
+                cost_price,
+                producer,
+                producer_code,
+                origin_place,
+                price1,
+                description,
+                datasource_code,
+                create_user,
+                create_time,
+                update_user,
+                update_time,
+                property
+         )
+        VALUES
+            <foreach collection="list" item="skuEntity" index= "index" separator =",">
+                (
+                #{skuEntity.id},
+                #{skuEntity.tenantId},
+                #{skuEntity.cargoOwnerId},
+                #{skuEntity.categorysId},
+                #{skuEntity.sku},
+                #{skuEntity.upc},
+                #{skuEntity.barcode},
+                #{skuEntity.itemName},
+                #{skuEntity.spec},
+                #{skuEntity.unitType},
+                #{skuEntity.warehouseTemp},
+                #{skuEntity.transportTemp},
+                #{skuEntity.costPrice},
+                #{skuEntity.producer},
+                #{skuEntity.producerCode},
+                #{skuEntity.originPlace},
+                #{skuEntity.price1},
+                #{skuEntity.description},
+                #{skuEntity.datasourceCode},
+                #{skuEntity.createUser,jdbcType=VARCHAR},
+                 #{skuEntity.createTime,jdbcType=BIGINT},
+                 #{skuEntity.updateUser,jdbcType=VARCHAR},
+                #{skuEntity.updateTime,jdbcType=BIGINT},
+                #{skuEntity.property,jdbcType=VARCHAR}
+                )
+            </foreach>
+
+    </insert>
+
+
+    <insert id="insertSku" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuEntity">
+        insert into t_smart_sku
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="skuEntity.id != null">
+                id,
+            </if>
+            <if test="skuEntity.tenantId != null">
+                tenant_id,
+            </if>
+            <if test="skuEntity.cargoOwnerId != null">
+                cargo_owner_id,
+            </if>
+            <if test="skuEntity.sku != null">
+                sku,
+            </if>
+            <if test="skuEntity.upc != null">
+                upc,
+            </if>
+            <if test="skuEntity.barcode != null">
+                barcode,
+            </if>
+            <if test="skuEntity.itemName != null">
+                item_name,
+            </if>
+            <if test="skuEntity.categorysId != null">
+                categorys_id,
+            </if>
+            <if test="skuEntity.spec != null">
+                spec,
+            </if>
+            <if test="skuEntity.unitType != null">
+                unit_type,
+            </if>
+            <if test="skuEntity.netWeight != null">
+                net_weight,
+            </if>
+            <if test="skuEntity.grossWeight != null">
+                gross_weight,
+            </if>
+            <if test="skuEntity.volume != null">
+                volume,
+            </if>
+            <if test="skuEntity.warehouseTemp != null">
+                warehouse_temp,
+            </if>
+            <if test="skuEntity.transportTemp != null">
+                transport_temp,
+            </if>
+            <if test="skuEntity.costPrice != null">
+                cost_price,
+            </if>
+            <if test="skuEntity.isActive != null">
+                is_active,
+            </if>
+            <if test="skuEntity.isDel != null">
+                is_del,
+            </if>
+            <if test="skuEntity.datasourceCode != null">
+                datasource_code,
+            </if>
+            <if test="skuEntity.producer != null">
+                producer,
+            </if>
+            <if test="skuEntity.producerCode != null">
+                producer_code,
+            </if>
+            <if test="skuEntity.originPlace != null">
+                origin_place,
+            </if>
+            <if test="skuEntity.price1 != null">
+                price1,
+            </if>
+            <if test="skuEntity.price2 != null">
+                price2,
+            </if>
+            <if test="skuEntity.price3 != null">
+                price3,
+            </if>
+            <if test="skuEntity.description != null">
+                description,
+            </if>
+            <if test="skuEntity.createUser != null">
+                create_user,
+            </if>
+            <if test="skuEntity.createTime != null">
+                create_time,
+            </if>
+            <if test="skuEntity.updateUser != null">
+                update_user,
+            </if>
+            <if test="skuEntity.updateTime != null">
+                update_time,
+            </if>
+            <if test="skuEntity.property != null">
+                property,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="skuEntity.id != null">
+                #{skuEntity.id,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.tenantId != null">
+                #{skuEntity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.cargoOwnerId != null">
+                #{skuEntity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.sku != null">
+                #{skuEntity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.upc != null">
+                #{skuEntity.upc,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.barcode != null">
+                #{skuEntity.barcode,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.itemName != null">
+                #{skuEntity.itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.categorysId != null">
+                #{skuEntity.categorysId,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.spec != null">
+                #{skuEntity.spec,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.unitType != null">
+                #{skuEntity.unitType,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.netWeight != null">
+                #{skuEntity.netWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.grossWeight != null">
+                #{skuEntity.grossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.volume != null">
+                #{skuEntity.volume,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.warehouseTemp != null">
+                #{skuEntity.warehouseTemp,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.transportTemp != null">
+                #{skuEntity.transportTemp,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.costPrice != null">
+                #{skuEntity.costPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.isActive != null">
+                #{skuEntity.isActive,jdbcType=TINYINT},
+            </if>
+            <if test="skuEntity.isDel != null">
+                #{skuEntity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="skuEntity.datasourceCode != null">
+                #{skuEntity.datasourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.producer != null">
+                #{skuEntity.producer,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.producerCode != null">
+                #{skuEntity.producerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.originPlace != null">
+                #{skuEntity.originPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.price1 != null">
+                #{skuEntity.price1,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.price2 != null">
+                #{skuEntity.price2,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.price3 != null">
+                #{skuEntity.price3,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.description != null">
+                #{skuEntity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.createUser != null">
+                #{skuEntity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.createTime != null">
+                #{skuEntity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.updateUser != null">
+                #{skuEntity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.updateTime != null">
+                #{skuEntity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.property != null">
+                #{skuEntity.property,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSku" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuEntity">
+        UPDATE t_smart_sku
+        <set>
+            <if test="skuEntity.id != null">
+                id = #{skuEntity.id,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.tenantId != null">
+                tenant_id=#{skuEntity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.cargoOwnerId != null">
+                cargo_owner_id=#{skuEntity.cargoOwnerId,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.sku != null">
+                sku=#{skuEntity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.upc != null">
+                upc=#{skuEntity.upc,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.barcode != null">
+                barcode=#{skuEntity.barcode,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.itemName != null">
+                item_name= #{skuEntity.itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.categorysId != null">
+                categorys_id=#{skuEntity.categorysId,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.spec != null">
+                spec = #{skuEntity.spec,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.unitType != null">
+                unit_type= #{skuEntity.unitType,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.netWeight != null">
+                net_weight=#{skuEntity.netWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.grossWeight != null">
+                gross_weight= #{skuEntity.grossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.volume != null">
+                volume= #{skuEntity.volume,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.warehouseTemp != null">
+                warehouse_temp=#{skuEntity.warehouseTemp,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.transportTemp != null">
+                transport_temp=#{skuEntity.transportTemp,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.costPrice != null">
+                cost_price= #{skuEntity.costPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.isActive != null">
+                is_active= #{skuEntity.isActive,jdbcType=TINYINT},
+            </if>
+            <if test="skuEntity.isDel != null">
+                is_del= #{skuEntity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="skuEntity.datasourceCode != null">
+                datasource_code=#{skuEntity.datasourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.producer != null">
+                producer=#{skuEntity.producer,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.producerCode != null">
+                producer_code=#{skuEntity.producerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.originPlace != null">
+                origin_place=#{skuEntity.originPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.price1 != null">
+                price1=#{skuEntity.price1,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.price2 != null">
+                price2=#{skuEntity.price2,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.price3 != null">
+                price3=#{skuEntity.price3,jdbcType=DECIMAL},
+            </if>
+            <if test="skuEntity.description != null">
+                description=#{skuEntity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.createUser != null">
+                create_user= #{skuEntity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.createTime != null">
+                create_time=#{skuEntity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.updateUser != null">
+                update_user=#{skuEntity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="skuEntity.updateTime != null">
+                update_time=#{skuEntity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="skuEntity.property != null">
+                property=#{skuEntity.property,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE id = #{skuEntity.id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteSku" parameterType="java.lang.Long">
+        DELETE
+        FROM t_smart_sku
+        WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteSkuBatch" parameterType="java.util.List">
+        DELETE
+        FROM t_smart_sku
+        WHERE id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")" >
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--根据商品的sku查询-->
+    <select id="getSkuByBarcode" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku
+        WHERE barcode = #{barcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByCargoOwnerId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku
+        WHERE cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+    </select>
+
+    <!--根据条件查询 商品IDList-->
+    <select id="selectSkuIdList" resultType="java.lang.Long"  parameterType="com.huamengtong.wms.entity.sku.TWmsSkuEntity">
+        SELECT id
+        FROM t_smart_sku
+        <include refid="queryWhereClause"/>
+    </select>
+
+    <!--根据条件查询 商品List-->
+    <select id="selectByIdList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sku
+        WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--根据商品名称查询-->
+    <select id="getSkuByItemName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM  t_smart_sku
+        WHERE item_name = #{itemName,jdbcType=BIGINT}
+    </select>
+
+
+    <sql id="querySkuCargoOwnerWhereClause">
+        <where>
+            <if test="sku != null ">
+                AND sku.sku = #{sku,jdbcType =VARCHAR}
+            </if>
+            <if test="itemName != null">
+              AND sku.item_name LIKE CONCAT('%', #{itemName,jdbcType =VARCHAR}, '%')
+            </if>
+            <if test="cargoOwnerId != null">
+               AND skuCargo.cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+            </if>
+            <if test="skuId != null">
+                AND sku.id = #{skuId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="findSkuCargoOwner" resultType="com.huamengtong.wms.entity.sku.TWmsSkuEntity" parameterType="java.util.Map" >
+        SELECT
+        skuCargo.cargo_owner_id AS cargoOwnerId , sku.id AS id , sku.item_name AS itemName , sku.sku AS sku ,
+        sku.cost_price AS costPrice, sku.spec AS spec , sku.unit_type AS unitType,
+        sku.barcode AS barcode , sku.is_active AS isActive
+        FROM  t_smart_sku sku
+        INNER JOIN t_smart_sku_cargo_owner skuCargo ON sku.id = skuCargo.sku_id
+        <include refid="querySkuCargoOwnerWhereClause" />
+    </select>
+
+
+    <sql id="queryWhereClauseForOutWhPopup" >
+        <where>
+            <if test="skuEntity.cargoOwnerId  !=null">
+                AND skuCargo.cargo_owner_id = #{skuEntity.cargoOwnerId,jdbcType=BIGINT}
+            </if>
+            <if test="skuEntity.sku  !=null">
+               AND sku.sku = #{skuEntity.sku,jdbcType=VARCHAR}
+            </if>
+            <if test="skuEntity.itemName  !=null">
+                <bind name="itemName" value="'%' + skuEntity.itemName + '%'"/>
+                AND sku.item_name LIKE #{itemName}
+            </if>
+        </where>
+    </sql>
+
+    <!--query limit 语句-->
+    <sql id="queryLimitClauseForOutWhPopup">
+        <if test="skuEntity.offset != null and skuEntity.offset >= 0 and skuEntity.pageSize != null and skuEntity.pageSize > 0">
+            LIMIT ${skuEntity.offset}, ${skuEntity.pageSize}
+        </if>
+    </sql>
+
+    <!--query orderby 语句-->
+    <sql id="queryOrderByClauseForOutWhPopup">
+        <if test="skuEntity.orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="skuEntity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+
+    <select id="selectSkuPagesByCargoOwnerId" resultType="com.huamengtong.wms.entity.sku.TWmsSkuEntity" >
+        SELECT
+        skuCargo.cargo_owner_id AS cargoOwnerId , sku.id AS id , sku.item_name AS itemName , sku.sku AS sku ,
+        sku.cost_price AS costPrice , sku.spec AS spec , sku.unit_type AS unitType,
+        sku.barcode AS barcode , sku.is_active AS isActive , skuCargo.cargo_owner_barcode AS cargoOwnerBarcode
+        FROM t_smart_sku sku
+        INNER JOIN  t_smart_sku_cargo_owner skuCargo ON sku.id = skuCargo.sku_id
+        <include refid="queryWhereClauseForOutWhPopup"/>
+        <include refid="queryOrderByClauseForOutWhPopup"/>
+        <include refid="queryLimitClauseForOutWhPopup"/>
+    </select>
+
+    <select id="queryPageCountByCargoOwnerId" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuEntity" >
+        SELECT COUNT(1)
+        FROM t_smart_sku sku
+        INNER JOIN  t_smart_sku_cargo_owner skuCargo ON sku.id = skuCargo.sku_id
+        <include refid="queryWhereClauseForOutWhPopup"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectSkuByUpc" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM  t_smart_sku
+        WHERE upc = #{upc,jdbcType=BIGINT}
+    </select>
+
+
+
+</mapper>

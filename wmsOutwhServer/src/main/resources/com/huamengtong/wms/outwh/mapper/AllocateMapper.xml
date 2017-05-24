@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.outwh.mapper.AllocateMapper">
+  <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.outwh.TWmsAllocateEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="detail_id" jdbcType="BIGINT" property="detailId" />
+    <result column="inventory_id" jdbcType="BIGINT" property="inventoryId" />
+    <result column="location_id" jdbcType="VARCHAR" property="locationId" />
+    <result column="storage_room_id" jdbcType="VARCHAR" property="storageRoomId" />
+    <result column="allocated_qty" jdbcType="INTEGER" property="allocatedQty" />
+    <result column="picked_qty" jdbcType="INTEGER" property="pickedQty" />
+    <result column="shipped_qty" jdbcType="INTEGER" property="shippedQty" />
+    <result column="is_failed" jdbcType="TINYINT" property="isFailed" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="allocate_user" jdbcType="VARCHAR" property="allocateUser" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, detail_id, inventory_id, location_id, storage_room_id, allocated_qty, picked_qty, shipped_qty,is_failed,
+    description, allocate_user, create_user, create_time, update_user,update_time
+  </sql>
+
+  <sql id="queryWhereClause">
+    <where>
+      <if test="entity.id !=null and entity.id != 0">
+        AND  id = #{entity.id,jdbcType=BIGINT}
+      </if>
+      <if test="entity.detailId !=null and entity.detailId != 0">
+        AND  detail_id = #{entity.detailId,jdbcType=BIGINT}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="selectAllocates" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    SELECT
+        <include refid="Base_Column_List"/>
+    FROM t_smart_allocate allocate
+    WHERE exists(select 1 from t_smart_shipment_detail sh_d where sh_d.id = allocate.detail_id
+    and sh_d.shipment_id = #{headerId,jdbcType=BIGINT})
+  </select>
+
+  <select id="selectAllocatesByShipmentDetailId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_smart_allocate
+    WHERE detail_id = #{detailId,jdbcType=BIGINT}
+  </select>
+
+
+  <insert id="insertAllocate" parameterType="com.huamengtong.wms.entity.outwh.TWmsAllocateEntity">
+       INSERT INTO t_smart_allocate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="entity.id != null">
+            id,
+          </if>
+          <if test="entity.detailId != null and entity.detailId !='' ">
+            detail_id,
+          </if>
+          <if test="entity.inventoryId != null and entity.inventoryId != ''">
+            inventory_id,
+          </if>
+          <if test="entity.locationId != null and entity.locationId !='' ">
+            location_id,
+          </if>
+          <if test="entity.storageRoomId != null and entity.storageRoomId != ''">
+            storage_room_id,
+          </if>
+          <if test="entity.allocatedQty != null and entity.allocatedQty != ''">
+            allocated_qty,
+          </if>
+          <if test="entity.pickedQty != null and entity.pickedQty != ''">
+            picked_qty,
+          </if>
+          <if test="entity.shippedQty != null and entity.shippedQty != ''">
+            shipped_qty,
+          </if>
+          <if test="entity.allocateUser != null and entity.allocateUser != ''">
+            allocate_user,
+          </if>
+          <if test="entity.createUser != null and entity.createUser !=''">
+            create_user,
+          </if>
+          <if test="entity.createTime != null and entity.createTime != ''">
+            create_time,
+          </if>
+          <if test="entity.updateUser != null and entity.updateUser !=''">
+            update_user,
+          </if>
+          <if test="entity.updateTime != null and entity.updateTime != ''">
+            update_time
+          </if>
+       </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="entity.id != null and entity.id != 0">
+          #{entity.id,jdbcType=BIGINT},
+        </if>
+        <if test="entity.detailId != null and entity.detailId !=''">
+          #{entity.detailId,jdbcType=BIGINT},
+        </if>
+        <if test="entity.inventoryId != null and entity.inventoryId !=''">
+          #{entity.inventoryId,jdbcType=BIGINT},
+        </if>
+        <if test="entity.locationId != null and entity.locationId !=''">
+          #{entity.locationId,jdbcType=BIGINT},
+        </if>
+        <if test="entity.storageRoomId != null and entity.storageRoomId !=''">
+          #{entity.storageRoomId,jdbcType=BIGINT},
+        </if>
+        <if test="entity.allocatedQty != null and entity.allocatedQty !=''">
+          #{entity.allocatedQty,jdbcType=INTEGER},
+        </if>
+        <if test="entity.pickedQty != null and entity.pickedQty !=''">
+          #{entity.pickedQty,jdbcType=INTEGER},
+        </if>
+        <if test="entity.shippedQty != null and entity.shippedQty !=''">
+          #{entity.shippedQty,jdbcType=INTEGER},
+        </if>
+        <if test="entity.allocateUser != null and entity.allocateUser !=''">
+          #{entity.allocateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.createUser != null and entity.createUser !=''">
+          #{entity.createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.createTime != null and entity.createTime !=''">
+          #{entity.createTime,jdbcType=BIGINT},
+        </if>
+        <if test="entity.updateUser != null and entity.updateUser != ''">
+          #{entity.updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.updateTime != null and entity.updateTime !=''">
+          #{entity.updateTime,jdbcType=BIGINT}
+        </if>
+      </trim>
+
+
+  </insert>
+
+  <update id="updateAllocate" parameterType="com.huamengtong.wms.entity.outwh.TWmsAllocateEntity">
+    update t_smart_allocate
+    <set>
+      <if test="entity.id != null">
+        id = #{entity.id,jdbcType=BIGINT},
+      </if>
+      <if test="entity.detailId != null">
+        detail_id = #{entity.detailId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.inventoryId != null">
+        inventory_id = #{entity.inventoryId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.locationId != null">
+        location_id = #{entity.locationId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.storageRoomId != null">
+        storage_room_id = #{entity.storageRoomId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.allocatedQty != null">
+        allocated_qty = #{entity.allocatedQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.pickedQty != null">
+        picked_qty = #{entity.pickedQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.shippedQty != null">
+        shipped_qty = #{entity.shippedQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.isFailed != null">
+        is_failed = #{entity.isFailed,jdbcType=TINYINT},
+      </if>
+      <if test="entity.description != null">
+        description = #{entity.description,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.allocateUser != null">
+        allocate_user = #{entity.allocateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.createUser != null">
+        create_user = #{entity.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.createTime != null">
+        create_time = #{entity.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.updateUser != null">
+        update_user = #{entity.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.updateTime != null">
+        update_time = #{entity.updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    WHERE id = #{entity.id,jdbcType=BIGINT}
+  </update>
+
+ <delete id="deleteAllocate" parameterType="java.lang.Long">
+   DELETE
+   FROM t_smart_allocate
+   WHERE detail_id = #{detailId,jdbcType=BIGINT}
+ </delete>
+
+</mapper>

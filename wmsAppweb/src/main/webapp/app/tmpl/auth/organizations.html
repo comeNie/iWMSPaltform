@@ -1,0 +1,72 @@
+
+<div class="content-wrap" ng-controller="organizationsController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="organizationsHeaderGrid">
+            <div class="panel-group">
+                <label>机构名称</label><input type="text" ng-model="query.name" />
+            </div>
+            <div class="panel-group">
+                <label>机构类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="OrganizationType" name="query.typeCode" id="query.typeCode" ></l-select>
+                </div>
+            </div>
+            <div class="panel-group">
+                <label>联系人</label><input type="text" ng-model="query.contacts" />
+            </div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="organizationsHeaderGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>
+
+<!--  组织机构新增-->
+<script id="organizations-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>机构名称</label>
+                <input id="name" name="name" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>机构类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="OrganizationType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>上级机构</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="organizationsSrc" name="parentId" id="parentId"></r-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否启用</label>
+                <input id="isActive" name="isActive"  type="checkbox" value="1" checked="checked"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>描述</label>
+                <input id="description" name="description" type="text"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>机构电话</label>
+                <input id="telephone" name="telephone" type="text"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>机构联系人</label>
+                <input id="contacts" name="contacts" type="text"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>机构地址</label>
+                <input id="address" name="address" type="text" />
+            </div>
+        </div>
+    </div>
+</script>
+

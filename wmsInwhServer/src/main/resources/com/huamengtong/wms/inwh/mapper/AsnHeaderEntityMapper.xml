@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.inwh.mapper.AsnHeaderMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inwh.TWmsAsnHeaderEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId" />
+        <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode" />
+        <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+        <result column="expected_date" jdbcType="BIGINT" property="expectedDate" />
+        <result column="from_type_code" jdbcType="VARCHAR" property="fromTypeCode" />
+        <result column="from_order_no" jdbcType="VARCHAR" property="fromOrderNo" />
+        <result column="from_address" jdbcType="VARCHAR" property="fromAddress" />
+        <result column="warehouse_refer_no" jdbcType="VARCHAR" property="warehouseReferNo" />
+        <result column="supplier_id" jdbcType="BIGINT" property="supplierId" />
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
+        <result column="supplier_contact" jdbcType="VARCHAR" property="supplierContact" />
+        <result column="supplier_telephone" jdbcType="VARCHAR" property="supplierTelephone" />
+        <result column="supplier_address" jdbcType="VARCHAR" property="supplierAddress" />
+        <result column="supplier_refer_no" jdbcType="VARCHAR" property="supplierReferNo" />
+        <result column="carrier_id" jdbcType="BIGINT" property="carrierId" />
+        <result column="carrier_name" jdbcType="VARCHAR" property="carrierName" />
+        <result column="carrier_contact" jdbcType="VARCHAR" property="carrierContact" />
+        <result column="carrier_telephone" jdbcType="VARCHAR" property="carrierTelephone" />
+        <result column="carrier_address" jdbcType="VARCHAR" property="carrierAddress" />
+        <result column="carrier_refer_no" jdbcType="VARCHAR" property="carrierReferNo" />
+        <result column="transport_mode_code" jdbcType="VARCHAR" property="transportModeCode" />
+        <result column="vehicle_no" jdbcType="VARCHAR" property="vehicleNo" />
+        <result column="total_qty" jdbcType="INTEGER" property="totalQty" />
+        <result column="total_carton_qty" jdbcType="INTEGER" property="totalCartonQty" />
+        <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+        <result column="total_net_weight" jdbcType="DECIMAL" property="totalNetWeight" />
+        <result column="total_gross_weight" jdbcType="DECIMAL" property="totalGrossWeight" />
+        <result column="total_cube" jdbcType="DECIMAL" property="totalCube" />
+        <result column="total_pallet_qty" jdbcType="INTEGER" property="totalPalletQty" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="receipt_type_code" jdbcType="VARCHAR" property="receiptTypeCode" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+        <result column="is_need_qc" jdbcType="TINYINT" property="isNeedQc" />
+        <result column="qc_times" jdbcType="TINYINT" property="qcTimes" />
+        <result column="qc_status_code" jdbcType="VARCHAR" property="qcStatusCode" />
+        <result column="qc_ftp" jdbcType="DECIMAL" property="qcFtp" />
+        <result column="total_qty_real" jdbcType="INTEGER" property="totalQtyReal" />
+        <result column="total_category_qty" jdbcType="INTEGER" property="totalCategoryQty" />
+        <result column="from_oms_no" jdbcType="VARCHAR" property="fromOmsNo" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        id, tenant_id, warehouse_id, cargo_owner_id, datasource_code, status_code, expected_date,
+    from_type_code, from_order_no, from_address, warehouse_refer_no, supplier_id, supplier_name, supplier_contact,
+    supplier_telephone, supplier_address, supplier_refer_no, carrier_id, carrier_name, carrier_contact,
+    carrier_telephone, carrier_address, carrier_refer_no, transport_mode_code, vehicle_no,
+    total_qty, total_carton_qty, total_amount, total_net_weight, total_gross_weight,
+    total_cube, total_pallet_qty, description, create_user, create_time, update_user,
+    update_time, receipt_type_code, is_del, is_need_qc, qc_times, qc_status_code, qc_ftp,
+    total_qty_real, total_category_qty, from_oms_no
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id !=null and entity.id != 0">
+                AND id = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.datasourceCode !=null and entity.datasourceCode !='' ">
+                AND datasource_code = #{entity.datasourceCode,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.statusCode !=null and entity.statusCode !='' ">
+                AND status_code = #{entity.statusCode,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.cargoOwnerId !=null and entity.cargoOwnerId !=0 ">
+                AND cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT}
+            </if>
+            <if test="entity.expectedDate !=null and entity.expectedDate !='' ">
+                AND expected_date = #{entity.expectedDate,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.datasourceCode !=null and entity.datasourceCode !='' ">
+                AND datasource_code = #{entity.datasourceCode,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.fromTypeCode !=null and entity.fromTypeCode !='' ">
+                AND from_type_code = #{entity.fromTypeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.receiptTypeCode !=null and entity.receiptTypeCode !='' ">
+                AND receipt_type_code = #{entity.receiptTypeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.startTime !=null and entity.startTime !='' ">
+                AND create_time &gt;= #{entity.startTime,jdbcType=BIGINT}
+            </if>
+            <if test="entity.endTime !=null and entity.endTime !='' ">
+                AND create_time &lt;= #{entity.endTime,jdbcType=BIGINT}
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset>=0 and entity.pageSize != null and entity.pageSize>0">
+            LIMIT ${entity.offset},${entity.pageSize}
+        </if>
+    </sql>
+
+    <select id="queryAsnHeaderPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.inwh.TWmsAsnHeaderEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_asn_header
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryAsnHeaderPageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.inwh.TWmsAsnHeaderEntity">
+        SELECT count(1) FROM t_smart_asn_header
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap"   >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_asn_header
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey"  >
+        delete
+        from t_smart_asn_header
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+    <insert id="insertAsnHeader" parameterType="com.huamengtong.wms.entity.inwh.TWmsAsnHeaderEntity">
+        insert into t_smart_asn_header
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null ">
+                id,
+            </if>
+            <if test="entity.tenantId != null ">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null ">
+                warehouse_id,
+            </if>
+            <if test="entity.cargoOwnerId != null ">
+                cargo_owner_id,
+            </if>
+            <if test="entity.datasourceCode != null ">
+                datasource_code,
+            </if>
+            <if test="entity.statusCode != null ">
+                status_code,
+            </if>
+            <if test="entity.expectedDate != null ">
+                expected_date,
+            </if>
+            <if test="entity.fromTypeCode != null ">
+                from_type_code,
+            </if>
+            <if test="entity.fromOrderNo != null ">
+                from_order_no,
+            </if>
+            <if test="entity.fromAddress != null ">
+                from_address,
+            </if>
+            <if test="entity.warehouseReferNo != null ">
+                warehouse_refer_no,
+            </if>
+            <if test="entity.supplierId != null ">
+                supplier_id,
+            </if>
+            <if test="entity.supplierName != null ">
+                supplier_name,
+            </if>
+            <if test="entity.supplierContact != null ">
+                supplier_contact,
+            </if>
+            <if test="entity.supplierTelephone != null ">
+                supplier_telephone,
+            </if>
+            <if test="entity.supplierAddress != null ">
+                supplier_address,
+            </if>
+            <if test="entity.supplierReferNo != null ">
+                supplier_refer_no,
+            </if>
+            <if test="entity.carrierId != null ">
+                carrier_id,
+            </if>
+            <if test="entity.carrierName != null ">
+                carrier_name,
+            </if>
+            <if test="entity.carrierContact != null ">
+                carrier_contact,
+            </if>
+            <if test="entity.carrierTelephone != null ">
+                carrier_telephone,
+            </if>
+            <if test="entity.carrierAddress != null ">
+                carrier_address,
+            </if>
+            <if test="entity.carrierReferNo != null ">
+                carrier_refer_no,
+            </if>
+            <if test="entity.transportModeCode != null ">
+                transport_mode_code,
+            </if>
+            <if test="entity.vehicleNo != null ">
+                vehicle_no,
+            </if>
+            <if test="entity.totalQty != null ">
+                total_qty,
+            </if>
+            <if test="entity.totalCartonQty != null ">
+                total_carton_qty,
+            </if>
+            <if test="entity.totalAmount != null ">
+                total_amount,
+            </if>
+            <if test="entity.totalNetWeight != null ">
+                total_net_weight,
+            </if>
+            <if test="entity.totalGrossWeight != null ">
+                total_gross_weight,
+            </if>
+            <if test="entity.totalCube != null ">
+                total_cube,
+            </if>
+            <if test="entity.totalPalletQty != null ">
+                total_pallet_qty,
+            </if>
+            <if test="entity.description != null ">
+                description,
+            </if>
+            <if test="entity.createUser != null ">
+                create_user,
+            </if>
+            <if test="entity.createTime != null ">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null ">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null ">
+                update_time,
+            </if>
+            <if test="entity.receiptTypeCode != null  ">
+                receipt_type_code,
+            </if>
+            <if test="entity.isDel != null  ">
+                is_del,
+            </if>
+            <if test="entity.isNeedQc != null  ">
+                is_need_qc,
+            </if>
+            <if test="entity.qcTimes != null  ">
+                qc_times,
+            </if>
+            <if test="entity.qcStatusCode != null ">
+                qc_status_code,
+            </if>
+            <if test="entity.qcFtp != null ">
+                qc_ftp,
+            </if>
+            <if test="entity.totalQtyReal != null ">
+                total_qty_real,
+            </if>
+            <if test="entity.totalCategoryQty != null ">
+                total_category_qty,
+            </if>
+            <if test="entity.fromOmsNo != null ">
+                from_oms_no,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null ">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null ">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null ">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null ">
+                #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.datasourceCode != null ">
+                #{entity.datasourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null ">
+                #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.expectedDate != null">
+                #{entity.expectedDate,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromTypeCode != null ">
+                #{entity.fromTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromOrderNo != null ">
+                #{entity.fromOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromAddress != null ">
+                #{entity.fromAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.warehouseReferNo != null ">
+                #{entity.warehouseReferNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierId != null ">
+                #{entity.supplierId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.supplierName != null ">
+                #{entity.supplierName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierContact != null ">
+                #{entity.supplierContact,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierTelephone != null ">
+                #{entity.supplierTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierAddress != null ">
+                #{entity.supplierAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierReferNo != null ">
+                #{entity.supplierReferNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierId != null ">
+                #{entity.carrierId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.carrierName != null ">
+                #{entity.carrierName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierContact != null ">
+                #{entity.carrierContact,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierTelephone != null ">
+                #{entity.carrierTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierAddress != null ">
+                #{entity.carrierAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierReferNo != null ">
+                #{entity.carrierReferNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.transportModeCode != null ">
+                #{entity.transportModeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.vehicleNo != null ">
+                #{entity.vehicleNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.totalQty != null ">
+                #{entity.totalQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.totalCartonQty != null ">
+                #{entity.totalCartonQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.totalAmount != null ">
+                #{entity.totalAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalNetWeight != null ">
+                #{entity.totalNetWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalGrossWeight != null ">
+                #{entity.totalGrossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalCube != null ">
+                #{entity.totalCube,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalPalletQty != null ">
+                #{entity.totalPalletQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.description != null ">
+                #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null ">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null ">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null ">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null ">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.receiptTypeCode != null ">
+                #{entity.receiptTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isDel != null  ">
+                #{entity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="entity.isNeedQc != null  ">
+                #{entity.isNeedQc,jdbcType=TINYINT},
+            </if>
+            <if test="entity.qcTimes != null  ">
+                #{entity.qcTimes,jdbcType=TINYINT},
+            </if>
+            <if test="entity.qcStatusCode != null ">
+                #{entity.qcStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.qcFtp != null ">
+                #{entity.qcFtp,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalQtyReal != null ">
+                #{entity.totalQtyReal,jdbcType=INTEGER},
+            </if>
+            <if test="entity.totalCategoryQty != null ">
+                #{entity.totalCategoryQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.fromOmsNo != null ">
+                #{entity.fromOmsNo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateAsnHeader" parameterType="com.huamengtong.wms.entity.inwh.TWmsAsnHeaderEntity">
+        update t_smart_asn_header
+        <set>
+            <if test="entity.id != null ">
+                id=#{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null ">
+                tenant_id=#{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null ">
+                warehouse_id=#{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null ">
+                cargo_owner_id=#{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.datasourceCode != null ">
+                datasource_code=#{entity.datasourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null ">
+                status_code=#{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.expectedDate != null ">
+                expected_date=#{entity.expectedDate,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromTypeCode != null ">
+                from_type_code=#{entity.fromTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromOrderNo != null ">
+                from_order_no=#{entity.fromOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromAddress != null ">
+                from_address=#{entity.fromAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.warehouseReferNo != null ">
+                warehouse_refer_no=#{entity.warehouseReferNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierId != null ">
+                supplier_id=#{entity.supplierId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.supplierName != null ">
+                supplier_name=#{entity.supplierName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierContact != null ">
+                supplier_contact=#{entity.supplierContact,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierTelephone != null ">
+                supplier_telephone=#{entity.supplierTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierAddress != null ">
+                supplier_address=#{entity.supplierAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.supplierReferNo != null ">
+                supplier_refer_no=#{entity.supplierReferNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierId != null ">
+                carrier_id=#{entity.carrierId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.carrierName != null ">
+                carrier_name=#{entity.carrierName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierContact != null ">
+                carrier_contact=#{entity.carrierContact,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierTelephone != null ">
+                carrier_telephone=#{entity.carrierTelephone,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierAddress != null ">
+                carrier_address=#{entity.carrierAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.carrierReferNo != null ">
+                carrier_refer_no=#{entity.carrierReferNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.transportModeCode != null ">
+                transport_mode_code=#{entity.transportModeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.vehicleNo != null ">
+                vehicle_no=#{entity.vehicleNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.totalQty != null ">
+                total_qty=#{entity.totalQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.totalCartonQty != null ">
+                total_carton_qty=#{entity.totalCartonQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.totalAmount != null ">
+                total_amount=#{entity.totalAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalNetWeight != null ">
+                total_net_weight=#{entity.totalNetWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalGrossWeight != null ">
+                total_gross_weight=#{entity.totalGrossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalCube != null ">
+                total_cube=#{entity.totalCube,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalPalletQty != null ">
+                total_pallet_qty=#{entity.totalPalletQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.description != null ">
+                description=#{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null ">
+                create_user=#{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null ">
+                create_time=#{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null ">
+                update_user=#{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null ">
+                update_time=#{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.receiptTypeCode != null  ">
+                receipt_type_code=#{entity.receiptTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isDel != null  ">
+                is_del=#{entity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="entity.isNeedQc != null  ">
+                is_need_qc=#{entity.isNeedQc,jdbcType=TINYINT},
+            </if>
+            <if test="entity.qcTimes != null  ">
+                qc_times=#{entity.qcTimes,jdbcType=TINYINT},
+            </if>
+            <if test="entity.qcStatusCode != null ">
+                qc_status_code=#{entity.qcStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.qcFtp != null ">
+                qc_ftp=#{entity.qcFtp,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.totalQtyReal != null ">
+                total_qty_real=#{entity.totalQtyReal,jdbcType=INTEGER},
+            </if>
+            <if test="entity.totalCategoryQty != null ">
+                total_category_qty=#{entity.totalCategoryQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.fromOmsNo != null ">
+                from_oms_no=#{entity.fromOmsNo,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--订阅服务-->
+    <dubbo:reference id="autoIdClient" interface="com.huamengtong.wms.client.IAutoIdClient"/>
+
+    <dubbo:reference id="skuService" interface="com.huamengtong.wms.sku.service.ISkuService" />
+    <dubbo:reference id="cargoOwnerService" interface="com.huamengtong.wms.main.service.ICargoOwnerService"/>
+    <dubbo:reference id="storageRoomService" interface="com.huamengtong.wms.main.service.IStorageRoomService"/>
+    <dubbo:reference id="inventoryService" interface="com.huamengtong.wms.inventory.service.IInventoryService"/>
+    <dubbo:reference id="inventoryLogService" interface="com.huamengtong.wms.inventory.service.IInventoryLogService"/>
+    <dubbo:reference id="proInventoryService" interface="com.huamengtong.wms.inventory.service.IProInventoryService"/>
+    <dubbo:reference id="skuCargoOwnerService" interface="com.huamengtong.wms.sku.service.ISkuCargoOwnerService" />
+</beans> 

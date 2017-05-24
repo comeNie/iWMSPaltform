@@ -1,0 +1,1 @@
+insert into `t_smart_user_warehouse` (`id`, `user_id`, `user_name`, `real_name`, `warehouse_id`, `create_user`, `create_time`, `update_user`, `update_time`) values('10','1','admin','管理员','89','system',now(),'system',now());

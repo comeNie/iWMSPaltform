@@ -1,0 +1,14 @@
+<div class="warehouse-content">
+    <table>
+        <tr>
+            <td width="250" ng-repeat="warehouse in warehouseList" ng-click="switchWarehouse(warehouse)">
+                <div class="warehouse-list">
+                    <div class="warehouse-box">
+                        <i></i>
+                        <p title="{{warehouse.key}}">{{warehouse.key}}</p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

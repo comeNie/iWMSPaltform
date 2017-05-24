@@ -1,0 +1,146 @@
+<div class="content-wrap" ng-controller="qcCheckController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="qcCheckHeaderGrid">
+            <div class="panel-group">
+                <label>质检编号</label><input type="text" ng-model="query.id"/>
+            </div>
+            <div class="panel-group">
+                <label>质检主表</label><input type="text" ng-model="query.qcId"/>
+            </div>
+            <div class="panel-group">
+                <label>质检类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="OrderType" name="query.typeCode" id="query.typeCode"></l-select>
+                </div>
+            </div>
+            <div class="panel-group">
+                <label>状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="QualityStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="qcCheckHeaderGrid" options="mainGridOptions">
+                <div k-detail-template>
+                    <div kendo-grid="qcCheckDetailGrid" k-options="qcCheckDetailOptions(dataItem)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="k-popup-edit-form k-window-content k-content ng-scope" style="width: 350px;" kendo-window="qcCheckDetailPopup" k-title="'质检'"
+         k-resizable="false" k-modal="true" k-visible="false">
+        <div class="k-edit-form-container">
+            <div class="edit-form-container">
+                <div style="height: 10px"></div><!--占位-->
+                <div class="pure-body">
+                    <div class="pure-control-group p-b-5">
+                        <label>质检明细单号</label>
+                        <input id="qcCheckDetailModel.id" name="qcCheckDetailModel.id" ng-model="qcCheckDetailModel.id" type="text" disabled="disabled"/>
+                    </div>
+                    <div class="pure-control-group p-b-5">
+                        <label>入库明细单号</label>
+                        <input id="qcCheckDetailModel.qcDetailId" name="qcCheckDetailModel.qcDetailId" ng-model="qcCheckDetailModel.qcDetailId" type="text" disabled="disabled"/>
+                    </div>
+                    <div class="pure-control-group p-b-5 ">
+                        <label>质检商品</label>
+                        <input id="qcCheckDetailModel.skuId" name="qcCheckDetailModel.skuId" ng-model="qcCheckDetailModel.skuId" type="text" hidden="hidden"/>
+                        <input id="qcCheckDetailModel.parentId" name="qcCheckDetailModel.parentId" ng-model="qcCheckDetailModel.parentId" type="text" hidden="hidden"/>
+                        <input id="qcCheckDetailModel.skuName" name="qcCheckDetailModel.skuName" ng-model="qcCheckDetailModel.skuName" type="text" disabled="disabled"/>
+                    </div>
+                    <div class="pure-control-group p-b-5 ">
+                        <label>商品编码</label>
+                        <input id="qcCheckDetailModel.sku" name="qcCheckDetailModel.sku" ng-model="qcCheckDetailModel.sku" type="text" disabled="disabled"/>
+                    </div>
+                    <div class="pure-control-group p-b-5">
+                        <label>合格标志</label>
+                        <input id="qcCheckDetailModelIsQualified" name="qcCheckDetailModel.isQualified" ng-model="qcCheckDetailModel.isQualified" type="checkbox"
+                               ng-click="isQualified()"/>
+                    </div>
+                    <div class="pure-control-group p-b-5">
+                        <label>不合格原因</label>
+                        <textarea id="qcCheckDetailModelUnQualifiedReason" ng-model="qcCheckDetailModel.unQualifiedReason" name="qcCheckDetailModel.unQualifiedReason"/>
+                    </div>
+                    <div class="pure-control-group p-b-5">
+                        <label>备注</label>
+                        <textarea id="qcCheckDetailModel.description" ng-model="qcCheckDetailModel.description" name="qcCheckDetailModel.description"/>
+
+                    </div>
+            <div class="k-edit-buttons k-state-default">
+                <a class="k-button k-button-icontext k-primary k-grid-update" ng-click="qcCheckConfirm($event)"><span
+                        class="k-icon k-update"></span>确定</a>
+                <a class="k-button k-button-icontext k-grid-cancel" href="#" ng-click="qcCheckClose()"><span
+                        class="k-icon k-cancel"></span>关闭</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 质检头表新增，修改-->
+<script id="qcCheck-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>质检编号</label>
+                <input id="id" name="id" type="text" disabled="disabled"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>质检主表</label>
+                <input ng-if="!dataItem.isNew()" id="qcId" name="qcId" type="text" disabled="disabled"/>
+                <input ng-if="dataItem.isNew()" name="qcId" type="text"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>质检类型</label>
+                <span class="inputDisbled" ng-if="!dataItem.isNew()"
+                      ng-bind="dataItem.typeCode|codeFormat:'OrderType'"></span>
+                <div class="select-wrapper" ng-if="dataItem.isNew()">
+                    <div class="select-border"></div>
+                    <l-select src="OrderType" name="typeCode" id="typeCode"></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="statusCode" id="statusCode"></l-select>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</script>
+<!--质检明细新增，修改-->
+<script id="qcCheckDetail-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body">
+            <div class="pure-control-group p-b-5">
+                <label>质检编号</label>
+                <input id="id" name="id" type="text" disabled="disabled"/>
+            </div>
+            <div class="pure-control-group p-b-5">
+                <label>质检子表</label>
+                <input id="qcDetailId" name="qcDetailId" type="text" disabled="disabled"/>
+            </div>
+            <div class="pure-control-group p-b-5 ">
+                <label>质检商品</label>
+                <input id="skuId" name="skuId" type="text" hidden="hidden"/>
+                <input id="skuName" name="skuName" type="text" disabled="disabled"/>
+            </div>
+            <div class="pure-control-group p-b-5">
+                <label>合格标志</label>
+                <input id="isQualified" name="isQualified" type="checkbox" ng-click="isQualified(dataItem)"/>
+            </div>
+            <div class="pure-control-group p-b-5">
+                <label>不合格原因</label>
+                <textarea id="unQualifiedReason" name="unQualifiedReason"/>
+            </div>
+            <div class="pure-control-group p-b-5">
+                <label>备注</label>
+                <textarea id="description" name="description"/>
+
+            </div>
+        </div>
+</script>

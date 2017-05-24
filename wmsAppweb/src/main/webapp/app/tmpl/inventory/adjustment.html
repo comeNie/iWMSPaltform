@@ -1,0 +1,151 @@
+<div class="content-wrap" ng-controller="adjustmentController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="adjustmentHeaderGrid">
+
+            <div class="panel-group">
+                <label>调整单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+
+            <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>单据状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+
+        </panel_heading_search>
+
+
+        <div class="panel-body">
+            <div kendo-grid="adjustmentHeaderGrid" options="mainGridOptions">
+                <div k-detail-template>
+                    <kendo-tabstrip>
+                        <ul>
+                            <li class="k-state-active" ng-click="hideCreate(dataItem)">明细信息</li>
+                            <li>操作日志</li>
+                        </ul>
+                        <!--明细信息-->
+                        <div>
+                            <div kendo-grid="adjustmentDetailGrid" k-options="adjustmentDetailOptions(dataItem)"></div>
+                        </div>
+                        <!--操作日志-->
+                        <div>
+                            <div kendo-grid k-options="logOptions(dataItem.id,'Adjustment')"></div>
+                        </div>
+
+                    </kendo-tabstrip>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+<!-- 新增/编辑模版 -->
+<script id="adjustmentHeader-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>调整单号</label>
+                <input type="text" value="自动生成" disabled="disabled">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>调整类型</label>
+                <input type="text" value="手动调整" disabled="disabled">
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货主</label>
+                <div class="select-wrapper" ng-if="dataItem.isNew()">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="cargoOwnerId" ui-select-id="cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models) required></wms-ui-select>
+                </div>
+                <span ng-if="!dataItem.isNew()" class="inputDisbled"    ng-model="dataItem.cargoOwnerId"  ng-bind="dataItem.cargoOwnerId|cargoOwnerFormat:'cargoOwnerId'" />
+            </div>
+
+
+
+            <!--<div class="pure-control-group p-b-5 pure-5">-->
+                <!--<label>参考单号</label>-->
+                <!--<input id="referNo" name="referNo" type="text" />-->
+            <!--</div>-->
+
+            <div class="pure-control-group p-b-5">
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <label>备注</label>
+                <textarea class="tear-text" clos="50" id="description" name="description" />
+            </div>
+
+            </div>
+        </div>
+</script>
+
+
+<script id="adjustmentDetail-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>库房</label>
+                <div class="select-wrapper" ng-if="dataItem.isNew()">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="storageRoomId" ui-select-id="storageRoomId" src="storageRoomSrc" on-select=$parent.storageRoomIdChange($item,$models) required></wms-ui-select>
+                </div>
+                <span ng-if="!dataItem.isNew()" class="inputDisbled"    ng-model="dataItem.storageRoomId"  ng-bind="dataItem.storageRoomId|storageRoomFormat:'storageRoomId'" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品</label>
+                <input type="hidden" id="skuId" name="skuId"/>
+                <input type="text" ng-if="dataItem.isNew()" id="skuName" name="skuName"   ng-click="windowOpen(this)" readonly="readonly" />
+                <span class="inputDisbled" ng-if="!dataItem.isNew()" ng-bind ="dataItem.skuName"></span>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>调整前数量</label>
+                <input id="adjustedBeforeQty" name="adjustedBeforeQty" type="number" disabled/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>调整后数量</label>
+                <input id="adjustedAfterQty" name="adjustedAfterQty" ng-model="adjustedAfterQty" ng-change="adjustedAfterQtyChange()" data-minqty="0" type="number" required/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>调整数量（正负）</label>
+                <input id="adjustedQty" name="adjustedQty"  type="text" disabled />
+            </div>
+
+            <div class="pure-control-group p-b-5">
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <label>说明</label>
+                <textarea class="tear-text" clos="50" id="description" name="description" />
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<!--商品选择-->
+<div kendo-window="skuInventoryPopup" k-title="'商品选择'" k-modal="true"
+     k-resizable="false"
+     k-width="800" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/skuInventory.html' }"></div>
+
+
+
+

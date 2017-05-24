@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.inwh.mapper.ProPackageDetailMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inwh.TWmsProPackageDetailEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="pro_inventory_id" jdbcType="BIGINT" property="proInventoryId" />
+        <result column="pro_inventory_qty" jdbcType="INTEGER" property="proInventoryQty" />
+        <result column="pro_storage_room_id" jdbcType="BIGINT" property="proStorageRoomId" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            id, parent_id, tenant_id, warehouse_id, pro_inventory_id, pro_inventory_qty, pro_storage_room_id,
+    create_user, create_time, update_user, update_time
+    </sql>
+
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id != null and entity.id != 0">
+                AND id=#{entity.id,jdbcType=BIGINT}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 字句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time DESC
+        </if>
+    </sql>
+
+    <!-- query limit 字句,传递offset参数使用你offset，如果不传递通过page和pageSize计算获得offset -->
+    <sql id="queryLimitClauseCondition">
+        <if test="offset !=null and offset > 0 and pageSize != null and pageSize > 0">
+            LIMTI ${entity.offset},${entity.pageSize}
+        </if>
+    </sql>
+
+    <select id="queryProPackageDetails" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_pro_package_detail
+        WHERE parent_id = #{parentId,jdbcType= BIGINT}
+    </select>
+
+    <select id="selectByprimarkey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_pro_package_detail
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insertProPackageDetail" parameterType="com.huamengtong.wms.entity.inwh.TWmsProPackageDetailEntity">
+        insert into t_smart_pro_package_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=0">
+                id,
+            </if>
+            <if test="entity.parentId != null and entity.parentId != 0">
+                parent_id,
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId != 0">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != 0">
+                warehouse_id,
+            </if>
+            <if test="entity.proInventoryId != null and entity.proInventoryId != 0">
+                pro_inventory_id,
+            </if>
+            <if test="entity.proInventoryQty != null and entity.proInventoryQty != 0">
+                pro_inventory_qty,
+            </if>
+            <if test="entity.proStorageRoomId != null and entity.proStorageRoomId != 0">
+                pro_storage_room_id,
+            </if>
+            <if test="entity.createUser != null and entity.createUser != ''">
+                create_user,
+            </if>
+            <if test="entity.createTime != null and entity.createTime != ''">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id != 0">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.parentId != null and entity.parentId != 0">
+                #{entity.parentId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId != 0">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != 0">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.proInventoryId != null and entity.proInventoryId != 0">
+                #{entity.proInventoryId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.proInventoryQty != null and entity.proInventoryQty != ''">
+                #{entity.proInventoryQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.proStorageRoomId != null and entity.proStorageRoomId != 0">
+                #{entity.proStorageRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.createUser != null and entity.createUser != ''">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime != ''">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser != ''">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime != ''">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProPackageDetail" parameterType="com.huamengtong.wms.entity.inwh.TWmsProPackageDetailEntity">
+        update t_smart_pro_package_detail
+        <set>
+            <if test="entity.parentId != null and entity.parentId != 0">
+                parent_id = #{entity.parentId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId !=0">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId !=0">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.proInventoryId != null and entity.proInventoryId !=0">
+                pro_inventory_id = #{entity.proInventoryId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.proInventoryQty != null and entity.proInventoryQty !=''">
+                pro_inventory_qty = #{entity.proInventoryQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.proStorageRoomId != null and entity.proStorageRoomId !=0">
+                pro_storage_room_id = #{entity.proStorageRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.createUser != null and entity.createUser != ''">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteProPackageDetail" parameterType="java.lang.Long">
+        DELETE  FROM t_smart_pro_package_detail
+         WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <select id="queryDetailPages" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_pro_package_detail
+        where parent_id = #{parentId,jdbcType=BIGINT}
+        <include refid="queryLimitClauseCondition"/>
+    </select>
+
+    <select id="queryDetailPageCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM t_smart_pro_package_detail
+        where parent_id = #{parentId,jdbcType=BIGINT}
+        LIMIT 1
+    </select>
+
+</mapper>

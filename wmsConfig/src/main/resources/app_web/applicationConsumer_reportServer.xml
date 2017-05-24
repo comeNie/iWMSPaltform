@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+    ">
+
+    <!--订阅服务-->
+    <dubbo:reference id="reportInventoryService" interface="com.huamengtong.wms.report.service.IReportInventoryService"/>
+    <dubbo:reference id="reportReceiptService" interface="com.huamengtong.wms.report.service.IReportReceiptService"/>
+    <dubbo:reference id="reportInventorySalesService" interface="com.huamengtong.wms.report.service.IReportInventorySalesService"/>
+</beans>

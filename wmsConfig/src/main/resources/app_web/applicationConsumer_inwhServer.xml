@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+    ">
+
+    <!--订阅服务-->
+    <dubbo:reference id="receiptHeaderService" interface="com.huamengtong.wms.inwh.service.IReceiptHeaderService"/>
+    <dubbo:reference id="receiptDetailService" interface="com.huamengtong.wms.inwh.service.IReceiptDetailService"/>
+    <dubbo:reference id="asnHeaderService" interface="com.huamengtong.wms.inwh.service.IAsnHeaderService"/>
+    <dubbo:reference id="asnDetailService" interface="com.huamengtong.wms.inwh.service.IAsnDetailService"/>
+    <dubbo:reference id="qcHeaderService" interface="com.huamengtong.wms.inwh.service.IQcHeaderService"/>
+    <dubbo:reference id="qcDetailService" interface="com.huamengtong.wms.inwh.service.IQcDetailService"/>
+    <dubbo:reference id="adjustmentHeaderService" interface="com.huamengtong.wms.inwh.service.IAdjustmentHeaderService"/>
+    <dubbo:reference id="adjustmentDetailService" interface="com.huamengtong.wms.inwh.service.IAdjustmentDetailService"/>
+    <dubbo:reference id="moveService" interface="com.huamengtong.wms.inwh.service.IMoveService"/>
+    <dubbo:reference id="stocktakingHeaderService" interface="com.huamengtong.wms.inwh.service.IStocktakingHeaderService"/>
+    <dubbo:reference id="stocktakingDetailService" interface="com.huamengtong.wms.inwh.service.IStocktakingDetailService"/>
+    <dubbo:reference id="proPackageService" interface="com.huamengtong.wms.inwh.service.IProPackageService"/>
+    <dubbo:reference id="proPackageDetailService" interface="com.huamengtong.wms.inwh.service.IProPackageDetailService"/>
+    <dubbo:reference id="qcCheckService" interface="com.huamengtong.wms.inwh.service.IQcCheckService"/>
+    <dubbo:reference id="proInvPackageDetailService" interface="com.huamengtong.wms.inwh.service.IProInvPackageDetailService"/>
+    <dubbo:reference id="ProInvPackageService" interface="com.huamengtong.wms.inwh.service.IProInvPackageService"/>
+</beans>

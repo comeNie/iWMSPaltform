@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+	default-lazy-init="false">
+	<description>Spring autoId配置</description>
+
+	<import resource="spring-jdbc.xml"/>
+
+	<bean id="transactionManager_autoid_master" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="autoIdDataSource" />
+	</bean>
+	<bean id="transactionManager_autoid_slasve" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="autoIdSlaveDataSource" />
+	</bean>
+	
+	<tx:advice id="coreTxAdvice_autoid_master" transaction-manager="transactionManager_autoid_master">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<tx:advice id="coreTxAdvice_autoid_slasve" transaction-manager="transactionManager_autoid_slasve">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="pointcut" expression="execution( * com.huamengtong.wms.autoid.client.AutoIdClient.*(..))" />
+		<aop:advisor advice-ref="coreTxAdvice_autoid_master" pointcut-ref="pointcut" />
+		<aop:advisor advice-ref="coreTxAdvice_autoid_slasve" pointcut-ref="pointcut" />
+	</aop:config>
+	
+	<import resource="applicationProvider.xml" />
+	<import resource="applicationConsumer.xml" />
+
+</beans>

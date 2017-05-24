@@ -1,0 +1,1 @@
+UPDATE `db_csmart_inwh_0_0`.`t_smart_receipt_header` SET status_code = 'Confirmed' WHERE status_code = 'Finished' limit 20;

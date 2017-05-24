@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.main.mapper.PrintTempMapper">
+  <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.main.TWmsPrintTempEntity">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="report_category_code" jdbcType="VARCHAR" property="reportCategoryCode" />
+    <result column="report_name" jdbcType="VARCHAR" property="reportName" />
+    <result column="is_default" jdbcType="TINYINT" property="isDefault" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="carrier" jdbcType="VARCHAR" property="carrier" />
+    <result column="project_code" jdbcType="VARCHAR" property="projectCode" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="print_options" jdbcType="LONGVARCHAR" property="printOptions" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, tenant_id, report_category_code, report_name, is_default, create_user, create_time, 
+    update_user, update_time, carrier, project_code,content,print_options
+  </sql>
+
+  <!--query where 语句-->
+  <sql id="queryWhereClause">
+    <where>
+      <if test="id != null and id != 0">
+        AND id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="reportName != null">
+        AND report_name =#{reportName,jdbcType=VARCHAR}
+      </if>
+      <if test="reportCategoryCode != null">
+        AND report_category_code =#{reportCategoryCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <!--query limit语句-->
+  <sql id="queryLimitClause">
+    <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+      LIMIT ${offset}, ${pageSize}
+    </if>
+  </sql>
+
+  <!--order by 语句-->
+  <sql id="queryOrderByClause">
+    <if test="orderBy != null">
+      ORDER BY ${orderBy}
+    </if>
+    <if test="orderBy == null">
+      ORDER BY create_time desc
+    </if>
+  </sql>
+
+  <select id="queryPrintTempPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.main.TWmsPrintTempEntity">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_smart_print_temp
+    <include refid="queryWhereClause"/>
+    <include refid="queryOrderByClause"/>
+    <include refid="queryLimitClause"/>
+  </select>
+
+  <select id="queryPrintTempLists" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_smart_print_temp
+  </select>
+
+  <select id="queryPrintTempPageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.main.TWmsPrintTempEntity" >
+    SELECT count(1)
+    FROM t_smart_print_temp
+    <include refid="queryWhereClause"/>
+    LIMIT 1
+  </select>
+
+  <!--根据主键查询-->
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_smart_print_temp
+    WHERE id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertPrintTemp" parameterType="com.huamengtong.wms.entity.main.TWmsPrintTempEntity">
+    insert into t_smart_print_temp
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
+      <if test="reportCategoryCode != null">
+        report_category_code,
+      </if>
+      <if test="reportName != null">
+        report_name,
+      </if>
+      <if test="isDefault != null">
+        is_default,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="carrier != null">
+        carrier,
+      </if>
+      <if test="projectCode != null">
+        project_code,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="printOptions != null">
+        print_options,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="reportCategoryCode != null">
+        #{reportCategoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null">
+        #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="carrier != null">
+        #{carrier,jdbcType=VARCHAR},
+      </if>
+      <if test="projectCode != null">
+        #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="printOptions != null">
+        #{printOptions,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!--数据库更新操作-->
+  <update id="updatePrintTemp" parameterType="com.huamengtong.wms.entity.main.TWmsPrintTempEntity">
+    update t_smart_print_temp
+    <set>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=INTEGER},
+      </if>
+      <if test="reportCategoryCode != null">
+        report_category_code = #{reportCategoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reportName != null">
+        report_name = #{reportName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        is_default = #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="carrier != null">
+        carrier = #{carrier,jdbcType=VARCHAR},
+      </if>
+      <if test="projectCode != null">
+        project_code = #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="printOptions != null">
+        print_options = #{printOptions,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <delete id="deletePrintTemp" parameterType="java.lang.Integer">
+    DELETE FROM t_smart_print_temp
+    WHERE id =#{id,jdbcType=INTEGER}
+  </delete>
+
+</mapper>

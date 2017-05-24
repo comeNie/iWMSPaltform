@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 监控中心配置 -->
+    <!-- 监控中心协议，如果为protocol="registry"，表示从注册中心发现监控中心地址，否则直连监控中心 -->
+    <!--<dubbo:monitor protocol="registry"/>-->
+
+    <!-- consumer application name -->  
+    <dubbo:application name="wmsAppweb"/>
+  
+    <!-- registry address, used for consumer to discover services -->  
+    <dubbo:registry client="zkclient" address="${zookeeper.address}" />
+    <dubbo:consumer timeout="50000"/>
+    
+    <import resource="applicationConsumer_mainServer.xml"/>
+    <import resource="applicationConsumer_skuServer.xml"/>
+    <import resource="applicationConsumer_inventoryServer.xml"/>
+    <import resource="applicationConsumer_inwhServer.xml"/>
+    <import resource="applicationConsumer_outwhServer.xml"/>
+    <import resource="applicationConsumer_reportServer.xml"/>
+
+</beans>

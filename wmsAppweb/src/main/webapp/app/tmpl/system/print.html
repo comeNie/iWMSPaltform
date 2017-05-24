@@ -1,0 +1,44 @@
+<div class="content-wrap" ng-controller="printMapController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="printMapHeaderGrid">
+            <div class="panel-group">
+                <label>打印代码</label><input type="text" ng-model="query.code" /></div>
+            <div class="panel-group">
+                <label>打印名称</label><input type="text" ng-model="query.name" /></div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="printMapHeaderGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>
+
+<!--  打印设置新增-->
+<script id="printMap-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 ">
+                <label>打印代码</label>
+                <input id="code" name="code" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 ">
+                <label>打印名称</label>
+                <input id="name" name="name" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 ">
+                <label>字段映射</label>
+                <textarea rows="4" style="width: 400px" id="field" name="field" type="textarea" required></textarea>
+
+            </div>
+            <div class="pure-control-group p-b-5 ">
+                <label>详细设计</label>
+                <textarea rows="4" style="width: 400px" id="detail" name="detail"  required></textarea>
+
+            </div>
+            <div class="pure-control-group p-b-5">
+                <label>是否详细</label>
+                <input id="hasDetail" name="hasDetail" type="checkbox" value="1" checked="checked"/>
+            </div>
+        </div>
+    </div>
+</script>
+

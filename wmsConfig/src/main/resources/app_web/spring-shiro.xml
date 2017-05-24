@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 凭证匹配器 -->
+    <bean id="customCredentialsMatcher" class="com.huamengtong.wms.app.authorization.shiro.CustomCredentialsMatcher">
+        <property name="hashAlgorithmName" value="md5"></property>
+        <property name="hashIterations" value="12"></property>
+        <property name="storedCredentialsHexEncoded" value="true"></property>
+    </bean>
+
+    <!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->
+    <bean id="myRealm" class="com.huamengtong.wms.app.authorization.shiro.MyRealm">
+        <property name="credentialsMatcher" ref="customCredentialsMatcher"></property>
+    </bean>
+
+    <!-- 安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="myRealm"/>
+    </bean>
+
+    <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
+        <property name="arguments" ref="securityManager"/>
+    </bean>
+
+    <!-- 身份验证过滤器 -->
+    <bean id="cusAuthc" class="com.huamengtong.wms.app.authorization.shiro.CustomAuthenticationFilter"/>
+
+    <!-- Shiro主过滤器本身功能十分强大,其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 -->
+    <!-- Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截,Shiro对基于Spring的Web应用提供了完美的支持 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" depends-on="cusAuthc">
+        <!-- Shiro的核心安全接口,这个属性是必须的 -->
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /app/login.html = anon
+                /login.html = anon
+                /login = anon
+                /status =anon
+                /logout = logout
+                /unauthorized= anon
+                /favicon.ico = anon
+                /**/*.css = anon
+                /**/*.ico = anon
+                /**/*.jpg = anon
+                /**/*.png = anon
+                /**/*.gif = anon
+                /**/*.js = anon
+                /**/*.json = user,cusAuthc
+                /app/bower_components/** = anon
+                /app/tmpl/*.html = user,cusAuthc
+                /app/tmpl/**/*.html = user,cusAuthc
+                /** = user,cusAuthc
+            </value>
+        </property>
+        <property name="filters">
+            <map>
+                <entry key="cusAuthc" value-ref="cusAuthc"></entry>
+            </map>
+        </property>
+
+    </bean>
+
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+</beans>

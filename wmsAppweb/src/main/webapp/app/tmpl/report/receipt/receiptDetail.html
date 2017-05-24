@@ -1,0 +1,52 @@
+<div class="content-wrap" ng-controller="receiptDetailController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="receiptDetailGrid">
+
+            <div class="panel-group">
+                <label>入库单号</label>
+                <input type="text" ng-model="query.receiptId"/>
+            </div>
+
+            <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>商品名称:</label>
+                <input type="text" ng-model="query.skuName" />
+            </div>
+
+            <div class="panel-group">
+                <label>商品条码:</label>
+                <input type="text" ng-model="query.sku" />
+            </div>
+
+
+            <div class="panel-group">
+                <label>存储库房</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="storageRoomSrc" name="query.storageRoomId" id="query.storageRoomId"></r-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>入库时间:</label>
+                <wms-Date-Time-Picker id="receiptStartTime" is-query="true" format="yyyy/MM/dd 00:00:00"/>
+            </div>
+            <div class="panel-group">
+                <label>到:</label>
+                <wms-Date-Time-Picker id="receiptEndTime" is-query="true" format="yyyy/MM/dd 23:59:59"/>
+            </div>
+
+        </panel_heading_search>
+
+        <div class="panel-body">
+            <div kendo-grid="receiptDetailGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>

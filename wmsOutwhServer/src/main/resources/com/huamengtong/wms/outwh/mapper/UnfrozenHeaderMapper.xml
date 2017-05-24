@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.outwh.mapper.UnfrozenHeaderMapper">
+  <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.outwh.TWmsUnfrozenHeaderEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="frozen_id" jdbcType="BIGINT" property="frozenId" />
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+    <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="factoring_type" jdbcType="VARCHAR" property="factoringType" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+    <result column="total_qty" jdbcType="INTEGER" property="totalQty" />
+    <result column="total_carton_qty" jdbcType="INTEGER" property="totalCartonQty" />
+    <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+    <result column="total_net_weight" jdbcType="DECIMAL" property="totalNetWeight" />
+    <result column="total_gross_weight" jdbcType="DECIMAL" property="totalGrossWeight" />
+    <result column="total_volume" jdbcType="DECIMAL" property="totalVolume" />
+    <result column="factoring_total_qty" jdbcType="INTEGER" property="factoringTotalQty" />
+    <result column="factoring_organize_id" jdbcType="BIGINT" property="factoringOrganizeId" />
+    <result column="factoring_time" jdbcType="BIGINT" property="factoringTime" />
+    <result column="factoring_actual_time" jdbcType="BIGINT" property="factoringActualTime" />
+    <result column="audited_organize_id" jdbcType="BIGINT" property="auditedOrganizeId" />
+    <result column="audited_user" jdbcType="VARCHAR" property="auditedUser" />
+    <result column="audited_time" jdbcType="BIGINT" property="auditedTime" />
+    <result column="is_audited" jdbcType="TINYINT" property="isAudited" />
+    <result column="is_invalided" jdbcType="TINYINT" property="isInvalided" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="is_cancelled" jdbcType="TINYINT" property="isCancelled" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, frozen_id, tenant_id, warehouse_id, cargo_owner_id, name, factoring_type, status_code, total_qty,
+    total_carton_qty, total_amount, total_net_weight, total_gross_weight, total_volume, factoring_total_qty,
+    factoring_organize_id, factoring_time, factoring_actual_time, audited_organize_id, audited_user, audited_time,
+    is_audited, is_invalided, description, create_user, create_time, update_user, update_time,
+    is_cancelled, is_del
+  </sql>
+
+  <sql id="queryWhereClause">
+    <where>
+      <if test="entity.id !=null ">
+        AND id = #{entity.id,jdbcType=BIGINT}
+      </if>
+      <if test="entity.factoringType !=null ">
+        AND factoring_type = #{entity.factoringType,jdbcType=BIGINT}
+      </if>
+      <if test="entity.cargoOwnerId !=null ">
+        AND cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT}
+      </if>
+      <if test="entity.statusCode !=null ">
+        AND status_code = #{entity.statusCode,jdbcType=VARCHAR}
+      </if>
+      <if test="entity.startTime !=null  ">
+        AND factoring_time &gt;= #{entity.startTime,jdbcType=BIGINT}
+      </if>
+      <if test="entity.endTime !=null  ">
+        AND factoring_time &lt;= #{entity.endTime,jdbcType=BIGINT}
+      </if>
+    </where>
+  </sql>
+
+  <!-- order By 字句 -->
+  <sql id="queryOrderByClause">
+    <if test="entity.orderBy != null">
+      ORDER BY ${entity.orderBy}
+    </if>
+    <if test="entity.orderBy == null">
+      ORDER BY create_time desc
+    </if>
+  </sql>
+
+  <!-- query limit 字句,传递offset参数使用你offset，如果不传递通过page和pageSize计算获得offset -->
+  <sql id="queryLimitClause">
+    <if test="entity.offset != null and entity.offset >0 and entity.pageSize != null and entity.pageSize > 0">
+      LIMIT ${entity.offset},${entity.pageSize}
+    </if>
+  </sql>
+
+  <select id="queryUnfrozenHeaderPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.outwh.TWmsUnfrozenHeaderEntity">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from t_smart_unfrozen_header
+    <include refid="queryWhereClause"/>
+    <include refid="queryOrderByClause"/>
+    <include refid="queryLimitClause"/>
+  </select>
+
+  <select id="queryUnfrozenHeaderPageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.outwh.TWmsUnfrozenHeaderEntity">
+    select  count(1)
+    from t_smart_unfrozen_header
+    <include refid="queryWhereClause"/>
+    LIMIT 1
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_smart_unfrozen_header
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteUnfrozenHeader" parameterType="java.lang.Long">
+    delete
+    from t_smart_unfrozen_header
+    where id= #{id,jdbcType=BIGINT}
+  </delete>
+
+  <update id="updateUnfrozenHeader" parameterType="com.huamengtong.wms.entity.outwh.TWmsUnfrozenHeaderEntity">
+    update t_smart_unfrozen_header
+    <set>
+      <if test="entity.frozenId != null ">
+        frozen_id = #{entity.frozenId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.tenantId != null ">
+        tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.warehouseId != null ">
+        warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.cargoOwnerId != null ">
+        cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.name != null ">
+        name = #{entity.name,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.factoringType != null ">
+        factoring_type = #{entity.factoringType,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.statusCode != null ">
+        status_code = #{entity.statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.totalQty != null ">
+        total_qty = #{entity.totalQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.totalCartonQty != null ">
+        total_carton_qty = #{entity.totalCartonQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.totalAmount != null ">
+        total_amount = #{entity.totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="entity.totalNetWeight != null ">
+        total_net_weight = #{entity.totalNetWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="entity.totalGrossWeight != null ">
+        total_gross_weight = #{entity.totalGrossWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="entity.totalVolume != null ">
+        total_volume = #{entity.totalVolume,jdbcType=DECIMAL},
+      </if>
+      <if test="entity.factoringTotalQty != null ">
+        factoring_total_qty = #{entity.factoringTotalQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.factoringOrganizeId != null ">
+        factoring_organize_id = #{entity.factoringOrganizeId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.factoringTime != null ">
+        factoring_time = #{entity.factoringTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.factoringActualTime != null ">
+        factoring_actual_time = #{entity.factoringActualTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.auditedOrganizeId != null ">
+        audited_organize_id = #{entity.auditedOrganizeId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.auditedUser != null ">
+        audited_user = #{entity.auditedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.auditedTime != null ">
+        audited_time = #{entity.auditedTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.isAudited != null ">
+        is_audited = #{entity.isAudited,jdbcType=TINYINT},
+      </if>
+      <if test="entity.isInvalided != null ">
+        is_invalided = #{entity.isInvalided,jdbcType=TINYINT},
+      </if>
+      <if test="entity.description != null ">
+        description = #{entity.description,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.createUser != null ">
+        create_user = #{entity.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.createTime != null ">
+        create_time = #{entity.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.updateUser != null ">
+        update_user = #{entity.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.updateTime != null ">
+        update_time = #{entity.updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.isCancelled != null ">
+        is_cancelled = #{entity.isCancelled,jdbcType=TINYINT},
+      </if>
+      <if test="entity.isDel != null ">
+        is_del = #{entity.isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{entity.id,jdbcType=BIGINT}
+  </update>
+
+  <insert id="insertUnfrozenHeader" parameterType="com.huamengtong.wms.entity.outwh.TWmsUnfrozenHeaderEntity">
+    insert into t_smart_unfrozen_header
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="entity.id != null ">
+        id,
+      </if>
+      <if test="entity.frozenId != null ">
+        frozen_id,
+      </if>
+      <if test="entity.tenantId != null ">
+        tenant_id,
+      </if>
+      <if test="entity.warehouseId != null ">
+        warehouse_id,
+      </if>
+      <if test="entity.cargoOwnerId != null ">
+        cargo_owner_id,
+      </if>
+      <if test="entity.name != null ">
+        name,
+      </if>
+      <if test="entity.factoringType != null ">
+        factoring_type,
+      </if>
+      <if test="entity.statusCode != null ">
+        status_code,
+      </if>
+      <if test="entity.totalQty != null ">
+        total_qty,
+      </if>
+      <if test="entity.totalCartonQty != null ">
+        total_carton_qty,
+      </if>
+      <if test="entity.totalAmount != null ">
+        total_amount,
+      </if>
+      <if test="entity.totalNetWeight != null ">
+        total_net_weight,
+      </if>
+      <if test="entity.totalGrossWeight != null ">
+        total_gross_weight,
+      </if>
+      <if test="entity.totalVolume != null ">
+        total_volume,
+      </if>
+      <if test="entity.factoringTotalQty != null ">
+        factoring_total_qty,
+      </if>
+      <if test="entity.factoringOrganizeId != null ">
+        factoring_organize_id,
+      </if>
+      <if test="entity.factoringTime != null ">
+        factoring_time,
+      </if>
+      <if test="entity.factoringActualTime != null  ">
+        factoring_actual_time,
+      </if>
+      <if test="entity.auditedOrganizeId != null ">
+        audited_organize_id,
+      </if>
+      <if test="entity.auditedUser != null ">
+        audited_user,
+      </if>
+      <if test="entity.auditedTime != null ">
+        audited_time,
+      </if>
+      <if test="entity.isAudited != null ">
+        is_audited,
+      </if>
+      <if test="entity.isInvalided != null ">
+        is_invalided,
+      </if>
+      <if test="entity.description != null ">
+        description,
+      </if>
+      <if test="entity.createUser != null ">
+        create_user,
+      </if>
+      <if test="entity.createTime != null ">
+        create_time,
+      </if>
+      <if test="entity.updateUser != null ">
+        update_user,
+      </if>
+      <if test="entity.updateTime != null ">
+        update_time,
+      </if>
+      <if test="entity.isCancelled != null ">
+        is_cancelled,
+      </if>
+      <if test="entity.isDel != null ">
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="entity.id != null ">
+        #{entity.id,jdbcType=BIGINT},
+      </if>
+      <if test="entity.frozenId != null ">
+        #{entity.frozenId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.tenantId != null ">
+        #{entity.tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.warehouseId != null ">
+        #{entity.warehouseId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.cargoOwnerId != null ">
+        #{entity.cargoOwnerId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.name != null ">
+        #{entity.name,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.factoringType != null ">
+        #{entity.factoringType,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.statusCode != null ">
+        #{entity.statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.totalQty != null ">
+        #{entity.totalQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.totalCartonQty != null ">
+        #{entity.totalCartonQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.totalAmount != null ">
+        #{entity.totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="entity.totalNetWeight != null ">
+        #{entity.totalNetWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="entity.totalGrossWeight != null ">
+        #{entity.totalGrossWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="entity.totalVolume != null ">
+        #{entity.totalVolume,jdbcType=DECIMAL},
+      </if>
+      <if test="entity.factoringTotalQty != null ">
+        #{entity.factoringTotalQty,jdbcType=INTEGER},
+      </if>
+      <if test="entity.factoringOrganizeId != null ">
+        #{entity.factoringOrganizeId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.factoringTime != null ">
+        #{entity.factoringTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.factoringActualTime != null  ">
+        #{entity.factoringActualTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.auditedOrganizeId != null ">
+        #{entity.auditedOrganizeId,jdbcType=BIGINT},
+      </if>
+      <if test="entity.auditedUser != null ">
+        #{entity.auditedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.auditedTime != null ">
+        #{entity.auditedTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.isAudited != null ">
+        #{entity.isAudited,jdbcType=TINYINT},
+      </if>
+      <if test="entity.isInvalided != null ">
+        #{entity.isInvalided,jdbcType=TINYINT},
+      </if>
+      <if test="entity.description != null ">
+        #{entity.description,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.createUser != null ">
+        #{entity.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.createTime != null ">
+        #{entity.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.updateUser != null ">
+        #{entity.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="entity.updateTime != null ">
+        #{entity.updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="entity.isCancelled != null ">
+        #{entity.isCancelled,jdbcType=TINYINT},
+      </if>
+      <if test="entity.isDel != null ">
+        #{entity.isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+
+  <select id="selectByFrozenId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_smart_unfrozen_header
+    where frozen_id = #{frozenId,jdbcType=BIGINT}
+  </select>
+
+</mapper>

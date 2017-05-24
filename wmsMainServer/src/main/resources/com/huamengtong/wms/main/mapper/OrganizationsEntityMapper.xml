@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.main.mapper.OrganizationsMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.main.TWmsOrganizationsEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="type_code" jdbcType="VARCHAR" property="typeCode" />
+        <result column="is_active" jdbcType="TINYINT" property="isActive" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+        <result column="contacts" jdbcType="VARCHAR" property="contacts" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    </resultMap>
+
+
+
+    <sql id="Base_Column_List">
+        id, tenant_id, parent_id, code, name ,type_code , is_active, description, telephone, contacts,
+        address, create_user, create_time, update_user, update_time
+    </sql>
+
+    <!--querywhere语句-->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="id !=null and id !=0">
+                AND id =#{id,jdbcType=BIGINT}
+            </if>
+            <if test="name !=null">
+                AND name =#{name,jdbcType=VARCHAR}
+            </if>
+
+            <if test="parentId != null and parentId !=0">
+
+                AND parent_id =#{parentId,jdbcType=BIGINT}
+            </if>
+            <if test="typeCode !=null">
+                AND type_code =#{typeCode,jdbcType=VARCHAR}
+            </if>
+
+            <if test="contacts !=null">
+                AND contacts =#{contacts,jdbcType=VARCHAR}
+            </if>
+
+        </where>
+    </sql>
+
+    <!--query limit语句-->
+    <sql id="queryLimitClause">
+        <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+            LIMIT ${offset}, ${pageSize}
+        </if>
+    </sql>
+
+    <!--order by 语句-->
+    <sql id="queryOrderByClause">
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!--根据主键查询-->
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_organizations
+        WHERE id=#{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_organizations
+    </select>
+
+
+    <select id="queryOrganizationPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.main.TWmsOrganizationsEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_organizations
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="queryOrganizationPageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.main.TWmsOrganizationsEntity">
+        SELECT COUNT(1)
+        FROM t_smart_organizations
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <insert id="insertOrganization" parameterType="com.huamengtong.wms.entity.main.TWmsOrganizationsEntity">
+        insert into t_smart_organizations
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="tenantId != null">
+                tenant_id,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="typeCode != null">
+                type_code,
+            </if>
+            <if test="isActive != null">
+                is_active,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="telephone != null">
+                telephone,
+            </if>
+            <if test="contacts != null">
+                contacts,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="typeCode != null">
+                #{typeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isActive != null">
+                #{isActive,jdbcType=TINYINT},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="contacts != null">
+                #{contacts,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateOrganization" parameterType="com.huamengtong.wms.entity.main.TWmsOrganizationsEntity">
+        update t_smart_organizations
+        <set>
+            <if test="tenantId != null">
+                tenant_id = #{tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="typeCode != null">
+                type_code = #{typeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive,jdbcType=TINYINT},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="contacts != null">
+                contacts = #{contacts,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteOrganization" parameterType="java.lang.Long">
+        DELETE
+        FROM t_smart_organizations
+        WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+</mapper>

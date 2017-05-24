@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.inwh.mapper.AsnDetailMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inwh.TWmsAsnDetailEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="asn_id" jdbcType="BIGINT" property="asnId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+        <result column="sku_barcode" jdbcType="VARCHAR" property="skuBarcode" />
+        <result column="from_order_no" jdbcType="VARCHAR" property="fromOrderNo" />
+        <result column="invoice_no" jdbcType="VARCHAR" property="invoiceNo" />
+        <result column="expected_qty" jdbcType="INTEGER" property="expectedQty" />
+        <result column="adjust_qty" jdbcType="INTEGER" property="adjustQty" />
+        <result column="container_no" jdbcType="VARCHAR" property="containerNo" />
+        <result column="container_qty" jdbcType="INTEGER" property="containerQty" />
+        <result column="received_qty" jdbcType="INTEGER" property="receivedQty" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="last_receipt_time" jdbcType="BIGINT" property="lastReceiptTime" />
+        <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+        <result column="is_need_qc" jdbcType="TINYINT" property="isNeedQc" />
+        <result column="qc_refer_no" jdbcType="VARCHAR" property="qcReferNo" />
+        <result column="net_weight" jdbcType="DECIMAL" property="netWeight" />
+        <result column="gross_weight" jdbcType="DECIMAL" property="grossWeight" />
+        <result column="volume" jdbcType="DECIMAL" property="volume" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="reject_reason" jdbcType="VARCHAR" property="rejectReason" />
+        <result column="is_reject" jdbcType="TINYINT" property="isReject" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+        <result column="qc_qualified_rate" jdbcType="DECIMAL" property="qcQualifiedRate" />
+        <result column="qualified_qty" jdbcType="INTEGER" property="qualifiedQty" />
+        <result column="unqualified_qty" jdbcType="INTEGER" property="unqualifiedQty" />
+        <result column="property" jdbcType="VARCHAR" property="property" />
+        <result column="spec" jdbcType="VARCHAR" property="spec" />
+        <result column="unit_type" jdbcType="VARCHAR" property="unitType" />
+    </resultMap>
+
+
+
+    <sql id="Base_Column_List">
+        id, tenant_id, asn_id, warehouse_id, sku_id, sku, sku_name, sku_barcode, from_order_no, invoice_no, expected_qty,
+    adjust_qty, container_no, container_qty, received_qty, price, last_receipt_time,
+    status_code, is_need_qc, qc_refer_no, net_weight, gross_weight, volume, description,
+    create_user, create_time, update_user, update_time, reject_reason, is_reject, is_del,
+    qc_qualified_rate, qualified_qty, unqualified_qty,property,spec,unit_type
+    </sql>
+
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id !=null and entity.id != 0">
+                AND  id = #{entity.id,jdbcType=BIGINT}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="queryOrderByClause" >
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset >= 0 and entity.pageSize != null and entity.pageSize > 0">
+            LIMIT ${entity.offset},${entity.pageSize}
+        </if>
+    </sql>
+
+    <sql id="queryLimitClauseCondition">
+        <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+            LIMIT ${offset},${pageSize}
+        </if>
+    </sql>
+
+    <select id="queryAsnDetailPages"  resultMap="BaseResultMap"    parameterType="com.huamengtong.wms.entity.inwh.TWmsAsnDetailEntity">
+        select
+        <include refid="Base_Column_List"  />
+        from  t_smart_asn_detail
+        <include refid="queryWhereClause" />
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="queryAsnDetailPageCount"   resultType="java.lang.Integer"   parameterType="com.huamengtong.wms.entity.inwh.TWmsAsnDetailEntity">
+        SELECT count(1) from  t_smart_asn_detail
+        <include refid="queryWhereClause"  />
+        LIMIT 1
+    </select>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_asn_detail
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" >
+        delete from t_smart_asn_detail
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+
+    <insert id="insertAsnDetail" parameterType="com.huamengtong.wms.entity.inwh.TWmsAsnDetailEntity">
+        insert into t_smart_asn_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null  ">
+                id,
+            </if>
+            <if test="entity.tenantId != null  ">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null ">
+                warehouse_id,
+            </if>
+            <if test="entity.asnId != null ">
+                asn_id,
+            </if>
+            <if test="entity.skuId != null ">
+                sku_id,
+            </if>
+            <if test="entity.sku != null ">
+                sku,
+            </if>
+            <if test="entity.skuName != null ">
+                sku_name,
+            </if>
+            <if test="entity.skuBarcode != null ">
+                sku_barcode,
+            </if>
+            <if test="entity.fromOrderNo != null ">
+                from_order_no,
+            </if>
+            <if test="entity.invoiceNo != null ">
+                invoice_no,
+            </if>
+            <if test="entity.expectedQty != null ">
+                expected_qty,
+            </if>
+            <if test="entity.adjustQty != null ">
+                adjust_qty,
+            </if>
+            <if test="entity.containerNo != null ">
+                container_no,
+            </if>
+            <if test="entity.containerQty != null ">
+                container_qty,
+            </if>
+            <if test="entity.receivedQty != null ">
+                received_qty,
+            </if>
+            <if test="entity.price != null ">
+                price,
+            </if>
+            <if test="entity.lastReceiptTime != null ">
+                last_receipt_time,
+            </if>
+            <if test="entity.statusCode != null ">
+                status_code,
+            </if>
+            <if test="entity.isNeedQc != null ">
+                is_need_qc,
+            </if>
+            <if test="entity.qcReferNo != null ">
+                qc_refer_no,
+            </if>
+            <if test="entity.netWeight != null ">
+                net_weight,
+            </if>
+            <if test="entity.grossWeight != null ">
+                gross_weight,
+            </if>
+            <if test="entity.volume != null ">
+                volume,
+            </if>
+            <if test="entity.description != null ">
+                description,
+            </if>
+            <if test="entity.createUser != null ">
+                create_user,
+            </if>
+            <if test="entity.createTime != null ">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null ">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null ">
+                update_time,
+            </if>
+            <if test="entity.rejectReason != null ">
+                reject_reason,
+            </if>
+            <if test="entity.isReject != null ">
+                is_reject,
+            </if>
+            <if test="entity.isDel != null ">
+                is_del,
+            </if>
+            <if test="entity.qcQualifiedRate != null ">
+                qc_qualified_rate,
+            </if>
+            <if test="entity.qualifiedQty != null ">
+                qualified_qty,
+            </if>
+            <if test="entity.unqualifiedQty != null ">
+                unqualified_qty,
+            </if>
+            <if test="entity.property != null ">
+                property,
+            </if>
+            <if test="entity.spec != null ">
+                spec,
+            </if>
+            <if test="entity.unitType != null ">
+                unit_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="entity.id != null ">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null ">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null ">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.asnId != null ">
+                #{entity.asnId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.skuId != null ">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null ">
+                #{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuName != null ">
+                #{entity.skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuBarcode != null ">
+                #{entity.skuBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromOrderNo != null ">
+                #{entity.fromOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.invoiceNo != null ">
+                #{entity.invoiceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.expectedQty != null ">
+                #{entity.expectedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.adjustQty != null ">
+                #{entity.adjustQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.containerNo != null ">
+                #{entity.containerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.containerQty != null ">
+                #{entity.containerQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.receivedQty != null ">
+                #{entity.receivedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.price != null ">
+                #{entity.price,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.lastReceiptTime != null ">
+                #{entity.lastReceiptTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.statusCode != null ">
+                #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isNeedQc != null ">
+                #{entity.isNeedQc,jdbcType=TINYINT},
+            </if>
+            <if test="entity.qcReferNo != null ">
+                 #{entity.qcReferNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.netWeight != null ">
+                #{entity.netWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.grossWeight != null ">
+                #{entity.grossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.volume != null ">
+                #{entity.volume,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.description != null ">
+                #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null ">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null ">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null ">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null ">
+                 #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.rejectReason != null ">
+                #{entity.rejectReason,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isReject != null ">
+                #{entity.isReject,jdbcType=TINYINT},
+            </if>
+            <if test="entity.isDel != null ">
+                #{entity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="entity.qcQualifiedRate != null ">
+                #{entity.qcQualifiedRate,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.qualifiedQty != null ">
+                #{entity.qualifiedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.unqualifiedQty != null ">
+                #{entity.unqualifiedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.property != null ">
+                #{entity.property,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.spec != null ">
+                #{entity.spec,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.unitType != null ">
+                #{entity.unitType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateAsnDetail" parameterType="com.huamengtong.wms.entity.inwh.TWmsAsnDetailEntity">
+        update t_smart_asn_detail
+        <set>
+            <if test="entity.id != null ">
+                id=#{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null ">
+                tenant_id=#{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.asnId != null ">
+                asn_id=#{entity.asnId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null ">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.skuId != null ">
+                sku_id=#{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null ">
+                sku=#{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuName != null ">
+                sku_name=#{entity.skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuBarcode != null ">
+                sku_barcode=#{entity.skuBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromOrderNo != null ">
+                from_order_no=#{entity.fromOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.invoiceNo != null ">
+                invoice_no=#{entity.invoiceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.expectedQty != null ">
+                expected_qty=#{entity.expectedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.adjustQty != null ">
+                adjust_qty=#{entity.adjustQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.containerNo != null ">
+                container_no=#{entity.containerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.containerQty != null ">
+                container_qty=#{entity.containerQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.receivedQty != null ">
+                received_qty=#{entity.receivedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.price != null ">
+                price=#{entity.price,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.lastReceiptTime != null ">
+                last_receipt_time=#{entity.lastReceiptTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.statusCode != null ">
+                status_code=#{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isNeedQc != null ">
+                is_need_qc=#{entity.isNeedQc,jdbcType=TINYINT},
+            </if>
+            <if test="entity.qcReferNo != null ">
+                qc_refer_no=#{entity.qcReferNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.netWeight != null ">
+                net_weight=#{entity.netWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.grossWeight != null ">
+                gross_weight=#{entity.grossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.volume != null ">
+                volume=#{entity.volume,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.description != null ">
+                description=#{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null ">
+                create_user=#{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null ">
+                create_time=#{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null ">
+                update_user=#{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null ">
+                update_time=#{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.rejectReason != null ">
+                reject_reason=#{entity.rejectReason,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isReject != null ">
+                is_reject=#{entity.isReject,jdbcType=TINYINT},
+            </if>
+            <if test="entity.isDel != null ">
+                is_del=#{entity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="entity.qcQualifiedRate != null ">
+                qc_qualified_rate=#{entity.qcQualifiedRate,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.qualifiedQty != null ">
+                qualified_qty=#{entity.qualifiedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.unqualifiedQty != null ">
+                unqualified_qty=#{entity.unqualifiedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.property != null ">
+                property=#{entity.property,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.spec != null ">
+                spec=#{entity.spec,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.unitType != null ">
+                unit_type=#{entity.unitType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+    <select id="queryDetailsPages" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_asn_detail
+        WHERE asn_id = #{id,jdbcType=BIGINT}
+        <include refid="queryLimitClauseCondition"/>
+    </select>
+
+    <select id="queryDetailPageCount"  resultType="java.lang.Integer" parameterType="java.util.Map" >
+        SELECT count(1)
+        FROM t_smart_asn_detail
+        WHERE asn_id= #{id,jdbcType=BIGINT}
+        LIMIT 1
+    </select>
+
+
+    <select id="selectAsnDetailsByHeaderId" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_asn_detail
+        where asn_id = #{headerId,jdbcType=BIGINT}
+    </select>
+
+
+    <delete id="deleteAsnDetailsByHeaderId" >
+        delete from t_smart_asn_detail
+        where asn_id = #{headerId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selectByHeaderIdAndSku" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_asn_detail
+        where asn_id = #{headerId,jdbcType=BIGINT}
+        AND sku = #{sku,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="selectByHeaderIdAndSkuId"  resultType="com.huamengtong.wms.entity.inwh.TWmsAsnDetailEntity"  >
+        select
+        <include refid="Base_Column_List"  />
+        from  t_smart_asn_detail
+        where asn_id = #{headerId,jdbcType=BIGINT}
+        AND sku_id = #{skuId,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

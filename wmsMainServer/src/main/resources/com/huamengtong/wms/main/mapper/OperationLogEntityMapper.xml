@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huamengtong.wms.main.mapper.OperationLogMapper" >
+  <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.main.TWmsOperationLogEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="tenant_id" property="tenantId" jdbcType="BIGINT" />
+    <result column="warehouse_id" property="warehouseId" jdbcType="BIGINT" />
+    <result column="cargo_owner_id" property="cargoOwnerId" jdbcType="BIGINT" />
+    <result column="order_type_code" property="orderTypeCode" jdbcType="VARCHAR" />
+    <result column="order_no" property="orderNo" jdbcType="BIGINT" />
+    <result column="order_refer_no" property="orderReferNo" jdbcType="VARCHAR" />
+    <result column="operation_code" property="operationCode" jdbcType="VARCHAR" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="BIGINT" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, tenant_id, warehouse_id, cargo_owner_id, order_type_code, order_no, order_refer_no,
+    operation_code, status_code, description, create_user, create_time, update_user, 
+    update_time
+  </sql>
+
+  <!--querywhere语句-->
+  <sql id="queryWhereClause">
+    <where>
+      <if test="id !=null and id !=0">
+          AND id =#{id,jdbcType=BIGINT}
+      </if>
+      <if test="orderNo !=null and orderNo !=0">
+          AND order_no =#{orderNo,jdbcType=BIGINT}
+      </if>
+      <if test="orderTypeCode !=null and orderTypeCode !=''">
+         AND order_type_code =#{orderTypeCode,jdbcType=VARCHAR}
+      </if>
+      <if test="orderReferNo !=null and orderReferNo !=''">
+         AND order_refer_no =#{orderReferNo,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null and description !=''">
+        AND description LIKE CONCAT('%', #{description}, '%')
+      </if>
+      <if test="createUser !=null and createUser !=''">
+        AND create_user =#{createUser,jdbcType=VARCHAR}
+      </if>
+      <if test="statusCode !=null and statusCode !=''">
+        AND status_code =#{statusCode,jdbcType=VARCHAR}
+      </if>
+      <if test="operationCode !=null and operationCode !=''">
+        AND operation_code =#{operationCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <sql id="queryLimitClause">
+    <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+      LIMIT ${offset}, ${pageSize}
+    </if>
+  </sql>
+
+  <!--order by 语句-->
+  <sql id="queryOrderByClause">
+    <if test="orderBy != null">
+      ORDER BY ${orderBy}
+    </if>
+    <if test="orderBy == null">
+      ORDER BY create_time desc
+    </if>
+  </sql>
+
+
+  <select id="queryOperationLogPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.main.TWmsOperationLogEntity" >
+    select
+    <include refid="Base_Column_List" />
+     from t_smart_operation_log
+    <include refid="queryWhereClause"/>
+    <include refid="queryOrderByClause"/>
+    <include refid="queryLimitClause"/>
+  </select>
+
+  <select id="queryOperationLogPageCounts" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.main.TWmsOperationLogEntity" >
+    SELECT COUNT(1)
+    FROM t_smart_operation_log
+    <include refid="queryWhereClause"/>
+    LIMIT 1
+  </select>
+
+
+  <insert id="insertOperationLog" parameterType="com.huamengtong.wms.entity.main.TWmsOperationLogEntity" >
+    insert into t_smart_operation_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tenantId != null" >
+        tenant_id,
+      </if>
+      <if test="warehouseId != null" >
+        warehouse_id,
+      </if>
+      <if test="cargoOwnerId != null" >
+        cargo_owner_id,
+      </if>
+      <if test="orderTypeCode != null" >
+        order_type_code,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="orderReferNo != null" >
+        order_refer_no,
+      </if>
+      <if test="operationCode != null" >
+        operation_code,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tenantId != null" >
+        #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="warehouseId != null" >
+        #{warehouseId,jdbcType=BIGINT},
+      </if>
+      <if test="cargoOwnerId != null" >
+        #{cargoOwnerId,jdbcType=BIGINT},
+      </if>
+      <if test="orderTypeCode != null" >
+        #{orderTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=BIGINT},
+      </if>
+      <if test="orderReferNo != null" >
+        #{orderReferNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operationCode != null" >
+        #{operationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huamengtong.wms.sku.mapper.SkuCategorysMapper">
+
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.sku.TWmsSkuCategorysEntity">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="category_code" jdbcType="VARCHAR" property="categoryCode" />
+        <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+        <result column="position" jdbcType="INTEGER" property="position" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`parent_id`,`tenant_id`,`category_code`,`category_name`,`position`,`description`,`create_user`,`create_time`,
+        `update_user`,`update_time`
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test=" entity.id !=null and entity.id != 0">
+                AND id = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test=" entity.parentId !=null ">
+                AND parent_id = #{entity.parentId,jdbcType=BIGINT}
+            </if>
+            <if test="entity.categoryName != null">
+                AND category_name LIKE CONCAT('%', #{entity.categoryName}, '%')
+            </if>
+            <if test="entity.categoryCode != null">
+                AND category_code LIKE CONCAT('%', #{entity.categoryCode}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <sql id="queryWhereClauseByclumns">
+        <where>
+            <if test=" parentId != null">
+                AND parent_id = #{parentId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </sql>
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset >= 0 and entity.pageSize != null and entity.pageSize> 0 ">
+            LIMIT ${entity.offset},${entity.pageSize}
+        </if>
+    </sql>
+
+    <select id="querySkuCategorysPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuCategorysEntity">
+        select
+        <include refid="Base_Column_List"  />
+        FROM t_smart_sku_categorys
+        <include refid="queryWhereClause" />
+        <include refid="queryOrderByClause" />
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="querySkuCategorysPageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuCategorysEntity">
+        SELECT count(1) from t_smart_sku_categorys
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"  />
+        FROM t_smart_sku_categorys
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByParentId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"  />
+        FROM t_smart_sku_categorys
+       <include refid="queryWhereClauseByclumns"/>
+    </select>
+
+    <delete id="deleteSkuCategorys" parameterType="java.lang.Long">
+        delete
+             FROM t_smart_sku_categorys
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insertSkuCategorys" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuCategorysEntity">
+        insert into t_smart_sku_categorys
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.parentId != null and entity.parentId !='' ">
+                parent_id,
+            </if>
+
+            <if test="entity.tenantId != null and entity.tenantId !=''">
+                tenant_id,
+            </if>
+
+            <if test="entity.categoryCode != null and entity.categoryCode != ''">
+                category_code,
+            </if>
+            <if test="entity.categoryName != null and entity.categoryName != ''">
+                category_name,
+            </if>
+            <if test="entity.position != null and entity.position != ''">
+                position,
+            </if>
+            <if test="entity.description != null and entity.description != ''">
+                description,
+            </if>
+            <if test="entity.createUser != null and entity.createUser != ''">
+                create_user,
+            </if>
+            <if test="entity.createTime != null and entity.createTime != ''">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser != ''">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime != ''">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.parentId != null and entity.parentId !='' ">
+                #{entity.parentId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId != ''">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.categoryCode != null and entity.categoryCode != ''">
+                #{entity.categoryCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.categoryName != null and entity.categoryName != ''">
+                #{entity.categoryName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.position != null and entity.position != ''">
+                #{entity.position,jdbcType=INTEGER},
+            </if>
+            <if test="entity.description != null and entity.description != ''">
+                #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser != ''">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser != ''">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime != ''">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateSkuCategorys" parameterType="com.huamengtong.wms.entity.sku.TWmsSkuCategorysEntity">
+        update t_smart_sku_categorys
+        <set>
+            <if test="entity.parentId != null and entity.parentId !='' ">
+                parent_id = #{entity.parentId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId != ''">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.categoryCode != null and entity.categoryCode != ''">
+                category_code = #{entity.categoryCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.categoryName != null and entity.categoryName != ''">
+                category_name = #{entity.categoryName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.position != null and entity.position != ''">
+                position = #{entity.position,jdbcType=INTEGER},
+            </if>
+            <if test="entity.description != null and entity.description != ''">
+                description = #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser != ''">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser != ''">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime != ''">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"  />
+        FROM t_smart_sku_categorys
+    </select>
+
+
+</mapper>

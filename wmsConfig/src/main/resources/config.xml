@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+    <bean id="springMessages" class="com.huamengtong.wms.core.web.message.ResourceMessages"/>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>classpath:/i18n/messages</value>
+            </list>
+        </property>
+        <!--<property name="basename" value="classpath:/i18n/messages"/>-->
+        <property name="defaultEncoding" value="UTF-8" />
+        <!-- 暂时先用默认值 表示永远不刷新-->
+        <property name="cacheSeconds" value="-1"/>
+    </bean>
+
+    <!--使用CGLib动态代理-->
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!--异常处理类-->
+    <bean id="exceptionHandler" class="com.huamengtong.wms.core.execption.handle.ExceptionHandler"/>
+
+    <!--异常拦截器-->
+    <bean id="exceptionInteceptor" class="com.huamengtong.wms.core.interceptor.ExceptionInterceptor">
+        <property name="exceptionHandler" ref="exceptionHandler"/>
+    </bean>
+
+    <aop:config>
+        <aop:aspect id="aspectException" ref="exceptionInteceptor">
+            <aop:pointcut id="exceptionPointcut" expression="execution(* com.huamengtong.wms.*.service..*(..))"/>
+            <aop:around method="intercept" pointcut-ref="exceptionPointcut"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>

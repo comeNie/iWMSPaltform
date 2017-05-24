@@ -1,0 +1,183 @@
+<div class="content-wrap" ng-controller="unfrozenController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="unfrozenGrid">
+            <div class="panel-group">
+                <label>解押单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+            <div class="panel-group">
+                <label>解押类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="UnfrozenTypeCode" name="query.factoringType" id="query.factoringType"></l-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>单据状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+            <div class="panel-group ">
+                <label>预计解押时间</label>
+                <wms-Date-Time-Picker id="startTime"  format="yyyy/MM/dd 00:00:00" is-query="true"/>
+            </div>
+
+            <div class="panel-group ">
+                <label>预计解押时间</label>
+                <wms-Date-Time-Picker id="endTime" format="yyyy/MM/dd 23:59:59" is-query="true"/>
+            </div>
+
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="unfrozenGrid" options="mainGridOptions">
+                <div k-detail-template>
+                    <kendo-tabstrip>
+                        <ul>
+                            <li class="k-state-active" ng-click="hideCreate(dataItem)">明细信息</li>
+                            <li>基本信息</li>
+                            <li>操作日志</li>
+                        </ul>
+
+                        <!--明细信息-->
+                        <div>
+                            <div kendo-grid="unfrozenDetailGrid" k-options="unfrozenDetailOptions(dataItem)"></div>
+                        </div>
+                        <!--基本信息-->
+                        <div>
+                            <div ng-include="'/app/tmpl/factoring/unfrozenBasic.html'"></div>
+                        </div>
+                        <!--操作日志-->
+                        <div>
+                            <div kendo-grid k-options="logOptions(dataItem.id,'UNFROZEN')"></div>
+                        </div>
+
+                    </kendo-tabstrip>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="k-popup-edit-form k-window-content k-content ng-scope" kendo-window="unfrozenRejectPopup" k-title="'拒绝质押'"
+         k-resizable="false" k-modal="true" k-visible="false">
+        <div class="k-edit-form-container">
+            <div class="pure-body p-t-10">
+
+                <div class="pure-control-group p-b-5">
+                    <label>解质押单号</label>
+                    <span></span>
+                    <input type="text" name="unfrozenRejectModel.unfrozenId" id="unfrozenRejectModel.unfrozenId" ng-model="unfrozenRejectModel.unfrozenId"  disabled/>
+                </div>
+
+
+                <div class="pure-control-group">
+                    <label>拒绝原因</label>
+                    <span></span>
+                    <textarea class="tear-text" clos="50" id="unfrozenRejectModel.rejectReason" name="unfrozenRejectModel.rejectReason" ng-model="unfrozenRejectModel.rejectReason" maxlength="200" required/>
+                </div>
+
+            </div>
+            <div class="k-edit-buttons k-state-default">
+                <a class="k-button k-button-icontext k-primary k-grid-update" ng-click="unfrozenRejectConfirm($event)"><span
+                        class="k-icon k-update"></span>确定</a>
+                <a class="k-button k-button-icontext k-grid-cancel" href="#" ng-click="unfrozenRejectClose()"><span
+                        class="k-icon k-cancel"></span>关闭</a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="k-popup-edit-form k-window-content k-content ng-scope" kendo-window="unfrozenInvalidPopup" k-title="'作废质押单'"
+         k-resizable="false" k-modal="true" k-visible="false">
+        <div class="k-edit-form-container">
+            <div class="pure-body p-t-10">
+
+                <div class="pure-control-group p-b-5">
+                    <label>解质押单号</label>
+                    <span></span>
+                    <input type="text" name="unfrozenInvalidModel.unfrozenId" id="unfrozenInvalidModel.unfrozenId" ng-model="unfrozenInvalidModel.unfrozenId"  disabled/>
+                </div>
+
+
+                <div class="pure-control-group">
+                    <label>作废原因</label>
+                    <span></span>
+                    <textarea class="tear-text" clos="50" id="unfrozenInvalidModel.invalidReason" name="unfrozenInvalidModel.invalidReason" ng-model="unfrozenInvalidModel.invalidReason" maxlength="200" required/>
+                </div>
+
+            </div>
+            <div class="k-edit-buttons k-state-default">
+                <a class="k-button k-button-icontext k-primary k-grid-update" ng-click="unfrozenInvalidConfirm($event)"><span
+                        class="k-icon k-update"></span>确定</a>
+                <a class="k-button k-button-icontext k-grid-cancel" href="#" ng-click="unfrozenInvalidClose()"><span
+                        class="k-icon k-cancel"></span>关闭</a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="k-popup-edit-form k-window-content k-content ng-scope" kendo-window="unfrozenPopup" k-title="'解押'"
+         k-resizable="false" k-modal="true" k-visible="false">
+        <div class="k-edit-form-container">
+            <div class="pure-body p-t-10">
+
+                <div class="pure-control-group p-b-5">
+                    <label>解押单号</label>
+                    <span></span>
+                    <input type="text" name="unfrozenDetailModel.id" id="unfrozenDetailModel.id" ng-model="unfrozenDetailModel.id"  disabled/>
+                </div>
+
+                <div class="pure-control-group p-b-5">
+                    <label>商品名称</label>
+                    <span></span>
+                    <input type="text" name="unfrozenDetailModel.skuName" id="unfrozenDetailModel.skuName" ng-model="unfrozenDetailModel.skuName"  disabled/>
+                </div>
+
+                <div class="pure-control-group p-b-5">
+                    <label>当前剩余质押数量</label>
+                    <span></span>
+                    <input type="text" name="unfrozenDetailModel.frozenQtyByNow" id="unfrozenDetailModel.frozenQtyByNow" ng-model="unfrozenDetailModel.frozenQtyByNow"  disabled/>
+                </div>
+
+
+                <div class="pure-control-group">
+                    <label>解押数量</label>
+                    <span></span>
+                    <input type="number" name="unfrozenDetailModel.factoringQty" id="unfrozenDetailModel.factoringQty" ng-model="unfrozenDetailModel.factoringQty"
+                            data-minqty="0"  onlyPositiveNumberWide required/>
+                </div>
+
+            </div>
+            <div class="k-edit-buttons k-state-default">
+                <a class="k-button k-button-icontext k-primary k-grid-update" ng-click="unfrozenConfirm($event)"><span
+                        class="k-icon k-update"></span>确定</a>
+                <a class="k-button k-button-icontext k-grid-cancel" href="#" ng-click="unfrozenClose()"><span
+                        class="k-icon k-cancel"></span>关闭</a>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+

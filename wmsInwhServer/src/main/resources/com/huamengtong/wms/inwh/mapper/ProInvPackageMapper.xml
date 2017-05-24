@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.inwh.mapper.ProInvPackageMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inwh.TWmsProInvPackageEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId"/>
+        <result column="work_group_no" jdbcType="VARCHAR" property="workGroupNo"/>
+        <result column="type_code" jdbcType="INTEGER" property="typeCode"/>
+        <result column="status_code" jdbcType="VARCHAR" property="statusCode"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, tenant_id, warehouse_id, cargo_owner_id, work_group_no, type_code, status_code,
+        create_user, create_time, update_user, update_time
+    </sql>
+
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id != null and entity.id != 0">
+                AND id = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.statusCode != null">
+                AND status_code = #{entity.statusCode,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId != 0">
+                AND cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset >= 0 and entity.pageSize != null and entity.pageSize>0">
+            LIMIT ${entity.offset},${entity.pageSize}
+        </if>
+    </sql>
+
+    <select id="queryProInvPackagePages" resultMap="BaseResultMap"
+            parameterType="com.huamengtong.wms.entity.inwh.TWmsProInvPackageEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_pro_inv_package
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="queryProInvPackagePageCount" resultType="java.lang.Integer"
+            parameterType="com.huamengtong.wms.entity.inwh.TWmsProInvPackageEntity">
+        SELECT count(1) FROM
+        t_smart_pro_inv_package
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimarykey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM t_smart_pro_inv_package
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <insert id="insertProInvPackage" parameterType="com.huamengtong.wms.entity.inwh.TWmsProInvPackageEntity">
+
+        insert into t_smart_pro_inv_package
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id != 0">
+                id,
+            </if>
+            <if test="entity.tenantId != null  and entity.tenantId != 0">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != 0">
+                warehouse_id,
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId != 0">
+                cargo_owner_id,
+            </if>
+            <if test="entity.workGroupNo != null">
+                work_group_no,
+            </if>
+            <if test="entity.typeCode != null">
+                type_code,
+            </if>
+            <if test="entity.statusCode != null">
+                status_code,
+            </if>
+            <if test="entity.createUser != null">
+                create_user,
+            </if>
+            <if test="entity.createTime != null">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null">
+                #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.workGroupNo != null">
+                #{entity.workGroupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.typeCode != null">
+                #{entity.typeCode,jdbcType=INTEGER},
+            </if>
+            <if test="entity.statusCode != null">
+                #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+
+    </insert>
+
+    <update id="updateProInvPackage" parameterType="com.huamengtong.wms.entity.inwh.TWmsProInvPackageEntity">
+
+        update t_smart_pro_inv_package
+        <set>
+            <if test="entity.tenantId != null and entity.tenantId != 0">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != 0">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId != 0">
+                cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.workGroupNo != null">
+                work_group_no = #{entity.workGroupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.typeCode != null">
+                type_code = #{entity.typeCode,jdbcType=INTEGER},
+            </if>
+            <if test="entity.statusCode != null">
+                status_code = #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+
+    </update>
+
+    <update id="updateInvalidProInvPackage">
+        UPDATE t_smart_pro_inv_package
+        SET status_code = #{statusCode,jdbcType=VARCHAR}
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+</mapper>

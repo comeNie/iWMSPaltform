@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.outwh.mapper.ShipmentDetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.outwh.TWmsShipmentDetailEntity">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="shipment_id" jdbcType="BIGINT" property="shipmentId" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="dn_detail_id" jdbcType="BIGINT" property="dnDetailId" />
+        <result column="storage_room_id" jdbcType="VARCHAR" property="storageRoomId" />
+        <result column="sale_order_no" jdbcType="VARCHAR" property="saleOrderNo" />
+        <result column="refer_no" jdbcType="VARCHAR" property="referNo" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+        <result column="sku_barcode" jdbcType="VARCHAR" property="skuBarcode" />
+        <result column="inventory_status_code" jdbcType="VARCHAR" property="inventoryStatusCode" />
+        <result column="zone_type_code" jdbcType="VARCHAR" property="zoneTypeCode" />
+        <result column="zone_id" jdbcType="BIGINT" property="zoneId" />
+        <result column="location_id" jdbcType="BIGINT" property="locationId" />
+        <result column="pallet_no" jdbcType="VARCHAR" property="palletNo" />
+        <result column="container_no" jdbcType="VARCHAR" property="containerNo" />
+        <result column="ordered_qty" jdbcType="INTEGER" property="orderedQty" />
+        <result column="allocated_qty" jdbcType="INTEGER" property="allocatedQty" />
+        <result column="picked_qty" jdbcType="INTEGER" property="pickedQty" />
+        <result column="shipped_qty" jdbcType="INTEGER" property="shippedQty" />
+        <result column="gross_weight" jdbcType="DECIMAL" property="grossWeight" />
+        <result column="net_weight" jdbcType="DECIMAL" property="netWeight" />
+        <result column="volume" jdbcType="DECIMAL" property="volume" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
+        <result column="promotion_amount" jdbcType="DECIMAL" property="promotionAmount" />
+        <result column="actual_payment" jdbcType="DECIMAL" property="actualPayment" />
+        <result column="is_gift" jdbcType="TINYINT" property="isGift" />
+        <result column="work_group_no" jdbcType="VARCHAR" property="workGroupNo" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="is_canceled" jdbcType="TINYINT" property="isCanceled" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+     id, shipment_id, tenant_id,warehouse_id,dn_detail_id,storage_room_id, sale_order_no, refer_no, sku_id,sku,sku_name,sku_barcode, inventory_status_code,
+    zone_type_code, zone_id, location_id, pallet_no, container_no, ordered_qty, allocated_qty,
+    picked_qty, shipped_qty, gross_weight, net_weight, volume, description, amount, price,
+    discount_amount, promotion_amount, actual_payment, is_gift, work_group_no, create_user,
+    create_time, update_user, update_time, is_canceled, is_del
+    </sql>
+
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id !=null and entity.id != 0">
+                AND  id = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.skuId !=null">
+                AND  sku_id = #{entity.skuId,jdbcType=BIGINT}
+            </if>
+            <if test="entity.sku != null">
+                AND sku = #{entity.sku,jdbcType=BIGINT}
+            </if>
+            <if test="entity.skuName != null and entity.skuName != ''">
+                AND sku_name = #{entity.skuName,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.skuBarcode != null and entity.skuBarcode != ''">
+                AND sku_barcode = #{entity.skuBarcode,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset >= 0 and entity.pageSize != null and entity.pageSize > 0">
+            LIMIT ${entity.offset}, ${entity.pageSize}
+        </if>
+    </sql>
+
+    <sql id="queryLimitClauseCondition">
+        <if test="offset != null and offset>=0 and pageSize != null and pageSize>0">
+            LIMIT ${offset}, ${pageSize}
+        </if>
+    </sql>
+
+
+    <select id="queryShipmentDetailPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.outwh.TWmsShipmentDetailEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_shipment_detail
+        <include refid="queryWhereReportClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryShipmentDetailPageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.outwh.TWmsShipmentDetailEntity">
+        SELECT count(1) FROM t_smart_shipment_detail
+        <include refid="queryWhereReportClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Long"  >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_shipment_detail
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryShipmentDetails"  resultMap="BaseResultMap"   parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List" />
+        from  t_smart_shipment_detail
+        where shipment_id= #{headerId,jdbcType=BIGINT}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete
+        from t_smart_shipment_detail
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteShipmentDetails" >
+        DELETE FROM t_smart_shipment_detail WHERE shipment_id = #{shipmentId,jdbcType=BIGINT}
+    </delete>
+
+    <update id="updateShipmentDetailAllocatedQty">
+         update t_smart_shipment_detail  set storage_room_id = #{storageRoomId,jdbcType=VARCHAR},
+         allocated_qty = ordered_qty
+         where shipment_id = #{shipmentId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateShipmentDetail" parameterType="com.huamengtong.wms.entity.outwh.TWmsShipmentDetailEntity">
+        update t_smart_shipment_detail
+        <set>
+            <if test="entity.shipmentId != null and entity.shipmentId != ''">
+                shipment_id = #{entity.shipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId != ''">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId  != null and entity.warehouseId != ''">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.storageRoomId  != null and entity.storageRoomId != ''">
+                storage_room_id = #{entity.storageRoomId,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.dnDetailId  != null and entity.dnDetailId != ''">
+                dn_detail_id = #{entity.dnDetailId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.saleOrderNo != null and entity.saleOrderNo != ''">
+                sale_order_no = #{entity.saleOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.referNo != null and entity.referNo != ''">
+                refer_no = #{entity.referNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuId != null and entity.skuId != ''">
+                sku_id = #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null and entity.sku != ''">
+                sku = #{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuName != null and entity.skuName != ''">
+                sku_name = #{entity.skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuBarcode != null and entity.skuBarcode != ''">
+                sku_barcode = #{entity.skuBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.inventoryStatusCode != null and entity.inventoryStatusCode != ''">
+                inventory_status_code = #{entity.inventoryStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.zoneTypeCode != null and entity.zoneTypeCode != ''">
+                zone_type_code = #{entity.zoneTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.zoneId != null and entity.zoneId != ''">
+                zone_id = #{entity.zoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.locationId != null and entity.locationId != ''">
+                location_id = #{entity.locationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.palletNo != null and entity.palletNo != ''">
+                pallet_no = #{entity.palletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.containerNo != null and entity.containerNo != ''">
+                container_no = #{entity.containerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.orderedQty != null">
+                ordered_qty = #{entity.orderedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.allocatedQty != null">
+                allocated_qty = #{entity.allocatedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.pickedQty != null">
+                picked_qty = #{entity.pickedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.shippedQty != null">
+                shipped_qty = #{entity.shippedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.grossWeight != null and entity.grossWeight !=''">
+                gross_weight = #{entity.grossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.netWeight != null and entity.netWeight !=''">
+                net_weight = #{entity.netWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.volume != null and entity.volume != ''">
+                volume = #{entity.volume,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.description != null and entity.description !=''">
+                description = #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.amount != null and entity.amount != ''">
+                amount = #{entity.amount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.price != null and entity.price !=''">
+                price = #{entity.price,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.discountAmount != null and entity.discountAmount !=''">
+                discount_amount = #{entity.discountAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.promotionAmount != null and entity.promotionAmount !=''">
+                promotion_amount = #{entity.promotionAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.actualPayment != null and entity.actualPayment !=''">
+                actual_payment = #{entity.actualPayment,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.isGift != null and entity.isGift !=''">
+                is_gift = #{entity.isGift,jdbcType=TINYINT},
+            </if>
+            <if test="entity.workGroupNo != null and entity.workGroupNo !=''">
+                work_group_no = #{entity.workGroupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isCanceled != null and entity.isCanceled != ''">
+                is_canceled = #{entity.isCanceled,jdbcType=TINYINT},
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                is_del = #{entity.isDel,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+    <insert id="insertShipmentDetail" parameterType="com.huamengtong.wms.entity.outwh.TWmsShipmentDetailEntity">
+        insert into t_smart_shipment_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=''">
+                id,
+            </if>
+            <if test="entity.shipmentId != null and entity.shipmentId != ''">
+                shipment_id,
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != ''">
+                warehouse_id,
+            </if>
+            <if test="entity.dnDetailId != null and entity.dnDetailId != ''">
+                dn_detail_id,
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId != ''">
+                storage_room_id,
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId != ''">
+                tenant_id,
+            </if>
+            <if test="entity.saleOrderNo != null and entity.saleOrderNo !=''">
+                sale_order_no,
+            </if>
+            <if test="entity.referNo != null and entity.referNo !=''">
+                refer_no,
+            </if>
+            <if test="entity.skuId != null and entity.skuId !=''">
+                sku_id,
+            </if>
+            <if test="entity.sku != null and entity.sku != ''">
+                sku,
+            </if>
+            <if test="entity.skuName != null and entity.skuName != ''">
+                sku_name,
+            </if>
+            <if test="entity.skuBarcode != null and entity.skuBarcode != ''">
+                sku_barcode,
+            </if>
+            <if test="entity.inventoryStatusCode != null and entity.inventoryStatusCode != ''">
+                inventory_status_code,
+            </if>
+            <if test="entity.zoneTypeCode != null and entity.zoneTypeCode != ''">
+                zone_type_code,
+            </if>
+            <if test="entity.zoneId != null and entity.zoneId != ''">
+                zone_id,
+            </if>
+            <if test="entity.locationId != null and entity.locationId != ''">
+                location_id,
+            </if>
+            <if test="entity.palletNo != null and entity.palletNo != ''">
+                pallet_no,
+            </if>
+            <if test="entity.containerNo != null and entity.containerNo != ''">
+                container_no,
+            </if>
+            <if test="entity.orderedQty != null and entity.orderedQty != ''">
+                ordered_qty,
+            </if>
+            <if test="entity.allocatedQty != null and entity.allocatedQty != ''">
+                allocated_qty,
+            </if>
+            <if test="entity.pickedQty != null and entity.pickedQty != ''">
+                picked_qty,
+            </if>
+            <if test="entity.shippedQty != null and entity.shippedQty != ''">
+                shipped_qty,
+            </if>
+            <if test="entity.grossWeight != null and entity.grossWeight != ''">
+                gross_weight,
+            </if>
+            <if test="entity.netWeight != null and entity.netWeight !=''">
+                net_weight,
+            </if>
+            <if test="entity.volume != null and entity.volume != '' ">
+                volume,
+            </if>
+            <if test="entity.description != null and entity.description !=''">
+                description,
+            </if>
+            <if test="entity.amount != null and entity.amount !=''">
+                amount,
+            </if>
+            <if test="entity.price != null and entity.price != ''">
+                price,
+            </if>
+            <if test="entity.discountAmount != null and entity.discountAmount !=''">
+                discount_amount,
+            </if>
+            <if test="entity.promotionAmount != null and entity.promotionAmount !=''">
+                promotion_amount,
+            </if>
+            <if test="entity.actualPayment != null and entity.actualPayment !=''">
+                actual_payment,
+            </if>
+            <if test="entity.isGift != null and entity.isGift !=''">
+                is_gift,
+            </if>
+            <if test="entity.workGroupNo != null and entity.workGroupNo !=''">
+                work_group_no,
+            </if>
+            <if test="entity.createUser != null and entity.createUser != ''">
+                create_user,
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime != ''">
+                update_time,
+            </if>
+            <if test="entity.isCanceled != null and entity.isCanceled != ''">
+                is_canceled,
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=''">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.shipmentId != null and entity.shipmentId !=''">
+                #{entity.shipmentId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != ''">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.dnDetailId != null and entity.dnDetailId != ''">
+                #{entity.dnDetailId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId != ''">
+                #{entity.storageRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId !=''">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.saleOrderNo != null and entity.saleOrderNo !=''">
+                #{entity.saleOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.referNo != null and entity.referNo !=''">
+                #{entity.referNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuId != null and entity.skuId != ''">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null and entity.sku != ''">
+                #{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuName != null and entity.skuName != ''">
+                 #{entity.skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuBarcode != null and entity.skuBarcode != ''">
+                 #{entity.skuBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.inventoryStatusCode != null and entity.inventoryStatusCode !=''">
+                #{entity.inventoryStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.zoneTypeCode != null and entity.zoneTypeCode != ''">
+                #{entity.zoneTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.zoneId != null and entity.zoneId !=''">
+                #{entity.zoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.locationId != null and entity.locationId != ''">
+                #{entity.locationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.palletNo != null and entity.palletNo !=''">
+                #{entity.palletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.containerNo != null and entity.containerNo != ''">
+                #{entity.containerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.orderedQty != null">
+                #{entity.orderedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.allocatedQty != null">
+                #{entity.allocatedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.pickedQty != null">
+                #{entity.pickedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.shippedQty != null">
+                #{entity.shippedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.grossWeight != null and entity.grossWeight != ''">
+                #{entity.grossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.netWeight != null and entity.netWeight != ''">
+                #{entity.netWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.volume != null and entity.volume !=''">
+                #{entity.volume,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.description != null and entity.description !=''">
+                #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.amount != null and entity.amount !=''">
+                #{entity.amount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.price != null and entity.price != ''">
+                #{entity.price,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.discountAmount != null and entity.discountAmount !=''">
+                #{entity.discountAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.promotionAmount != null and entity.promotionAmount !=''">
+                #{entity.promotionAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.actualPayment != null  and entity.actualPayment !=''">
+                #{entity.actualPayment,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.isGift != null and entity.isGift !=''">
+                #{entity.isGift,jdbcType=TINYINT},
+            </if>
+            <if test="entity.workGroupNo != null and entity.workGroupNo != ''">
+                #{entity.workGroupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser != ''">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime != ''">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isCanceled != null and entity.isCanceled !=''">
+                #{entity.isCanceled,jdbcType=TINYINT},
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                #{entity.isDel,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryDetailsPages" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_shipment_detail
+        WHERE shipment_id = #{shipmentId,jdbcType=BIGINT}
+        <include refid="queryLimitClauseCondition"/>
+    </select>
+
+    <select id="queryDetailPageCount"  resultType="java.lang.Integer" >
+        SELECT count(1)
+        FROM t_smart_shipment_detail
+        WHERE shipment_id= #{shipmentId,jdbcType=BIGINT}
+        LIMIT 1
+    </select>
+
+    <insert id="insertShipmentDetailList" parameterType="ArrayList">
+        insert  into t_smart_shipment_detail
+        (id, shipment_id, tenant_id,
+        warehouse_id, dn_detail_id, sale_order_no,
+        refer_no, sku_id, sku,
+        sku_name, sku_barcode, inventory_status_code,
+        zone_type_code, zone_id, storage_room_id,
+        location_id, pallet_no, container_no,
+        ordered_qty, allocated_qty, picked_qty,
+        shipped_qty, gross_weight, net_weight,
+        volume, description, amount,
+        price, discount_amount, promotion_amount,
+        actual_payment, is_gift, work_group_no,
+        create_user, create_time, update_user,
+        update_time, is_canceled, is_del
+        )
+        values
+        <foreach collection="list" item="obj" index="index" separator="," >
+            (#{obj.id,jdbcType=BIGINT}, #{obj.shipmentId,jdbcType=BIGINT}, #{obj.tenantId,jdbcType=BIGINT},
+            #{obj.warehouseId,jdbcType=BIGINT}, #{obj.dnDetailId,jdbcType=BIGINT}, #{obj.saleOrderNo,jdbcType=VARCHAR},
+            #{obj.referNo,jdbcType=VARCHAR}, #{obj.skuId,jdbcType=BIGINT}, #{obj.sku,jdbcType=VARCHAR},
+            #{obj.skuName,jdbcType=VARCHAR}, #{obj.skuBarcode,jdbcType=VARCHAR}, #{obj.inventoryStatusCode,jdbcType=VARCHAR},
+            #{obj.zoneTypeCode,jdbcType=VARCHAR}, #{obj.zoneId,jdbcType=BIGINT}, #{obj.storageRoomId,jdbcType=VARCHAR},
+            #{obj.locationId,jdbcType=BIGINT}, #{obj.palletNo,jdbcType=VARCHAR}, #{obj.containerNo,jdbcType=VARCHAR},
+            #{obj.orderedQty,jdbcType=INTEGER}, #{obj.allocatedQty,jdbcType=INTEGER}, #{obj.pickedQty,jdbcType=INTEGER},
+            #{obj.shippedQty,jdbcType=INTEGER}, #{obj.grossWeight,jdbcType=DECIMAL}, #{obj.netWeight,jdbcType=DECIMAL},
+            #{obj.volume,jdbcType=DECIMAL}, #{obj.description,jdbcType=VARCHAR}, #{obj.amount,jdbcType=DECIMAL},
+            #{obj.price,jdbcType=DECIMAL}, #{obj.discountAmount,jdbcType=DECIMAL}, #{obj.promotionAmount,jdbcType=DECIMAL},
+            #{obj.actualPayment,jdbcType=DECIMAL}, #{obj.isGift,jdbcType=TINYINT}, #{obj.workGroupNo,jdbcType=VARCHAR},
+            #{obj.createUser,jdbcType=VARCHAR}, #{obj.createTime,jdbcType=BIGINT}, #{obj.updateUser,jdbcType=VARCHAR},
+            #{obj.updateTime,jdbcType=BIGINT}, #{obj.isCanceled,jdbcType=TINYINT}, #{obj.isDel,jdbcType=TINYINT}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryDetailSummaryPages" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        SELECT
+        id,shipment_id,warehouse_id,sku_id,sku,sku_name,sku_barcode,
+        SUM(ordered_qty) ordered_qty,SUM(allocated_qty) allocated_qty,SUM(shipped_qty) shipped_qty
+        FROM t_smart_shipment_detail
+        <include refid="queryWhereReportClause"/>
+        GROUP  BY sku_id
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryDetailSummaryPageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.outwh.TWmsShipmentDetailEntity">
+        SELECT count(tab.id) FROM (SELECT id,shipment_id,warehouse_id,sku_id,sku,sku_name,sku_barcode,
+        SUM(ordered_qty) ordered_qty,SUM(allocated_qty) allocated_qty,SUM(shipped_qty) shipped_qty
+        FROM t_smart_shipment_detail
+        <include refid="queryWhereReportClause"/>
+        GROUP  BY sku_id) tab
+        LIMIT 1
+    </select>
+
+    <sql id="queryWhereReportClause">
+        <where>
+            shipped_qty = ordered_qty
+            <if test="entity.id !=null and entity.id != 0">
+                AND  id = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.skuId !=null">
+                AND  sku_id = #{entity.skuId,jdbcType=BIGINT}
+            </if>
+            <if test="entity.sku != null">
+                AND sku = #{entity.sku,jdbcType=BIGINT}
+            </if>
+            <if test="entity.skuName != null and entity.skuName != ''">
+                <bind name="pattern" value="'%' + entity.skuName + '%'" />
+                AND sku_name LIKE #{pattern}
+            </if>
+            <if test="entity.skuBarcode != null and entity.skuBarcode != ''">
+                AND sku_barcode = #{entity.skuBarcode,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId != ''">
+                <bind name="pattern" value="'%' + entity.storageRoomId + '%'" />
+                AND storage_room_id LIKE #{pattern}
+            </if>
+            <if test="shipmentIds != null and shipmentIds.size > 0">
+            AND shipment_id IN <foreach collection="shipmentIds" item="id" open="(" separator="," close=")" >
+            #{id}
+            </foreach>
+            </if>
+            <if test="startTime != null and startTime != 0">
+                <![CDATA[AND create_time > #{startTime,jdbcType=BIGINT}]]>
+            </if>
+            <if test="endTime != null and endTime != 0">
+                <![CDATA[AND create_time < #{endTime,jdbcType=BIGINT}]]>
+            </if>
+        </where>
+    </sql>
+
+
+    <update id="updateShipmentDetailRoomId" parameterType="com.huamengtong.wms.entity.outwh.TWmsShipmentDetailEntity">
+        update t_smart_shipment_detail
+        <set>
+                storage_room_id = #{entity.storageRoomId,jdbcType=VARCHAR},
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

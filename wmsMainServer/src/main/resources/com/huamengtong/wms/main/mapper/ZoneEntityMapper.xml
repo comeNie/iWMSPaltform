@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.main.mapper.ZoneMapper">
+    <resultMap id="ZoneResultMap" type="com.huamengtong.wms.entity.main.TWmsZoneEntity">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="warehouse_id" property="warehouseId" jdbcType="BIGINT" />
+        <result column="zone_no" property="zoneNo" jdbcType="VARCHAR" />
+        <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+        <result column="is_active" property="isActive" jdbcType="BIT" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="priority" property="priority" jdbcType="INTEGER" />
+        <result column="is_sale_able" property="isSaleAble" jdbcType="BIT" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="BIGINT" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="BIGINT" />
+
+    </resultMap>
+
+
+    <resultMap id="LocationZonesResultMap" type="java.util.LinkedHashMap">
+        <result column="id" property="id" jdbcType="BIGINT" />
+        <result column="zone_no" property="zoneNo" jdbcType="VARCHAR" />
+        <result column="is_active" property="isActive" jdbcType="BIT" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="priority" property="priority" jdbcType="INTEGER" />
+        <result column="is_sale_able" property="isSaleAble" jdbcType="BIT" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        `id`,`warehouse_id`,`zone_no`,`type_code`,`is_active`,`description`,`priority`,`is_sale_able`,
+        `create_user`,`create_time`,`update_user`,`update_time`
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="id !=null and id != 0">
+                AND id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="typeCode != null">
+                AND type_code = #{typeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="zoneNo != null" >
+                AND zone_no = #{zoneNo,jdbcType=VARCHAR}
+            </if>
+            <if test="description != null" >
+                AND description = #{description,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="orderBy == null">
+            ORDER BY create_time desc
+        </if>
+
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+            LIMIT ${offset}, ${pageSize}
+        </if>
+    </sql>
+
+    <select id="queryZonePages" resultMap="ZoneResultMap" parameterType="com.huamengtong.wms.entity.main.TWmsZoneEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_zone
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryZonePageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.main.TWmsZoneEntity">
+        SELECT count(1) FROM t_smart_zone
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="ZoneResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_zone
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectZoneByList" resultMap="ZoneResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_zone
+        where warehouse_id = #{warehouseId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete
+        from t_smart_zone
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insertZone" parameterType="com.huamengtong.wms.entity.main.TWmsZoneEntity" >
+        insert into t_smart_zone
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="warehouseId != null" >
+                warehouse_id,
+            </if>
+            <if test="zoneNo != null" >
+                zone_no,
+            </if>
+            <if test="typeCode != null" >
+                type_code,
+            </if>
+            <if test="isActive != null" >
+                is_active,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="priority != null" >
+                priority,
+            </if>
+            <if test="isSaleAble != null" >
+                is_sale_able,
+            </if>
+            <if test="createUser != null" >
+                create_user,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateUser != null" >
+                update_user,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseId != null" >
+                #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="zoneNo != null" >
+                #{zoneNo,jdbcType=VARCHAR},
+            </if>
+            <if test="typeCode != null" >
+                #{typeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="isActive != null" >
+                #{isActive,jdbcType=BIT},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="priority != null" >
+                #{priority,jdbcType=INTEGER},
+            </if>
+            <if test="isSaleAble != null" >
+                #{isSaleAble,jdbcType=BIT},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateZone" parameterType="com.huamengtong.wms.entity.main.TWmsZoneEntity" >
+        update t_smart_zone
+        set
+        <if test="id != null">
+            id = #{id,jdbcType=BIGINT},
+        </if>
+        <if test="warehouseId != null">
+            warehouse_id = #{warehouseId,jdbcType=BIGINT},
+        </if>
+        <if test="zoneNo != null">
+            zone_no = #{zoneNo,jdbcType=VARCHAR},
+        </if>
+        <if test="typeCode != null">
+            type_code = #{typeCode,jdbcType=VARCHAR},
+        </if>
+        <if test="isActive != null">
+            is_active = #{isActive,jdbcType=BIT},
+        </if>
+        <if test="description != null">
+            description = #{description,jdbcType=VARCHAR},
+        </if>
+        <if test="priority != null">
+            priority = #{priority,jdbcType=INTEGER},
+        </if>
+        <if test="isSaleAble != null">
+            is_sale_able = #{isSaleAble,jdbcType=BIT},
+        </if>
+        <if test="createUser != null">
+            create_user = #{createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=BIGINT},
+        </if>
+        <if test="updateUser != null">
+            update_user = #{updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="updateTime != null ">
+            update_time = #{updateTime,jdbcType=BIGINT}
+        </if>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectLocationsByZoneId" resultType="String" parameterType="java.lang.Long">
+        SELECT location_id FROM t_smart_location WHERE zone_id = #{zoneId,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryZoneByLocationPages" resultMap="LocationZonesResultMap" parameterType="java.util.Map">
+        SELECT
+        tb_a.`id`,tb_a.`zone_no`,tb_b.`location_no`,tb_b.`is_active`,tb_b.`type_code`,tb_b.`class_code`,tb_b.`handling_code`,
+        tb_b.`category_code`,tb_b.`description`
+        FROM t_smart_zone tb_a LEFT JOIN t_smart_location tb_b
+        ON tb_a.id = tb_b.zone_id
+        WHERE tb_b.zone_id = #{zoneId,jdbcType=BIGINT}
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryZoneByLocationPageCount"  resultType="java.lang.Integer" parameterType="java.util.Map" >
+        SELECT count(1)
+        FROM t_smart_location tb_b LEFT JOIN t_smart_zone tb_a
+        ON tb_b.zone_id = tb_a.id
+        WHERE tb_b.zone_id = #{zoneId,jdbcType=BIGINT}
+        LIMIT 1
+    </select>
+
+    <select id="selectZonesByWarehouse" resultMap="ZoneResultMap">
+        SELECT
+        `id`,`warehouse_id`,`zone_no`,`type_code`,`is_active`,`description`,`priority`,`is_sale_able`
+        FROM t_smart_zone tb_a
+        WHERE
+        EXISTS ( SELECT 1 FROM t_smart_warehouse tb_b WHERE tb_b.id = tb_a.warehouse_id
+        AND  warehouse_id = #{warehouseId,jdbcType=BIGINT}
+        )
+        AND  tb_a.is_active = 1
+    </select>
+
+    <select id="selectAllZones" resultMap="ZoneResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_zone
+        <include refid="queryWhereClause"/>
+    </select>
+
+
+</mapper>

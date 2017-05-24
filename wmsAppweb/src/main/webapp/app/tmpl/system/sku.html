@@ -1,0 +1,132 @@
+<div class="content-wrap" ng-controller="skuController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="skuHeaderGrid">
+            <div class="panel-group">
+                <label>商品名称</label><input type="text" ng-model="query.itemName" />
+            </div>
+            <div class="panel-group">
+                <label>UPC编码</label><input type="text" ng-model="query.upc" />
+            </div>
+            <div class="panel-group">
+                <label>商品编码</label><input type="text" ng-model="query.sku" />
+            </div>
+            <div class="panel-group">
+                <label>商品类别</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="categorysSrc" name="query.categorysId" id="query.categorysId"></r-select>
+                </div>
+            </div>
+            <div class="panel-group">
+                <label>商品条码</label><input type="text" ng-model="query.barcode" />
+            </div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="skuHeaderGrid" options="mainGridOptions">
+                <!--wmsImport指令-->
+                <wms-import url="sku/import" template-name="商品信息导入模板.xlsx" title="商品导入"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 商品新增 ,商品编辑-->
+<script id="sku-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品名称</label>
+                <input id="itemName" name="itemName" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>数据来源：</label>
+                <span class="inputDisbled" ng-if="dataItem.isNew()" wms-label="DataSource.Manual" bind-name="datasourceCode"></span>
+                <span class="inputDisbled" ng-if="!dataItem.isNew()" ng-bind="dataItem.datasourceCode|codeFormat:'DataSource'"></span>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5" hidden="hidden">
+                <label>是否可用</label>
+                <input id="isActive" name="isActive" type="checkbox" value="1" checked="checked"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>UPC编码</label>
+                <input id="upc" name="upc" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品编码</label>
+                <input id="sku" name="sku" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品条码</label>
+                <input id="barcode" name="barcode" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品类别</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="categorysSrc" name="categorysId" id="categorysId" required></r-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品规格</label>
+                <input id="spec" name="spec" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>单位类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="MasterUnit" name="unitType" id="unitType"></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>净重</label>
+                <input id="netWeight" name="netWeight" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+            <label>毛重</label>
+            <input id="grossWeight" name="grossWeight" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>仓库温度</label>
+                <input id="warehouseTemp" name="warehouseTemp" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>运输温度</label>
+                <input id="transportTemp" name="transportTemp" type="text" >
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>实际价格</label>
+                <input id="costPrice" name="costPrice" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>生产者</label>
+                <input id="producer" name="producer" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>生产类别</label>
+                <input id="producerCode" name="producerCode" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>来源地</label>
+                <input id="originPlace" name="originPlace" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>销货价1</label>
+                <input id="price1" name="price1" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>销货价2</label>
+                <input id="price2" name="price2" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>销货价3</label>
+                <input id="price3" name="price3" type="text">
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>描述</label>
+                <input id="description" name="description" type="text">
+            </div>
+        </div>
+    </div>
+</script>
+

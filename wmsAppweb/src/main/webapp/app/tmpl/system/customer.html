@@ -1,0 +1,63 @@
+<div class="content-wrap" ng-controller="customerController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="customerHeaderGrid">
+            <div class="panel-group">
+                <label>客户ID</label><input type="text" ng-model="query.id" /></div>
+            <div class="panel-group">
+                <label>客户名称</label><input type="text" ng-model="query.customerName" /></div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="customerHeaderGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- 新增/编辑模版 -->
+<script id="customer-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="window-form pure-body">
+
+            <div class="pure-control-group p-b-5 ">
+                <label>客户名称</label>
+                <input id="customerName" name="customerName" type="text" required/>
+            </div>
+
+            <div class="pure-control-group p-b-5">
+                <label>客户类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="CustomerType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <label>是否启用</label>
+                <input id="isActive" name="isActive" type="checkbox" value="1" checked="checked"/>
+            </div>
+
+            <div class="pure-control-group p-b-5">
+                <label>客户电话</label>
+                <input id="telephone" name="telephone" type="text" required/>
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <label>客户联系人</label>
+                <input id="contacts" name="contacts" type="text" required/>
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <label>客户地址</label>
+                <textarea rows="3" style="width:300px;" id="address" name="address" required/>
+            </div>
+
+            <div class="pure-control-group p-b-5">
+                <label>客户备注</label>
+                <textarea rows="3" style="width:300px;" id="description" name="description" />
+            </div>
+
+
+        </div>
+    </div>
+</script>

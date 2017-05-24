@@ -1,0 +1,144 @@
+<div class="content-wrap" ng-controller="proInventoryController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="proInventoryGrid">
+            <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>库房</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="storageRoomSrc" name="query.storageRoomId" id="query.storageRoomId"></r-select>
+                </div>
+            </div>
+
+        </panel_heading_search>
+
+        <div class="panel-body">
+            <div kendo-grid="proInventoryGrid" options="mainGridOptions">
+                <div k-detail-template>
+                    <kendo-tabstrip>
+                        <ul>
+                            <li class="k-state-active" ng-click="hideCreate(dataItem)">成品信息</li>
+                            <li>操作日志</li>
+                            <!--<li>操作日志</li>-->
+                        </ul>
+                        <!--明细信息-->
+                        <div>
+                            <div kendo-grid="proInventoryDetailGrid" k-options="proInventoryDetailGridOptions(dataItem)"></div>
+                        </div>
+                        <!--操作日志-->
+                        <div>
+                            <div kendo-grid k-options="logOptions(dataItem.id,'Processing')"></div>
+                        </div>
+
+                    </kendo-tabstrip>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+<!-- 商品新增 ,商品编辑-->
+<script id="proInventory-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>原材料</label>
+                <input id="skuId" name="skuId" type="text"  ng-model="proModel.skuId" disabled="disabled" hidden="hidden"/>
+                <input id="storageRoomId" name="storageRoomId" ng-model="proModel.storageRoomId" type="text" disabled="disabled" hidden="hidden"/>
+                <input id="inventoryId" name="inventoryId" ng-model="proModel.inventoryId" type="text" hidden="hidden"/>
+                <input id="cargoOwnerId" name="cargoOwnerId" ng-model="proModel.cargoOwnerId" type="text" hidden="hidden"/>
+                <input id="skuName" name="skuName" type="text" ng-model="proModel.skuName" ng-click="windowOpen(this)" readonly="readonly"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品编码</label>
+                <input id="sku" name="sku" type="text"  disabled="disabled"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品规格</label>
+                <input id="spec" name="spec" type="text"  disabled="disabled"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>单位类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="MasterUnit" name="unitType" id="unitType" disabled="disabled" ></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>可用数量</label>
+                <input id="oldQty" name="oldQty" type="text"  disabled="disabled"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>加工数量</label>
+                <input id="qty" name="qty" type="number" data-minqty="1"  onlyNumber/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>批次号</label>
+                <input id="workGroupNo" name="workGroupNo"  type="text" required/>
+            </div>
+
+
+            <div class="pure-control-group ">
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <input type="button" class="k-button  k-grid-edit" ng-click="addRow(this.dataItem)" value="新增" style="margin-left: 10px;margin-bottom: 7px"/>
+                <input type="button" class="k-button  k-grid-edit" ng-click="deleteRows(this.dataItem)" value="删除" style="margin-bottom: 7px"/>
+            </div>
+            <div class="pure-control-group p-b-5" >
+                <table id="proTable" align="center" class="table table-bordered" style="margin: 5px 10px 10px;width: 98%">
+                    <thead>
+                        <tr>
+                            <th width="20px"><input type="checkbox"  ng-click="chooseAll()" id = "chooseAll"/></th>
+                            <th>商品名称</th>
+                            <th>商品编码</th>
+                            <th>商品规格</th>
+                            <th>商品单位</th>
+                            <th >库房</th>
+                            <th>商品数量</th>
+                            <th hidden="hidden">商品ID</th>
+                            <th hidden="hidden">商品单位</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</script>
+
+    <style>
+        td{
+            border: 1px solid #d0d9df;
+            font-size: 8px;
+        }
+    </style>
+
+
+<!--商品选择-->
+<div kendo-window="inventoryPopup" k-title="'在库原料'" k-modal="true"
+     k-resizable="false"
+     k-width="600" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/inventory.html' }">
+
+</div>
+
+
+<div kendo-window="skuProcessPopup" k-title="'商品选择'" k-modal="true"
+     k-resizable="false"
+     k-width="600" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/skuProcess.html' }">
+</div>

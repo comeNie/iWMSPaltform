@@ -1,0 +1,114 @@
+<div class="content-wrap" ng-controller="zoneController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="zoneHeaderGrid">
+            <div class="panel-group">
+                <label>货区编号</label><input type="text" ng-model="query.zoneNo" /></div>
+            <div class="panel-group">
+                <label>货区描述</label><input type="text" ng-model="query.description" /></div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="zoneHeaderGrid" options="mainGridOptions">
+                <div k-detail-template>
+                    <div>
+                        <div kendo-grid="zoneLocationGrid" k-options="zoneLocationOptions(dataItem)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增/编辑模版 -->
+<script id="zone-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货区编号</label>
+                <input id="zoneNo" name="zoneNo" type="text" required/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货区类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="ZoneType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>优先级</label>
+                <input id="priority" name="priority" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否可销售</label>
+                <input id="isSaleAble" name="isSaleAble" type="checkbox" value="1" checked="checked" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否可使用</label>
+                <input id="isActive" name="isActive" type="checkbox" value="1" checked="checked" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货区描述</label>
+                <input id="description" name="description" type="text" required/>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+
+<!--location新增编辑模板-->
+<script id="zone-location-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="window-form pure-body">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货位编号</label>
+                <input id="locationNo" name="locationNo" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货架类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="LocationType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>存货类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="LocationClass" name="classCode" id="classCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>操作方式</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="LocationHandling" name="handlingCode" id="handlingCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>存放方式</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="LocationCategory" name="categoryCode" id="categoryCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货位描述</label>
+                <input id="description" name="description" type="text" required/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>ABC分类</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="AbcClass" name="abcCode" id="abcCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否可用</label>
+                <input id="isActive" name="isActive" type="checkbox" value="1" checked="checked"/>
+            </div>
+
+        </div>
+    </div>
+</script>

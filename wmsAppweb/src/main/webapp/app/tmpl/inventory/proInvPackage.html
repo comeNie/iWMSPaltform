@@ -1,0 +1,249 @@
+<div class="content-wrap" ng-controller="proInvPackageController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="proInvPackageGrid">
+            <div class="panel-group">
+                <label>加工单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+
+            <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>单据状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+        </panel_heading_search>
+
+        <div class="panel-body">
+            <div kendo-grid="proInvPackageGrid" options="mainGridOptions">
+                <div k-detail-template>
+                    <kendo-tabstrip>
+                        <ul>
+                            <li class="k-state-active" ng-click="hideCreate(dataItem)">原料信息</li>
+                            <li>成品信息</li>
+                        </ul>
+                        <!--原料信息-->
+                        <div>
+                            <div kendo-grid="proInvPackageDetailGrid" k-options="proInvPackageDetailGridOptionsConsume(dataItem)"></div>
+                        </div>
+                        <!--商品信息-->
+                        <div>
+                            <div kendo-grid="proInvPackageDetailGrid" k-options="proInvPackageDetailGridOptionsOut(dataItem)"></div>
+                        </div>
+
+                    </kendo-tabstrip>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 新增/编辑模版 -->
+<script id="proInvPackage-kendo-template" type="text/x-kendo-template" class="ng-scope">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>单据类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="HandleType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货主</label>
+                <div class="select-wrapper" ng-if="dataItem.isNew()">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="cargoOwnerId" ui-select-id="cargoOwnerId" src="cargoOwnerSrc"
+                                   on-select=$parent.cargoOwnerIdChange($item,$models) onchange="changetip()"
+                                   required></wms-ui-select>
+                </div>
+                <span ng-if="!dataItem.isNew()" class="inputDisbled" ng-model="dataItem.cargoOwnerId"
+                      ng-bind="dataItem.cargoOwnerId|cargoOwnerFormat:'cargoOwnerId'"></span>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>批次号</label>
+                <input id="workGroupNo" name="workGroupNo" type="text" required/>
+            </div>
+
+            <div class="pure-control-group ">
+            </div>
+
+            <div id="oldInventory">
+                <h4>&nbsp;&nbsp;原料</h4>
+                <kendo-tabstrip>
+                    <ul>
+                        <li class="k-state-active">商品信息</li>
+                        <li>辅料信息</li>
+                    </ul>
+                    <div class="edit-form-container">
+                        <div class="pure-control-group p-b-5" style=" width:70%">
+                            <input type="button" class="k-button  k-grid-edit" ng-click="oldProTableAddRow(this.dataItem)"
+                                   value="新增" style="margin: 10px 10px 5px"/>
+                            <input type="button" class="k-button  k-grid-edit" ng-click="oldProTableDeleteRows(this.dataItem)"
+                                   value="删除" style="margin: 10px 10px 5px"/>
+                        </div>
+
+                        <div class="pure-control-group p-b-5" style=" width:100%">
+                            <table id="oldProTable" class="table table-bordered"
+                                   style="  margin: 5px 10px 10px;width: 98%">
+                                <thead>
+                                <tr>
+                                    <th width="20px"><input type="checkbox" id="oldProTableChooseAll" ng-click="oldProTableChooseAll()"/></th>
+                                    <th>商品名称</th>
+                                    <th>商品编码</th>
+                                    <th>商品规格</th>
+                                    <th>商品单位</th>
+                                    <th>库房</th>
+                                    <th>商品数量</th>
+                                    <th hidden="hidden">商品ID</th>
+                                    <th hidden="hidden">商品单位</th>
+                                    <th hidden="hidden">库存ID</th>
+                                    <th hidden="hidden">库房ID</th>
+                                    <th>可用数量</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="edit-form-container">
+                        <div class="pure-control-group p-b-5" style=" width:70%">
+                            <input type="button" class="k-button  k-grid-edit" ng-click="oldFuTableAddFuRow(this.dataItem)"
+                                   value="新增" style="margin: 10px 10px 5px"/>
+                            <input type="button" class="k-button  k-grid-edit" ng-click="oldFuTableDeleteFuRows(this.dataItem)"
+                                   value="删除" style="margin: 10px 10px 5px"/>
+                        </div>
+                        <div class="pure-control-group p-b-5" style=" width:100%">
+                            <table id="oldFuTable" class="table table-bordered" style=" margin: 5px 10px 10px;width: 98%">
+                                <thead>
+                                <tr>
+                                    <th width="20px"><input type="checkbox" id="oldFuTableChooseAll" ng-click="oldFuTableFuChooseAll()"/>
+                                    </th>
+                                    <th>辅料名称</th>
+                                    <th>辅料编码</th>
+                                    <th>辅料规格</th>
+                                    <th>辅料单位</th>
+                                    <th>库房</th>
+                                    <th>辅料数量</th>
+                                    <th hidden="hidden">辅料ID</th>
+                                    <th hidden="hidden">辅料单位</th>
+                                    <th hidden="hidden">库存ID</th>
+                                    <th hidden="hidden">库房ID</th>
+                                    <th>可用数量</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </kendo-tabstrip>
+            </div>
+            <div id="newInventory">
+                <h4>&nbsp;&nbsp;加工后</h4>
+                <kendo-tabstrip>
+                    <ul>
+                        <li class="k-state-active">商品信息</li>
+                        <li>辅料信息</li>
+                    </ul>
+                    <div class="edit-form-container">
+                        <div class="pure-control-group p-b-5" style=" width:70%">
+                            <input type="button" class="k-button  k-grid-edit" ng-click="newProTableAddRow(this.dataItem)"
+                                   value="新增" style="margin: 10px 10px 5px"/>
+                            <input type="button" class="k-button  k-grid-edit" ng-click="newProTableDeleteRows(this.dataItem)"
+                                   value="删除" style="margin: 10px 10px 5px"/>
+                        </div>
+
+                        <div class="pure-control-group p-b-5" style=" width:100%">
+                            <table id="newProTable" class="table table-bordered"
+                                   style="  margin: 5px 10px 10px;width: 98%">
+                                <thead>
+                                <tr>
+                                    <th width="20px"><input type="checkbox" id="newProTableChooseAll" ng-click="newProTableChooseAll()"/></th>
+                                    <th>商品名称</th>
+                                    <th>商品编码</th>
+                                    <th>商品规格</th>
+                                    <th>商品单位</th>
+                                    <th>库房</th>
+                                    <th>商品数量</th>
+                                    <th hidden="hidden">商品ID</th>
+                                    <th hidden="hidden">商品单位</th>
+                                    <th hidden="hidden">库存ID</th>
+                                    <th hidden="hidden">库房ID</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="edit-form-container">
+                        <div class="pure-control-group p-b-5" style=" width:70%">
+                            <input type="button" class="k-button  k-grid-edit" ng-click="newFuTableAddFuRow(this.dataItem)"
+                                   value="新增" style="margin: 10px 10px 5px"/>
+                            <input type="button" class="k-button  k-grid-edit" ng-click="newFuTableDeleteFuRows(this.dataItem)"
+                                   value="删除" style="margin: 10px 10px 5px"/>
+                        </div>
+                        <div class="pure-control-group p-b-5" style=" width:100%">
+                            <table id="newFuTable" class="table table-bordered" style=" margin: 5px 10px 10px;width: 98%">
+                                <thead>
+                                <tr>
+                                    <th width="20px"><input type="checkbox" id="newFuTableChooseAll" ng-click="newFuTableChooseAll()"/>
+                                    </th>
+                                    <th>辅料名称</th>
+                                    <th>辅料编码</th>
+                                    <th>辅料规格</th>
+                                    <th>辅料单位</th>
+                                    <th>库房</th>
+                                    <th>辅料数量</th>
+                                    <th hidden="hidden">辅料ID</th>
+                                    <th hidden="hidden">辅料单位</th>
+                                    <th hidden="hidden">库存ID</th>
+                                    <th hidden="hidden">库房ID</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </kendo-tabstrip>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!--商品选择-->
+<div kendo-window="inventoryCargoOwnerPopup" k-title="'在库商品'" k-modal="true"
+     k-resizable="false"
+     k-width="600" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/inventoryCargoOwner.html' }">
+
+</div>
+
+
+<div kendo-window="skuPopup" k-title="'包装商品选择'" k-modal="true"
+     k-resizable="false"
+     k-width="600" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/sku.html' }">
+</div>

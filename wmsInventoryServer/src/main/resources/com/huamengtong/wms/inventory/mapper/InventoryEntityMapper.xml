@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.inventory.mapper.InventoryMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId"/>
+        <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+        <result column="storage_room_id" jdbcType="BIGINT" property="storageRoomId"/>
+        <result column="zone_id" jdbcType="BIGINT" property="zoneId"/>
+        <result column="location_id" jdbcType="BIGINT" property="locationId"/>
+        <result column="pallet_no" jdbcType="VARCHAR" property="palletNo"/>
+        <result column="container_no" jdbcType="VARCHAR" property="containerNo"/>
+        <result column="work_group_no" jdbcType="VARCHAR" property="workGroupNo"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="onhand_qty" jdbcType="INTEGER" property="onhandQty"/>
+        <result column="allocated_qty" jdbcType="INTEGER" property="allocatedQty"/>
+        <result column="picked_qty" jdbcType="INTEGER" property="pickedQty"/>
+        <result column="working_qty" jdbcType="INTEGER" property="workingQty"/>
+        <result column="package_qty" jdbcType="INTEGER" property="packageQty"/>
+        <result column="mortgaged_qty" jdbcType="INTEGER" property="mortgagedQty"/>
+        <result column="is_hold" jdbcType="TINYINT" property="isHold"/>
+        <result column="inventory_status_code" jdbcType="VARCHAR" property="inventoryStatusCode"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="inventory_status_code" jdbcType="VARCHAR" property="inventoryStatusCode"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+        <result column="version" jdbcType="INTEGER" property="version"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+
+     id, tenant_id, warehouse_id, cargo_owner_id, sku_id, storage_room_id, zone_id, location_id, pallet_no,
+     container_no, work_group_no, price, onhand_qty, allocated_qty, picked_qty,mortgaged_qty, working_qty, is_hold,
+     create_user, create_time, update_user, update_time, version,inventory_status_code,working_qty,package_qty
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id !=null and entity.id != 0">
+                AND id = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.cargoOwnerId !=null ">
+                AND cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT}
+            </if>
+            <if test="entity.skuId !=null and entity.skuId != 0">
+                AND sku_id = #{entity.skuId,jdbcType=BIGINT}
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId != 0">
+                AND storage_room_id = #{entity.storageRoomId,jdbcType=BIGINT}
+            </if>
+            <if test="entity.isHold !=null">
+                AND is_hold = #{entity.isHold,jdbcType=TINYINT}
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset>=0 and entity.pageSize != null and entity.pageSize>0">
+            LIMIT ${entity.offset}, ${entity.pageSize}
+        </if>
+    </sql>
+
+
+    <select id="queryInventoryPages" resultMap="BaseResultMap"
+            parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_inventory
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+
+    <select id="queryInventoryPageCount" resultType="java.lang.Integer"
+            parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        SELECT count(1) FROM t_smart_inventory
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="selectByPK" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_smart_inventory
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="selectInventoryBySku" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_smart_inventory
+        where is_hold = 0
+        AND sku_id = #{skuId,jdbcType=BIGINT}
+        AND cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+        AND storage_room_id in
+        <foreach collection="roomIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY create_time
+    </select>
+
+    <insert id="insertInventory" parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        insert into t_smart_inventory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null">
+                id,
+            </if>
+            <if test="entity.tenantId != null">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="entity.cargoOwnerId != null">
+                cargo_owner_id,
+            </if>
+            <if test="entity.skuId != null">
+                sku_id,
+            </if>
+            <if test="entity.storageRoomId != null">
+                storage_room_id,
+            </if>
+            <if test="entity.zoneId != null">
+                zone_id,
+            </if>
+            <if test="entity.locationId != null">
+                location_id,
+            </if>
+            <if test="entity.palletNo != null">
+                pallet_no,
+            </if>
+            <if test="entity.containerNo != null">
+                container_no,
+            </if>
+            <if test="entity.workGroupNo != null">
+                work_group_no,
+            </if>
+            <if test="entity.price != null">
+                price,
+            </if>
+            <if test="entity.onhandQty != null">
+                onhand_qty,
+            </if>
+            <if test="entity.allocatedQty != null">
+                allocated_qty,
+            </if>
+            <if test="entity.pickedQty != null">
+                picked_qty,
+            </if>
+            <if test="entity.workingQty != null">
+                working_qty,
+            </if>
+            <if test="entity.mortgagedQty != null">
+                mortgaged_qty,
+            </if>
+            <if test="entity.packageQty != null">
+                package_qty,
+            </if>
+            <if test="entity.isHold != null">
+                is_hold,
+            </if>
+            <if test="entity.inventoryStatusCode != null ">
+                inventory_status_code,
+            </if>
+            <if test="entity.createUser != null">
+                create_user,
+            </if>
+            <if test="entity.createTime != null">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null">
+                update_time,
+            </if>
+            <if test="entity.version != null">
+                version,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=0">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId !=0">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId !=0">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId !=0">
+                #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.skuId != null and entity.skuId !=0">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId !=0">
+                #{entity.storageRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.zoneId != null and entity.zoneId !=0">
+                #{entity.zoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.locationId != null and entity.locationId !=0">
+                #{entity.locationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.palletNo != null and entity.palletNo !=''">
+                #{entity.palletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.containerNo != null and entity.containerNo !=''">
+                #{entity.containerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.workGroupNo != null and entity.workGroupNo !=''">
+                #{entity.workGroupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.price != null">
+                #{entity.price,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.onhandQty != null ">
+                #{entity.onhandQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.allocatedQty != null ">
+                #{entity.allocatedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.pickedQty != null ">
+                #{entity.pickedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.workingQty != null ">
+                #{entity.workingQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.mortgagedQty != null ">
+                #{entity.mortgagedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.packageQty != null ">
+                #{entity.packageQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.isHold != null">
+                #{entity.isHold,jdbcType=TINYINT},
+            </if>
+            <if test="entity.inventoryStatusCode != null ">
+                #{entity.inventoryStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=0">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=0">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.version != null">
+                #{entity.version,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateInventory" parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        update t_smart_inventory
+        <set>
+            <if test="entity.tenantId != null and entity.tenantId !=0">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId !=0">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId !=0">
+                cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.skuId != null and entity.skuId !=0">
+                sku_id = #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId !=0">
+                storage_room_id = #{entity.storageRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.zoneId != null and entity.zoneId !=0">
+                zone_id = #{entity.zoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.locationId != null and entity.locationId !=0">
+                location_id = #{entity.locationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.palletNo != null and entity.palletNo !=''">
+                pallet_no = #{entity.palletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.containerNo != null and entity.containerNo !=''">
+                container_no = #{entity.containerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.workGroupNo != null and entity.workGroupNo !=''">
+                work_group_no = #{entity.workGroupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.price != null">
+                price = #{entity.price,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.onhandQty != null ">
+                onhand_qty = #{entity.onhandQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.allocatedQty != null ">
+                allocated_qty = #{entity.allocatedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.pickedQty != null ">
+                picked_qty = #{entity.pickedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.workingQty != null ">
+                working_qty = #{entity.workingQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.mortgagedQty != null ">
+                mortgaged_qty = #{entity.mortgagedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.packageQty != null ">
+                package_qty = #{entity.packageQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.isHold != null">
+                is_hold = #{entity.isHold,jdbcType=TINYINT},
+            </if>
+            <if test="entity.inventoryStatusCode != null and entity.inventoryStatusCode !=''">
+                inventory_status_code = #{entity.inventoryStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=0">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=0">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.version != null">
+                version = #{entity.version,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByPrimaryKey">
+        DELETE
+        FROM t_smart_inventory
+        WHERE id=#{id,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selectByCargo" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_inventory
+        WHERE cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+        AND sku_id = #{skuId,jdbcType=BIGINT}
+        AND storage_room_id = #{storageRoomId,jdbcType=BIGINT}
+        <if test="inventoryStatusCode != null">
+            AND inventory_status_code = #{inventoryStatusCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectByStorageRoom" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_inventory
+        WHERE cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+        AND storage_room_id = #{storageRoomId,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="selectInventoryReport" resultMap="BaseResultMap"
+            parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_inventory
+        <include refid="queryWhereClauseReport"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="selectInventoryReportSum" resultMap="BaseResultMap"
+            parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        SELECT sku_Id, SUM(onhand_Qty) onhand_Qty, SUM(allocated_Qty) allocated_Qty, SUM(picked_Qty) picked_Qty,
+        SUM(mortgaged_qty) mortgaged_qty,
+        sum(working_qty) workingQty ,cargo_owner_id,warehouse_id,sum(package_qty) packageQty
+        FROM t_smart_inventory
+        <include refid="queryWhereClauseReport"/>
+        GROUP BY cargo_owner_id,sku_id
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="queryInventorySumPageCount" resultType="java.lang.Integer"
+            parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        SELECT count(t.sku_Id) FROM (SELECT sku_Id, SUM(onhand_Qty) onhand_Qty, SUM(allocated_Qty) allocated_Qty,
+        SUM(picked_Qty) picked_Qty, SUM(mortgaged_qty) mortgaged_qty,
+        sum(working_qty) workingQty , cargo_owner_id,warehouse_id
+        FROM t_smart_inventory
+        <include refid="queryWhereClauseReport"/>
+        GROUP BY cargo_owner_id,sku_id) t
+        LIMIT 1
+    </select>
+
+
+    <select id="selectByHold" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_inventory
+        WHERE cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+        AND storage_room_id = #{storageRoomId,jdbcType=BIGINT}
+        AND is_hold = 0
+    </select>
+
+    <select id="selectByCargoOwnerId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_inventory
+        WHERE cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+        AND is_hold = 0
+        AND onhand_qty &gt;0
+    </select>
+
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClauseReport">
+        <where>
+            <if test="entity.cargoOwnerId !=null and entity.cargoOwnerId != 0">
+                AND cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT}
+            </if>
+            <if test="skuIds != null and skuIds.size() > 0">
+                AND sku_id in
+                <foreach collection="skuIds" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId != 0">
+                AND storage_room_id = #{entity.storageRoomId,jdbcType=BIGINT}
+            </if>
+            <if test="fromTime != null and fromTime != 0">
+                <![CDATA[AND create_time > #{fromTime,jdbcType=BIGINT}]]>
+            </if>
+            <if test="toTime != null and toTime != 0">
+                <![CDATA[AND create_time < #{toTime,jdbcType=BIGINT}]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryInventoryReportPageCount" resultType="java.lang.Integer"
+            parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        SELECT count(1) FROM t_smart_inventory
+        <include refid="queryWhereClauseReport"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectSkuIdList" resultType="java.lang.Long"
+            parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryEntity">
+        SELECT sku_id
+        FROM t_smart_inventory
+        <include refid="queryWhereClauseReport"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.util.ArrayList">
+        select
+        <include refid="Base_Column_List"/>
+        from t_smart_inventory
+        where id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <select id="selectInventoryAllocationStrategy" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_smart_inventory
+        where is_hold = 0
+        AND sku_id = #{skuId,jdbcType=BIGINT}
+        AND cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+        AND storage_room_id in
+        <foreach collection="roomIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="orderBy != '' and ascOrDesc == 'asc'">
+            ORDER BY ${orderBy} asc
+        </if>
+        <if test="orderBy != '' and ascOrDesc == 'desc'">
+            ORDER BY ${orderBy} desc
+        </if>
+    </select>
+
+
+    <select id="queryActiveQty" resultType="java.lang.Integer">
+        SELECT SUM(onhand_qty -allocated_qty -picked_qty-working_qty-package_qty-mortgaged_qty)
+        FROM t_smart_inventory
+        WHERE is_hold = 0
+        AND sku_id = #{skuId,jdbcType=BIGINT}
+        AND cargo_owner_id = #{cargoOwnerId,jdbcType=BIGINT}
+        <if test="list != null and list.length > 0">
+            AND storage_room_id in
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryInventorBySkuId"  resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_inventory
+        where sku_id = #{skuId,jdbcType=BIGINT}
+    </select>
+
+
+</mapper>

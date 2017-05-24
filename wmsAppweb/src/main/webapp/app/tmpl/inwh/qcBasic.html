@@ -1,0 +1,43 @@
+<div class="bas-info border-none child-table-main">
+    <div>
+        <form class="wrapper-md">
+            <div class="clearfix">
+
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab"> 质检单号</label>
+                    <span class="child-span" ng-bind="dataItem.id"/>
+                </div>
+
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab"> 通知单号</label>
+                    <span class="child-span" ng-bind="dataItem.asnId"/>
+                </div>
+
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">总数量</label>
+                    <span class="child-span" ng-bind="dataItem.totalQty"/>
+                </div>
+
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">总品种数</label>
+                    <span class="child-span" ng-bind="dataItem.totalCategoryQty"/>
+                </div>
+
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">质检人</label>
+                    <span class="child-span" ng-bind="dataItem.qcPrincipalUser"/>
+                </div>
+
+                <div class="panel-group p-r-30 m-b-10">
+                    <label class="child-lab">单据状态</label>
+                    <span class="child-span" ng-bind="dataItem.statusCode|codeFormat:'TicketStatus'"/>
+                </div>
+
+
+
+
+
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.main.mapper.TenantMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.main.TWmsTenantEntity">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+        <result column="tenant_no" property="tenantNo" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="BIGINT" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="BIGINT" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        `id`,`type_code`,`tenant_no`,`description`, `create_user`,`create_time`,`update_user`,`update_time`
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="id !=null and id != 0">
+                AND id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="typeCode != null">
+                AND typec_code = #{typeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="tenantNo != null" >
+                AND tenant_no = #{tenantNo,jdbcType=VARCHAR}
+            </if>
+            <if test="description != null" >
+                AND description = #{description,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="orderBy == null">
+            ORDER BY create_time desc
+        </if>
+
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+            LIMIT ${offset}, ${pageSize}
+        </if>
+    </sql>
+
+    <select id="queryTenantPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.main.TWmsTenantEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_tenant
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryTenantPageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.main.TWmsTenantEntity">
+        SELECT count(1) FROM t_smart_tenant
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_tenant
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete
+        from t_smart_tenant
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insertTenant" parameterType="com.huamengtong.wms.entity.main.TWmsTenantEntity" >
+        insert into t_smart_tenant
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="typeCode != null" >
+                type_code,
+            </if>
+            <if test="tenantNo != null" >
+                tenant_no,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="createUser != null" >
+                create_user,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateUser != null" >
+                update_user,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="typeCode != null" >
+                #{typeCode,jdbcType=BIGINT},
+            </if>
+            <if test="tenantNo != null" >
+                #{tenantNo,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateTenant" parameterType="com.huamengtong.wms.entity.main.TWmsTenantEntity" >
+        update t_smart_tenant
+        set tenant_no = #{tenantNo,jdbcType=VARCHAR},
+        description = #{description,jdbcType=VARCHAR},
+        update_user = #{updateUser,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+</mapper>

@@ -1,0 +1,137 @@
+<div class="content-wrap" ng-controller="moveController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="moveGrid">
+            <div class="panel-group">
+                <label>移库单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+
+            <div class="panel-group">
+                <label>数据来源</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="DataSource" name="query.datasourceCode" id="query.datasourceCode" ></l-select>
+                </div>
+            </div>
+
+           <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+
+            <div class="panel-group">
+                <label>单据状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+
+        </panel_heading_search>
+
+
+        <div class="panel-body">
+            <div kendo-grid="moveGrid" options="mainGridOptions">
+                <div k-detail-template>
+                    <div>
+                        <div kendo-grid k-options="logOptions(dataItem.id,'Move')"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<!-- 新增/编辑模版 -->
+<script id="move-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>移库单号</label>
+                <input type="text" value="自动生成" disabled="disabled">
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <label>数据来源</label>
+                <span class="inputDisbled" ng-if="dataItem.isNew()" wms-label="DataSource.Manual" bind-name="datasourceCode"></span>
+                <span class="inputDisbled" ng-if="!dataItem.isNew()" ng-bind ="dataItem.datasourceCode|codeFormat:'DataSource'"></span>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货主</label>
+                <div class="select-wrapper" ng-if="dataItem.isNew()">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="cargoOwnerId" ui-select-id="cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models) required></wms-ui-select>
+                </div>
+                <span ng-if="!dataItem.isNew()" class="inputDisbled"    ng-model="dataItem.cargoOwnerId"  ng-bind="dataItem.cargoOwnerId|cargoOwnerFormat:'cargoOwnerId'" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>来源库房</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="storageRoomSrc" name="fromRoomId" id="fromRoomId" required></r-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品</label>
+                <input type="hidden" id="skuId" name="skuId"/>
+                <input type="text" ng-if="dataItem.isNew()" id="skuName" name="skuName"   ng-click="windowOpen(this)" readonly="readonly" />
+                <span class="inputDisbled" ng-if="!dataItem.isNew()" ng-bind ="dataItem.skuName"></span>
+            </div>
+
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>目的库房</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="storageRoomSrc" name="toRoomId" id="toRoomId" required></r-select>
+                </div>
+            </div>
+
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>在库可用数量</label>
+                <input  id="availableQty" name="availableQty"  type="number"  disabled/>
+            </div>
+
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>移货数量</label>
+                <input id="movedQty" name="movedQty" type="number" ng-click="test()" data-minqty="1" disabled="disabled"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>参考单号</label>
+                <input id="referNo" name="referNo" type="text" />
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <label>移货原因</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="MoveReason" name="moveReason" id="moveReason" required></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group">
+                <label>移货描述</label>
+                <textarea class="tear-text" clos="50" id="description" name="description" />
+            </div>
+
+        </div>
+    </div>
+</script>
+
+<!--商品选择-->
+<div kendo-window="skuInventoryPopup" k-title="'商品选择'" k-modal="true"
+     k-resizable="false"
+     k-width="800" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/skuInventory.html' }">
+    </div>

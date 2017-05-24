@@ -1,0 +1,1 @@
+insert into `t_smart_role` (`tenant_id`, `role_name`, `is_active`, `create_user`, `create_time`, `update_user`, `update_time`) values('88','管理员','1','admin',now(),'admin',now());

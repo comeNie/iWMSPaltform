@@ -1,0 +1,72 @@
+<div class="content-wrap" ng-controller="storageRoomController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="storageRoomHeaderGrid">
+            <div class="panel-group">
+                <label>库房编号</label><input type="text" ng-model="query.roomNo" />
+            </div>
+            <div class="panel-group">
+                <label>库房性质</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="RoomType" name="query.typeCode" id="query.typeCode"></l-select>
+                </div>
+            </div>
+            <div class="panel-group">
+                <label>库房类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="StorageRoomType" name="query.storageRoomType" id="query.storageRoomType"></l-select>
+                </div>
+            </div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="storageRoomHeaderGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 新增/编辑模版 -->
+<script id="storageRoom-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>库房编号</label>
+                <input id="roomNo" name="roomNo" type="text" required/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>库房性质</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="RoomType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>库房类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="StorageRoomType" name="storageRoomType" id="storageRoomType" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>优先级</label>
+                <input id="priority" name="priority" type="text" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否默认库房</label>
+                <input id="isDefault" name="isDefault" type="checkbox" checked="checked"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否可使用</label>
+                <input id="isActive" name="isActive" type="checkbox" value="1" checked="checked"/>
+            </div>
+            <div class="pure-control-group ">
+                <label>库房描述</label>
+                <textarea class="tear-text" clos="50" id="description" name="description" />
+            </div>
+        </div>
+    </div>
+</script>

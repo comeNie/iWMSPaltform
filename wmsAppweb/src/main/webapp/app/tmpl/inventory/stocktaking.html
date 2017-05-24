@@ -1,0 +1,142 @@
+<div class="content-wrap" ng-controller="stocktakingController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="stocktakingHeaderGrid">
+            <div class="panel-group">
+                <label>盘点单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+
+            <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>单据状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+
+            <div class="panel-group ">
+                <label>盘点时间</label>
+                <wms-Date-Time-Picker id="stocktakingTime"  format="yyyy/MM/dd 00:00:00" is-query="true"/>
+            </div>
+
+        </panel_heading_search>
+
+
+
+        <div class="panel-body">
+            <div kendo-grid="stocktakingHeaderGrid" options="mainGridOptions">
+                <div k-detail-template>
+                    <kendo-tabstrip>
+                        <ul>
+                            <li class="k-state-active" ng-click="hideCreate(dataItem)">明细信息</li>
+                            <li>操作日志</li>
+                        </ul>
+                        <!--明细信息-->
+                        <div>
+                            <div kendo-grid="stocktakingDetailGrid" k-options="stocktakingDetailOptions(dataItem)"></div>
+                        </div>
+                        <!--操作日志-->
+                        <div>
+                            <div kendo-grid k-options="logOptions(dataItem.id,'CycleCount')"></div>
+                        </div>
+
+                    </kendo-tabstrip>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="k-popup-edit-form k-window-content k-content ng-scope" kendo-window="stocktakingPopup" k-title="'盘点'"
+         k-resizable="false" k-modal="true" k-visible="false">
+        <div class="k-edit-form-container">
+            <div class="pure-body p-t-10">
+
+                <div class="pure-control-group p-b-5">
+                    <label>盘点单号</label>
+                    <input type="text" name="stocktakingDetailModel.id" id="stocktakingDetailModel.id" ng-model="stocktakingDetailModel.id"  disabled/>
+                </div>
+
+                <div class="pure-control-group p-b-5">
+                    <label>商品名称</label>
+                    <input type="text" name="stocktakingDetailModel.skuName" id="stocktakingDetailModel.skuName" ng-model="stocktakingDetailModel.skuName"  disabled/>
+                </div>
+
+                <div class="pure-control-group p-b-5">
+                    <label>目前在库可用数量</label>
+                    <input type="text" name="stocktakingDetailModel.systemQty" id="stocktakingDetailModel.systemQty" ng-model="stocktakingDetailModel.systemQty"  disabled/>
+                </div>
+
+                <div class="pure-control-group">
+                    <label>盘点数量</label>
+                    <input type="number" name="stocktakingDetailModel.countQty" id="stocktakingDetailModel.countQty" ng-model="stocktakingDetailModel.countQty" required/>
+                </div>
+            </div>
+            <br>
+            <div class="k-edit-buttons k-state-default">
+                <a class="k-button k-button-icontext k-primary k-grid-update" ng-click="stocktakingConfirm($event)"><span
+                        class="k-icon k-update"></span>确定</a>
+                <a class="k-button k-button-icontext k-grid-cancel" href="#" ng-click="stocktakingClose()"><span
+                        class="k-icon k-cancel"></span>关闭</a>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+<!-- 新增/编辑模版 -->
+<script id="stocktakingHeader-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>盘点单号</label>
+                <input type="text" value="自动生成" disabled="disabled">
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货主</label>
+                <div class="select-wrapper" ng-if="dataItem.isNew()">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="cargoOwnerId" ui-select-id="cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models) required></wms-ui-select>
+                </div>
+                <span ng-if="!dataItem.isNew()" class="inputDisbled"    ng-model="dataItem.cargoOwnerId"  ng-bind="dataItem.cargoOwnerId|cargoOwnerFormat:'cargoOwnerId'" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>库房</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <r-select src="storageRoomSrc" name="storageRoomId" id="storageRoomId" required></r-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>盘点类型</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="CycleCountType" name="typeCode" id="typeCode" required></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>盘点时间</label>
+                <wms-Date-Time-Picker id="stocktakingTime" name="stocktakingTime" format="yyyy/MM/dd 00:00:00 " today="true"/>
+            </div>
+
+        </div>
+    </div>
+</script>
+

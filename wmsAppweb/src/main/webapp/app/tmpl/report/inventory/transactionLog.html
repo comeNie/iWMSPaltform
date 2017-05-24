@@ -1,0 +1,41 @@
+<div class="content-wrap" ng-controller="reportTransactionLogController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="reportTransactionLogGrid">
+                <div class="panel-group">
+                    <label>开始时间:</label>
+                    <wms-Date-Time-Picker id="fromTime" is-query="true" format="yyyy/MM/dd 00:00:00"/>
+                </div>
+                <div class="panel-group">
+                    <label>结束时间:</label>
+                    <wms-Date-Time-Picker id="toTime" is-query="true" format="yyyy/MM/dd 23:59:59"/>
+                </div>
+                <div class="panel-group">
+                    <label>商品编码:</label>
+                    <input type="text" ng-model="query.sku" />
+                </div>
+                <div class="panel-group">
+                    <label>商品条码:</label>
+                    <input type="text" ng-model="query.barCode" />
+                </div>
+                <div class="panel-group">
+                    <label>商品名称:</label>
+                    <input type="text" ng-model="query.skuName" />
+                </div>
+                <div class="panel-group">
+                    <label>操作类型:</label>
+                    <div class="panel-select">
+                        <l-select src="OrderType" name="query.typeCode" id="query.typeCode"></l-select>
+                    </div>
+                </div>
+                <div class="panel-group">
+                    <label>单据号:</label>
+                    <input type="text" ng-model="query.orderId" class="js_wms_number" />
+                </div>
+        </panel_heading_search>
+
+        <div class="panel-body">
+            <div kendo-grid="reportTransactionLogGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+
+</div>

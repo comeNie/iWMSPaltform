@@ -1,0 +1,69 @@
+<div class="content-wrap" ng-controller="processController">
+    <div class="panel panel-default">
+         <div class="panel-heading m-b-5">
+             <form class="pure-form pure-form-land" >
+                 <div class="panel-box-main">
+                     <div class="panel-box-left">
+                         <div class="panel-group">
+                             <label>商品名称</label>
+                             <input type="text" id="skuName" name="skuName"/>
+                         </div>
+                         <div class="panel-group">
+                             <label>商品编码</label>
+                             <input type="text" id="sku" name="sku"/>
+                         </div>
+                         <!--<div class="panel-group">-->
+                             <!--<label>商品条码</label>-->
+                             <!--<input type="text" id="cargoOwnerBarcode" name="cargoOwnerBarcode"/>-->
+                         <!--</div>-->
+                         <!--<div class="panel-group">-->
+                             <!--<label>库房</label>-->
+                             <!--<div class="select-wrapper">-->
+                                 <!--<div class="select-border"></div>-->
+                                 <!--<r-select src="storageRoomSrc" name="storageRoomId" id="storageRoomId"></r-select>-->
+                             <!--</div>-->
+                         <!--</div>-->
+                         <!--<div class="panel-group">-->
+                             <!--<label>货主</label>-->
+                             <!--<div class="select-wrapper">-->
+                                 <!--<div class="select-border"></div>-->
+                                 <!--<wms-ui-select ui-select-name="cargoOwnerId" ui-select-id="cargoOwnerId" src="cargoOwnerSrc"></wms-ui-select>-->
+                             <!--</div>-->
+                         <!--</div>-->
+                     </div>
+                     <div class="panel-box-right">
+                         <button ng-click='searchGrid()' class='btn order-btn'><i class='fa fa-search faIcon'></i>查询</button>
+                         <wms-reset-button></wms-reset-button>
+                     </div>
+                 </div>
+             </form>
+             <button class="btn m-b-ms w-ms btn-info up-down" id="J_seachToggle"><i class="fa fa-w fa-angle-double-down"></i></button>
+         </div>
+
+        <div class="panel-body">
+            <!--<a class="k-button k-button-icontext k-add-button" href="#"><span class="k-icon k-add"></span>新增</a>-->
+            <div data-role="listview" id="listView"></div>
+            <div id="pager" class="k-pager-wrap k-grid-pager k-widget"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-kendo-tmpl" id="template">
+    <div class="product-view k-widget " >
+        <dl>
+            <dt>商品名称</dt>
+            <dd style="height:40px;width:200px">#:skuName#</dd>
+            <dt>商品规格</dt>
+            <dd>#:spec #</dd>
+            <dt>数量</dt>
+            <dd>#:kendo.toString(qty, "n2")#</dd>
+            <img src="./images/products/#= skuType #.jpg" alt="#= skuType # image" />
+        </dl>
+    </div>
+</script>
+
+<style>
+    .product-view {float: left; width: 50%; height: 190px; box-sizing: border-box; border-top: 0; position: relative; } .product-view:nth-child(even) {border-left-width: 0; } .product-view dl{margin: 10px 10px 0; padding: 0; overflow: hidden; } .product-view dt, dd{margin: 0; padding: 0; width: 100%; line-height: 24px; font-size: 18px; } .product-view dt{font-size: 11px; height: 16px; line-height: 16px; text-transform: uppercase; opacity: 0.5; } .product-view dd{height: 46px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } .product-view dd input[type="text"]{width: 144px; padding: 5px 5px; height: 24px; line-height: 22px; border: 1px solid #dcdcdc; float: left; } .product-view img{position: absolute; top: 20px; left: 240px; text-align: right; padding: 5px; } .product-view dd .k-widget, .product-view dd .k-textbox {font-size: 14px; } .k-listview{border-width: 1px 0 0; padding: 0; overflow: hidden; min-height: 298px; } .edit-buttons{position: absolute; bottom: 0; left: 0; right: 0; text-align: right; padding: 5px; background-color: rgba(0,0,0,0.1); } .k-pager-wrap{border-top: 0; } span.k-invalid-msg{position: absolute; margin-left: 6px; } .k-add-button {margin-bottom: 2em; } media only screen and (max-width:620px) {.product-view {width: 100%; } .product-view:nth-child(even) {border-left-width: 1px; } }
+</style>
+
+

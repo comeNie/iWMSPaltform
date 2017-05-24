@@ -1,0 +1,47 @@
+<div class="content-wrap" ng-controller="reportSalesController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="reportSalesGrid">
+            <div class="panel-group">
+                <label>商品编码:</label>
+                <input type="text" ng-model="query.sku"/>
+            </div>
+            <div class="panel-group">
+                <label>商品条码:</label>
+                <input type="text" ng-model="query.skuBarCode"/>
+            </div>
+            <div class="panel-group">
+                <label>商品名称:</label>
+                <input type="text" ng-model="query.skuItemName"/>
+            </div>
+        </panel_heading_search>
+
+        <div class="panel-body">
+            <div kendo-grid="reportSalesGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+
+
+</div>
+<script>
+    var flag = true;
+    this.window.onresize = function () {
+        flag = true;
+        heightChange();
+    };
+    window.setInterval(heightChange,1000);
+    function heightChange() {
+        if (window.location.hash.toString() !== "#/report/integration/inventoryReport") {
+            flag = true;
+            return;
+        } else if($('.k-grid-content').height() == null){
+            window.setTimeout(heightChange,50);
+        }else{
+            if(flag){
+                flag = false;
+                var height = $('.k-grid-content').height() - 30;
+                $('.k-grid-content').removeAttr("style");
+                $('.k-grid-content').attr("style", "height:" + height + "px");
+            }
+        }
+    }
+</script>

@@ -1,0 +1,101 @@
+<div class="content-wrap" ng-controller="qcController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="qcHeaderGrid">
+            <div class="panel-group">
+                <label>收货单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+
+            <div class="panel-group">
+                <label>单据状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+
+            <div class="panel-group ">
+                <label>创建开始时间</label>
+                <wms-Date-Time-Picker id="startTime"  format="yyyy/MM/dd 00:00:00" is-query="true"/>
+            </div>
+            <div class="panel-group ">
+                <label>创建结束时间</label>
+                <wms-Date-Time-Picker id="endTime" format="yyyy/MM/dd 23:59:59" is-query="true"/>
+            </div>
+        </panel_heading_search>
+
+        <div class="panel-body">
+            <div kendo-grid="qcHeaderGrid" options="mainGridOptions">
+
+                <div k-detail-template>
+
+                    <kendo-tabstrip>
+
+                        <ul>
+                            <li class="k-state-active">明细信息</li>
+                            <li>基本信息</li>
+                            <li>操作日志</li>
+                        </ul>
+
+                        <!--明细信息-->
+                    <div>
+                        <div kendo-grid="qcDetailGrid" k-options="qcDetailOptions(dataItem)"></div>
+                    </div>
+                        <!--基础信息-->
+                        <div>
+                            <div ng-include="'/app/tmpl/inwh/qcBasic.html'"></div>
+                        </div>
+                        <!--操作日志-->
+                        <div>
+                            <div kendo-grid k-options="logOptions(dataItem.id,'qc')"></div>
+                        </div>
+
+                    </kendo-tabstrip>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="k-popup-edit-form k-window-content k-content ng-scope" kendo-window="qcReceivePopup" k-title="'收货'"
+         k-resizable="false" k-modal="true" k-visible="false">
+        <div class="k-edit-form-container">
+            <div class="pure-body p-t-10">
+                <div class="pure-control-group p-b-5">
+                    <label>收货单号</label>
+                    <span></span>
+                    <input type="text" name="qcReceiveModel.qcId" id="qcReceiveModel.qcId" ng-model="qcReceiveModel.qcId"  disabled/>
+                </div>
+                <div class="pure-control-group p-b-5">
+                    <label>货主商品条码</label>
+                    <input type="text" name="qcReceiveModel.barcode" id="qcReceiveModel.barcode" ng-model="qcReceiveModel.barcode" required/>
+                </div>
+                <div class="pure-control-group p-b-5">
+                    <label>检收数量</label>
+                    <input type="text" name="qcReceiveModel.qcQty" id="qcReceiveModel.qcQty" ng-model="qcReceiveModel.qcQty" data-minqty="1" onlyNumber required/>
+                </div>
+                <div class="pure-control-group p-b-5">
+                    <label>存储库房</label>
+                    <div class="select-wrapper">
+                        <div class="select-border"></div>
+                        <r-select src="storageRoomSrc" name="storageRoomId" id="storageRoomId"  required></r-select>
+                    </div>
+                    <!--<input type="text" name="storageRoomId" id="storageRoomId" required/>-->
+                </div>
+                <div class="pure-control-group p-b-5">
+                    <label>仓库温度</label>
+                    <input type="text" name="qcReceiveModel.warehouseTemp" id="qcReceiveModel.warehouseTemp" ng-model="qcReceiveModel.warehouseTemp"  required/>
+                </div>
+            </div>
+            <div class="k-edit-buttons k-state-default">
+                <a class="k-button k-button-icontext k-primary k-grid-update" ng-click="qcReceiveConfirm($event)"><span
+                        class="k-icon k-update"></span>确定</a>
+                <a class="k-button k-button-icontext k-grid-cancel" href="#" ng-click="qcReceiveClose()"><span
+                        class="k-icon k-cancel"></span>关闭</a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

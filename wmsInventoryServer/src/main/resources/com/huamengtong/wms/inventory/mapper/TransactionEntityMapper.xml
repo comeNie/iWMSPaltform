@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.inventory.mapper.TransactionMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inventory.TWmsTransactionEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="type_code" jdbcType="VARCHAR" property="typeCode" />
+        <result column="order_id" jdbcType="BIGINT" property="orderId" />
+        <result column="from_storage_room_id" jdbcType="BIGINT" property="fromStorageRoomId" />
+        <result column="to_storage_room_id" jdbcType="BIGINT" property="toStorageRoomId" />
+        <result column="from_zone_id" jdbcType="BIGINT" property="fromZoneId" />
+        <result column="to_zone_id" jdbcType="BIGINT" property="toZoneId" />
+        <result column="from_location_id" jdbcType="BIGINT" property="fromLocationId" />
+        <result column="to_location_id" jdbcType="BIGINT" property="toLocationId" />
+        <result column="from_pallet_no" jdbcType="VARCHAR" property="fromPalletNo" />
+        <result column="to_pallet_no" jdbcType="VARCHAR" property="toPalletNo" />
+        <result column="from_carton_no" jdbcType="VARCHAR" property="fromCartonNo" />
+        <result column="to_carton_no" jdbcType="VARCHAR" property="toCartonNo" />
+        <result column="from_workgroup_no" jdbcType="VARCHAR" property="fromWorkgroupNo" />
+        <result column="to_workgroup_no" jdbcType="VARCHAR" property="toWorkgroupNo" />
+        <result column="from_inv_status_code" jdbcType="VARCHAR" property="fromInvStatusCode" />
+        <result column="to_inv_status_code" jdbcType="VARCHAR" property="toInvStatusCode" />
+        <result column="from_qty" jdbcType="INTEGER" property="fromQty" />
+        <result column="to_qty" jdbcType="INTEGER" property="toQty" />
+        <result column="from_price" jdbcType="DECIMAL" property="fromPrice" />
+        <result column="to_price" jdbcType="DECIMAL" property="toPrice" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="refer_no" jdbcType="VARCHAR" property="referNo" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id, tenant_id, warehouse_id, cargo_owner_id, sku_id, type_code, order_id, from_storage_room_id,
+        to_storage_room_id, from_zone_id, to_zone_id, from_location_id, to_location_id, from_pallet_no,
+        to_pallet_no, from_carton_no, to_carton_no, from_workgroup_no, to_workgroup_no, from_inv_status_code,
+        to_inv_status_code, from_qty, to_qty, from_price, to_price, create_user, create_time,
+        update_user, update_time, refer_no
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_transaction
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insertTransaction" parameterType="com.huamengtong.wms.entity.inventory.TWmsTransactionEntity">
+        insert into t_smart_transaction
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=0 ">
+                id,
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId !=0 ">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId !=0 ">
+                warehouse_id,
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId !=0 ">
+                cargo_owner_id,
+            </if>
+            <if test="entity.skuId != null and entity.skuId !=0 ">
+                sku_id,
+            </if>
+            <if test="entity.typeCode != null">
+                type_code,
+            </if>
+            <if test="entity.orderId != null">
+                order_id,
+            </if>
+            <if test="entity.fromStorageRoomId != null">
+                from_storage_room_id,
+            </if>
+            <if test="entity.toStorageRoomId != null">
+                to_storage_room_id,
+            </if>
+            <if test="entity.fromZoneId != null">
+                from_zone_id,
+            </if>
+            <if test="entity.toZoneId != null">
+                to_zone_id,
+            </if>
+            <if test="entity.fromLocationId != null">
+                from_location_id,
+            </if>
+            <if test="entity.toLocationId != null">
+                to_location_id,
+            </if>
+            <if test="entity.fromPalletNo != null">
+                from_pallet_no,
+            </if>
+            <if test="entity.toPalletNo != null">
+                to_pallet_no,
+            </if>
+            <if test="entity.fromCartonNo != null">
+                from_carton_no,
+            </if>
+            <if test="entity.toCartonNo != null">
+                to_carton_no,
+            </if>
+            <if test="entity.fromWorkgroupNo != null">
+                from_workgroup_no,
+            </if>
+            <if test="entity.toWorkgroupNo != null">
+                to_workgroup_no,
+            </if>
+            <if test="entity.fromInvStatusCode != null">
+                from_inv_status_code,
+            </if>
+            <if test="entity.toInvStatusCode != null">
+                to_inv_status_code,
+            </if>
+            <if test="entity.fromQty != null">
+                from_qty,
+            </if>
+            <if test="entity.toQty != null">
+                to_qty,
+            </if>
+            <if test="entity.fromPrice != null">
+                from_price,
+            </if>
+            <if test="entity.toPrice != null">
+                to_price,
+            </if>
+            <if test="entity.createUser != null">
+                create_user,
+            </if>
+            <if test="entity.createTime != null">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null">
+                update_time,
+            </if>
+            <if test="entity.referNo != null">
+                refer_no,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null">
+                #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.skuId != null">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.typeCode != null">
+                #{entity.typeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.orderId != null">
+                #{entity.orderId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromStorageRoomId != null">
+                #{entity.fromStorageRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toStorageRoomId != null">
+                #{entity.toStorageRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromZoneId != null">
+                #{entity.fromZoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toZoneId != null">
+                #{entity.toZoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromLocationId != null">
+                #{entity.fromLocationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toLocationId != null">
+                #{entity.toLocationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromPalletNo != null">
+                #{entity.fromPalletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.toPalletNo != null">
+                #{entity.toPalletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromCartonNo != null">
+                #{entity.fromCartonNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.toCartonNo != null">
+                #{entity.toCartonNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromWorkgroupNo != null">
+                #{entity.fromWorkgroupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.toWorkgroupNo != null">
+                #{entity.toWorkgroupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromInvStatusCode != null">
+                #{entity.fromInvStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.toInvStatusCode != null">
+                #{entity.toInvStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromQty != null">
+                #{entity.fromQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.toQty != null">
+                #{entity.toQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.fromPrice != null">
+                #{entity.fromPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.toPrice != null">
+                #{entity.toPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.createUser != null">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.referNo != null">
+                #{entity.referNo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>

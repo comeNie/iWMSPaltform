@@ -1,0 +1,294 @@
+<div class="content-wrap" ng-controller="asnController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="asnHeaderGrid">
+
+            <div class="panel-group">
+                <label>通知单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+
+            <div class="panel-group">
+                <label>货主</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="query.cargoOwnerId" ui-select-id="query.cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>单据来源</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="ReceiptFrom" name="query.fromTypeCode" id="query.fromTypeCode"></l-select>
+                </div>
+            </div>
+
+            <div class="panel-group">
+                <label>单据状态</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TicketStatus" name="query.statusCode" id="query.statusCode"></l-select>
+                </div>
+            </div>
+
+
+            <div class="panel-group ">
+                <label>创建开始时间</label>
+                <wms-Date-Time-Picker id="startTime"  format="yyyy/MM/dd 00:00:00" is-query="true"/>
+            </div>
+            <div class="panel-group ">
+                <label>创建结束时间</label>
+                <wms-Date-Time-Picker id="endTime" format="yyyy/MM/dd 23:59:59" is-query="true"/>
+            </div>
+
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="asnHeaderGrid" options="mainGridOptions">
+
+
+                <div k-detail-template>
+                    <kendo-tabstrip>
+                        <ul>
+                            <li class="k-state-active" ng-click="hideCreate(dataItem)">明细信息</li>
+                            <li>基本信息</li>
+                            <li>供应商信息</li>
+                            <li>承运商信息</li>
+                            <li>操作日志</li>
+                        </ul>
+
+                        <!--明细信息-->
+                    <div>
+                        <div kendo-grid="headerDetailGrid" k-options="DetailOptions(dataItem)"></div>
+                    </div>
+                        <!--基本信息-->
+                        <div>
+                            <div ng-include="'/app/tmpl/inwh/asnBasic.html'"></div>
+                        </div>
+                        <!--供应商信息-->
+                        <div>
+                            <div ng-include="'/app/tmpl/inwh/asnSupplierBasic.html'"></div>
+                        </div>
+                        <!--承运商信息-->
+                        <div>
+                            <div ng-include="'/app/tmpl/inwh/asnCarrierBasic.html'"></div>
+                        </div>
+                        <!--操作日志-->
+                        <div>
+                            <div kendo-grid k-options="logOptions(dataItem.id,'ASN')"></div>
+                        </div>
+
+                    </kendo-tabstrip>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script id="asnHeader-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>数据来源</label>
+                <span class="inputDisbled" ng-if="dataItem.isNew()" wms-label="DataSource.Manual" bind-name="datasourceCode"></span>
+                <span class="inputDisbled" ng-if="!dataItem.isNew()" ng-bind="dataItem.datasourceCode|codeFormat:'DataSource'"></span>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>单据来源</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="ReceiptFrom" name="fromTypeCode" id="fromTypeCode" required></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>入库方式</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="ReceiptType" name="receiptTypeCode" id="receiptTypeCode" required></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>货主</label>
+                <div class="select-wrapper" ng-if="dataItem.isNew()" >
+                    <div class="select-border"></div>
+                    <wms-ui-select ui-select-name="cargoOwnerId" ui-select-id="cargoOwnerId" src="cargoOwnerSrc" on-select=$parent.cargoOwnerIdChange($item,$models)></wms-ui-select>
+                </div>
+                <span ng-if="!dataItem.isNew()" class="inputDisbled"    ng-model="dataItem.cargoOwnerId"  ng-bind="dataItem.cargoOwnerId|cargoOwnerFormat:'cargoOwnerId'" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>预计到货日期</label>
+                <wms-Date-Time-Picker id="expectedDate" format="yyyy/MM/dd 00:00:00" is-query="true" date/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>起运地址</label>
+                <input id="fromAddress" name="fromAddress" type="text" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>供应商</label>
+                <input type="hidden" id="supplierId" name="supplierId"/>
+                <input id="supplierName" name="supplierName" type="text" ng-click="windowOpenSupplier(this)" readonly="readonly" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>预约单号</label>
+                <input id="warehouseReferNo" name="warehouseReferNo" type="text" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>承运商</label>
+                <input type="hidden" id="carrierId" name="carrierId"/>
+                <input id="carrierName" name="carrierName" type="text" ng-click="windowOpenCarrier(this)" readonly="readonly" />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>运输方式</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="TransportModeType" name="transportModeCode" id="transportModeCode" required></l-select>
+                </div>
+            </div>
+
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>总箱数</label>
+                <input id="totalCartonQty" name="totalCartonQty" type="number" readonly="readonly" class="inputDisbled" onlyPositiveNumberWide/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>总数量</label>
+                <input id="totalQty" name="totalQty" type="text" readonly="readonly" class="inputDisbled" onlyPositiveNumberWide/>
+            </div>
+
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>总金额</label>
+                <input id="totalAmount" name="totalAmount" type="text" readonly="readonly" class="inputDisbled" onlyPositiveNumberWide/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>总净重</label>
+                <input id="totalNetWeight" name="totalNetWeight" type="text" readonly="readonly" class="inputDisbled" onlyPositiveNumberWide/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>总毛重</label>
+                <input id="totalGrossWeight" name="totalGrossWeight" type="text" readonly="readonly" class="inputDisbled" onlyPositiveNumberWide/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>总容积</label>
+                <input id="totalCube" name="totalCube" type="text" readonly="readonly" class="inputDisbled" onlyPositiveNumberWide />
+            </div>
+
+            <div class="pure-control-group">
+            </div>
+
+            <div class="pure-control-group">
+                <label>描述</label>
+                <textarea class="tear-text" clos="50" id="description" name="description" />
+            </div>
+
+        </div>
+    </div>
+</script>
+
+
+<!--供应商/承运商选择-->
+<div kendo-window="organizationsPopup" k-title="'商家机构'" k-modal="true"
+     k-resizable="false"
+     k-width="600" k-height="480" k-visible="false"
+     k-content="{ url:'./tmpl/popup/organizations.html'}"></div>
+
+
+
+
+
+
+<script id="asnDetail-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品名称</label>
+                <input type="hidden" id="skuId" name="skuId"/>
+                <input id="skuName" name="skuName" type="text" ng-click="windowOpenSku(this)" readonly="readonly"/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品条码</label>
+                <input id="sku" name="sku" type="text" disabled/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品用途</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="SkuProperty" name="property" id="property"></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>期望数量</label>
+                <input id="expectedQty" name="expectedQty" type="number" data-minqty="1" data-maxqty="2147483647" required/>
+            </div>
+
+            <!-- -->
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>净重</label>
+                <input id="netWeight" name="netWeight" type="text"  onlyPositiveNumberWide />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>毛重</label>
+                <input id="grossWeight" name="grossWeight" type="text"  onlyPositiveNumberWide />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>总容积</label>
+                <input id="volume" name="volume" type="text"  onlyPositiveNumberWide />
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>商品单位</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="MasterUnit" name="unitType" id="unitType" disabled = true></l-select>
+                </div>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>规格</label>
+                <input id="spec" name="spec" type="text" disabled/>
+            </div>
+
+            <div class="pure-control-group"></div>
+
+
+            <div class="pure-control-group">
+                <label>备注</label>
+                <textarea class="tear-text" clos="50" id="description" name="description" />
+            </div>
+
+
+        </div>
+    </div>
+</script>
+
+
+<!--商品选择-->
+<div kendo-window="skuPopup" k-title="'商品选择'" k-modal="true"
+     k-resizable="false"
+     k-width="800" k-height="400" k-visible="false"
+     k-content="{ url: './tmpl/popup/sku.html' }"></div>
+
+
+<div ng-include="'/app/tmpl/inwh/printDetail.html'"></div>

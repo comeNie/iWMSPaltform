@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huamengtong.wms.main.mapper.ModuleMapper" >
+  <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.main.TWmsModuleEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="module_type" property="moduleType" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="module_name" property="moduleName" jdbcType="VARCHAR" />
+    <result column="icons" property="icons" jdbcType="VARCHAR" />
+    <result column="module_Path" property="modulePath" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="INTEGER" />
+    <result column="is_visible" property="isVisible" jdbcType="BIT" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="BIGINT" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, type_code, module_type, parent_id, module_name, module_Path,`icons`, description, `position`,
+    is_visible, create_user, create_time, update_user, update_time, is_del
+  </sql>
+
+  <!-- query where 子句 -->
+  <sql id="queryWhereClause">
+    <where>
+      <if test="id !=null and id != 0">
+        AND id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="isVisible != null" >
+        AND is_visible = #{isVisible,jdbcType=BIT}
+      </if>
+      <if test="moduleName != null" >
+        AND module_name = #{moduleName,jdbcType=VARCHAR}
+      </if>
+      <if test="moduleType != null" >
+        AND module_type = #{moduleType,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+  <sql id="queryLimitClause">
+    <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+      LIMIT ${offset}, ${pageSize}
+    </if>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_smart_module
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAllModules" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_smart_module
+    <include refid="queryWhereClause"/>
+  </select>
+
+  <select id="selectAllModulesAdmin" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_smart_module
+    where module_type = #{moduleType,jdbcType=VARCHAR} AND is_Del = 0
+    order by position ASC
+  </select>
+
+  <select id="selectAllModuleNormal" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from `t_smart_module` m
+    where m.module_type =#{moduleType,jdbcType=VARCHAR}
+    AND m.is_Visible = 1 AND m.is_Del = 0
+    AND m.id in (
+       select action_id from `t_smart_role_permission` rp where rp.relation_type='m' and
+           rp.role_Id in (select role_id from `t_smart_user_role` where user_id = #{userId,jdbcType=BIGINT} )
+    )
+    ORDER BY m.parent_Id,m.`POSITION` ASC
+  </select>
+
+  <select id="selectModuleByIds" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_smart_module m
+    where  m.is_Visible = 1 AND m.is_Del = 0 AND m.id in
+    <foreach collection="list" item="id" index="index"
+             open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_smart_module
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertModule" parameterType="com.huamengtong.wms.entity.main.TWmsModuleEntity" >
+    insert into t_smart_module
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="typeCode != null" >
+        type_code,
+      </if>
+      <if test="moduleType != null" >
+        module_type,
+      </if>
+      <if test="parentId != null and parentId !=0 " >
+        parent_id,
+      </if>
+      <if test="moduleName != null" >
+        module_name,
+      </if>
+      <if test="modulePath != null" >
+        module_Path,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="isVisible != null" >
+        is_visible,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="icons != null">
+        icons,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="typeCode != null" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleType != null" >
+        #{moduleType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null and parentId !=0 " >
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="moduleName != null" >
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="modulePath != null" >
+        #{modulePath,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=INTEGER},
+      </if>
+      <if test="isVisible != null" >
+        #{isVisible,jdbcType=BIT},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=BIT},
+      </if>
+      <if test="icons != null" >
+        #{icons,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateModule" parameterType="com.huamengtong.wms.entity.main.TWmsModuleEntity" >
+    update t_smart_module
+    <set>
+      <if test="typeCode != null">
+       type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleType != null">
+      module_type = #{moduleType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null and parentId !=0 ">
+      parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="moduleName != null">
+      module_name = #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null">
+      module_Path = #{modulePath,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+      description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+      position = #{position,jdbcType=INTEGER},
+      </if>
+      <if test="isVisible != null">
+      is_visible = #{isVisible,jdbcType=BIT},
+      </if>
+      <if test="icons != null">
+        icons = #{icons,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+      create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+      create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+      update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null">
+      is_del = #{isDel,jdbcType=BIT}
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

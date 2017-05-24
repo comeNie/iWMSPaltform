@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+
+    <!-- 监控中心配置 -->
+    <!--<dubbo:monitor protocol="registry"/>-->
+
+    <!-- Application name -->
+    <dubbo:application name="wmsOutwhServer" />
+
+    <dubbo:provider timeout="5000" cluster="failfast"/>
+
+    <!-- registry address, used for service to register itself -->
+    <dubbo:registry  client="zkclient" address="${zookeeper.address}" />
+    <!-- 用dubbo协议在20881端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="20884" accepts="1000"/>
+
+    <!-- Service interface   Concurrent Control 生产者服务  -->
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.ISaleOrderService"  ref="saleOrderService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IShipmentHeaderService"  ref="shipmentHeaderService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IShipmentService"  ref="shipmentService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IShipmentDetailService"  ref="shipmentDetailService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IDnHeaderService"  ref="dnHeaderService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IDnDetailService"  ref="dnDetailService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IDnInvoiceService"  ref="dnInvoiceService"/>
+
+
+    <dubbo:service interface="com.huamengtong.wms.outwh.service.IAllocateService" ref="allocateService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IFrozenHeaderService"  ref="frozenHeaderService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IFrozenDetailService"  ref="frozenDetailService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IUnfrozenHeaderService"  ref="unfrozenHeaderService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IUnfrozenDetailService"  ref="unfrozenDetailService"/>
+
+    <dubbo:service  interface="com.huamengtong.wms.outwh.service.IWaveService"  ref="waveService"/>
+
+
+</beans>

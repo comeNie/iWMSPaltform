@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.inwh.mapper.QcDetailMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inwh.TWmsQcDetailEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="qc_id" jdbcType="BIGINT" property="qcId" />
+        <result column="asn_detail_id" jdbcType="BIGINT" property="asnDetailId" />
+        <result column="location_id" jdbcType="BIGINT" property="locationId" />
+        <result column="storage_room_id" jdbcType="VARCHAR" property="storageRoomId" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+        <result column="sku_barcode" jdbcType="VARCHAR" property="skuBarcode" />
+        <result column="total_qty" jdbcType="INTEGER" property="totalQty" />
+        <result column="sampling_ratio" jdbcType="DECIMAL" property="samplingRatio" />
+        <result column="qc_qty" jdbcType="INTEGER" property="qcQty" />
+        <result column="checked_qty" jdbcType="INTEGER" property="checkedQty" />
+        <result column="qualified_qty" jdbcType="INTEGER" property="qualifiedQty" />
+        <result column="unqualified_qty" jdbcType="INTEGER" property="unqualifiedQty" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+        <result column="property" jdbcType="TINYINT" property="property" />
+        <result column="inventory_status_code" jdbcType="VARCHAR" property="inventoryStatusCode" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        id, tenant_id, warehouse_id, qc_id, asn_detail_id,  location_id,  storage_room_id, sku_id, sku, sku_name, sku_barcode, total_qty,
+    sampling_ratio, qc_qty, checked_qty, qualified_qty, unqualified_qty, description,
+    status_code, create_user, create_time, update_user, update_time, is_del,property , inventory_status_code
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id !=null and entity.id != 0">
+                AND id = #{entity.id,jdbcType=BIGINT}
+            </if>
+
+        </where>
+    </sql>
+
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!--&lt;!&ndash; query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset&ndash;&gt;-->
+    <!--<sql id="queryLimitClause">-->
+        <!--<if test="entity.offset != null and entity.offset>0 and entity.pageSize != null and entity.pageSize>0">-->
+            <!--LIMIT ${entity.offset}, ${entity.pageSize}-->
+        <!--</if>-->
+    <!--</sql>-->
+
+    <sql id="queryLimitClauseCondition">
+        <if test="offset != null and offset>=0 and pageSize != null and pageSize>0">
+            LIMIT ${offset}, ${pageSize}
+        </if>
+    </sql>
+
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap"   >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_qc_detail
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey"  >
+        delete
+        from t_smart_qc_detail
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+    <insert id="insertQcDetail" parameterType="com.huamengtong.wms.entity.inwh.TWmsQcDetailEntity">
+        insert into t_smart_qc_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null ">
+                id,
+            </if>
+            <if test="entity.tenantId != null ">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null ">
+                warehouse_id,
+            </if>
+            <if test="entity.qcId != null ">
+                qc_id,
+            </if>
+            <if test="entity.asnDetailId != null ">
+                asn_detail_id,
+            </if>
+            <if test="entity.locationId != null ">
+                location_id,
+            </if>
+            <if test="entity.storageRoomId != null ">
+                storage_room_id,
+            </if>
+            <if test="entity.skuId != null ">
+                sku_id,
+            </if>
+            <if test="entity.sku != null ">
+                sku,
+            </if>
+            <if test="entity.skuName != null ">
+                sku_name,
+            </if>
+            <if test="entity.skuBarcode != null ">
+                sku_barcode,
+            </if>
+            <if test="entity.totalQty != null ">
+                total_qty,
+            </if>
+            <if test="entity.samplingRatio != null ">
+                sampling_ratio,
+            </if>
+            <if test="entity.qcQty != null ">
+                qc_qty,
+            </if>
+            <if test="entity.checkedQty != null ">
+                checked_qty,
+            </if>
+            <if test="entity.qualifiedQty != null ">
+                qualified_qty,
+            </if>
+            <if test="entity.unqualifiedQty != null ">
+                unqualified_qty,
+            </if>
+            <if test="entity.description != null ">
+                description,
+            </if>
+            <if test="entity.statusCode != null ">
+                status_code,
+            </if>
+            <if test="entity.createUser != null ">
+                create_user,
+            </if>
+            <if test="entity.createTime != null ">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null ">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null ">
+                update_time,
+            </if>
+            <if test="entity.isDel != null ">
+                is_del,
+            </if>
+            <if test="entity.property != null ">
+                property,
+            </if>
+            <if test="entity.inventoryStatusCode != null ">
+                inventory_status_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null ">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null ">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null ">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.qcId != null ">
+                #{entity.qcId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.asnDetailId != null ">
+                #{entity.asnDetailId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.locationId != null ">
+               #{entity.locationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.storageRoomId != null ">
+                #{entity.storageRoomId,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuId != null ">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null ">
+                #{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuName != null ">
+                #{entity.skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuBarcode != null ">
+                #{entity.skuBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.totalQty != null ">
+                #{entity.totalQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.samplingRatio != null ">
+                #{entity.samplingRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.qcQty != null ">
+                #{entity.qcQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.checkedQty != null ">
+                #{entity.checkedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.qualifiedQty != null">
+                #{entity.qualifiedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.unqualifiedQty != null ">
+                 #{entity.unqualifiedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.description != null ">
+                 #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null ">
+                  #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null ">
+                 #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null ">
+                 #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null ">
+                 #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null ">
+                 #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isDel != null ">
+                 #{entity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="entity.property != null ">
+                #{entity.property,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.inventoryStatusCode != null ">
+                #{entity.inventoryStatusCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateQcDetail" parameterType="com.huamengtong.wms.entity.inwh.TWmsQcDetailEntity">
+        update t_smart_qc_detail
+        <set>
+            <if test="entity.tenantId != null ">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null ">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.qcId != null ">
+                qc_id = #{entity.qcId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.asnDetailId != null ">
+                asn_detail_id = #{entity.asnDetailId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.locationId != null ">
+                location_id = #{entity.locationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.storageRoomId != null ">
+                storage_room_id = #{entity.storageRoomId,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuId != null ">
+                sku_id = #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null ">
+                sku = #{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuName != null ">
+                sku_name = #{entity.skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuBarcode != null ">
+                sku_barcode = #{entity.skuBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.totalQty != null ">
+                total_qty = #{entity.totalQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.samplingRatio != null ">
+                sampling_ratio = #{entity.samplingRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.qcQty != null ">
+                qc_qty = #{entity.qcQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.checkedQty != null ">
+                checked_qty = #{entity.checkedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.qualifiedQty != null ">
+                qualified_qty = #{entity.qualifiedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.unqualifiedQty != null ">
+                unqualified_qty = #{entity.unqualifiedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.description != null ">
+                description = #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null ">
+                status_code = #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null ">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null ">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null ">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null ">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isDel != null ">
+                is_del = #{entity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="entity.property != null ">
+                property = #{entity.property,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.inventoryStatusCode != null ">
+                inventory_status_code= #{entity.inventoryStatusCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="queryDetailsPagesByHeaderId" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_qc_detail
+        WHERE qc_id = #{id,jdbcType=BIGINT}
+        <include refid="queryLimitClauseCondition"/>
+    </select>
+
+    <select id="queryDetailsPageCountByHeader"  resultType="java.lang.Integer" >
+        SELECT count(1)
+        FROM t_smart_qc_detail
+        WHERE qc_id= #{id,jdbcType=BIGINT}
+        LIMIT 1
+    </select>
+
+    <select id="selectQcDetailsByHeaderId"  resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_smart_qc_detail
+        WHERE qc_id= #{headerId,jdbcType=BIGINT}
+    </select>
+
+
+    <delete id="deleteQcDetailsByHeaderId"  >
+        delete
+        from t_smart_qc_detail
+        where qc_id = #{headerId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selectByHeaderIdAndSku"  resultMap="BaseResultMap" parameterType="java.util.Map"   >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_qc_detail
+        where qc_id = #{headerId,jdbcType=BIGINT}
+        AND   sku_barcode = #{barcode,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

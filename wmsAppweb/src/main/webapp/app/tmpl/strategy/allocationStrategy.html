@@ -1,0 +1,93 @@
+<div class="content-wrap" ng-controller="allocationStrategyController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="allocationStrategyGrid">
+            <div class="panel-group">
+                <label>策略名称</label><input type="text" ng-model="query.strategyName"/>
+            </div>
+        </panel_heading_search>
+        <div class="panel-body">
+            <div kendo-grid="allocationStrategyGrid" options="mainGridOptions"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 策略新增 ,策略编辑-->
+<script id="allocationStrategy-kendo-template" type="text/x-kendo-template">
+    <div class="edit-form-container">
+        <div class="pure-body p-t-10">
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>策略名称</label>
+                <input id="strategyName" name="strategyName" type="text" required/>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>所属仓库:</label>
+                <div class="panel-select">
+                    <r-select src="warehouse" id="warehouseId" name="warehouseId" ng-change="cleanStorageRoom(this)"></r-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5 pos-r">
+                <label>分配库房:</label>
+                <input id="storageRoomId" name="storageRoomId" type="text" hidden/>
+                <span class="span" ng-bind ="dataItem.storageRoomId|storageRoomStringFormat:'storageRoomStringFormat'"
+                       ng-click="windowOpenStorageRoom(this)"/>
+                <i class="fa fa-trash-o fa-click" ng-click="cleanStorageRoom(this)"></i>
+            </div>
+
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>排序字段</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="AllocateField" name="orderFieldCode" id="orderFieldCode" required></l-select>
+                </div>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>排序方向</label>
+                <div class="select-wrapper">
+                    <div class="select-border"></div>
+                    <l-select src="DirectionCode" name="directionCode" id="directionCode" required></l-select>
+                </div>
+            </div>
+
+            <!--<div class="pure-control-group p-b-5 pure-5">-->
+                <!--<label>整库优先</label>-->
+                <!--<input id="isWholePriority" name="isWholePriority"  type="checkbox" checked="checked"/>-->
+            <!--</div>-->
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否激活</label>
+                <input id="isActive" name="isActive" type="checkbox" value="1" checked="checked"/>
+            </div>
+            <div class="pure-control-group p-b-5 pure-5">
+                <label>是否默认</label>
+                <input id="isDefault" name="isDefault" type="checkbox" checked="checked"/>
+            </div>
+
+            <div class="pure-control-group p-b-5">
+            </div>
+
+            <div class="pure-control-group p-b-5 ">
+                <label>描述</label>
+                <!--<input id="description" name="description" type="text"/>-->
+                <textarea rows="3" style="width:250px;" id="description" name="description" />
+            </div>
+        </div>
+    </div>
+</script>
+
+<Style>
+    .span{
+        display: inline-block;
+        height: 24px;
+        width: 144px;
+        padding: 4px 5px;
+        border: 1px solid #dcdcdc;
+    }
+</Style>
+
+
+<!--承运商选择-->
+<div kendo-window="storageRoomPopup" k-title="'库房选择'" k-modal="true"
+     k-resizable="false"
+     k-width="700" k-height="500" k-visible="false"
+     k-content="{ url:'./tmpl/popup/storageRoom.html'}"></div>
+

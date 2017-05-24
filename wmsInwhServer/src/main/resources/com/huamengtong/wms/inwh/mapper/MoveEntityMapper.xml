@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.inwh.mapper.MoveMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inwh.TWmsMoveEntity">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId" />
+        <result column="move_reason" jdbcType="VARCHAR" property="moveReason" />
+        <result column="datasource_code" jdbcType="VARCHAR" property="datasourceCode" />
+        <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="from_room_id" jdbcType="BIGINT" property="fromRoomId" />
+        <result column="to_room_id" jdbcType="BIGINT" property="toRoomId" />
+        <result column="from_zone_id" jdbcType="BIGINT" property="fromZoneId" />
+        <result column="to_zone_id" jdbcType="BIGINT" property="toZoneId" />
+        <result column="from_location_id" jdbcType="BIGINT" property="fromLocationId" />
+        <result column="to_location_id" jdbcType="BIGINT" property="toLocationId" />
+        <result column="from_pallet_no" jdbcType="VARCHAR" property="fromPalletNo" />
+        <result column="to_pallet_no" jdbcType="VARCHAR" property="toPalletNo" />
+        <result column="from_container_no" jdbcType="VARCHAR" property="fromContainerNo" />
+        <result column="to_container_no" jdbcType="VARCHAR" property="toContainerNo" />
+        <result column="moved_qty" jdbcType="INTEGER" property="movedQty" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="submit_user" jdbcType="VARCHAR" property="submitUser" />
+        <result column="submit_time" jdbcType="BIGINT" property="submitTime" />
+        <result column="refer_no" jdbcType="VARCHAR" property="referNo" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            id, tenant_id, warehouse_id, cargo_owner_id, move_reason, datasource_code, status_code,
+    sku_id, from_room_id, to_room_id, from_zone_id, to_zone_id, from_location_id, to_location_id,
+    from_pallet_no, to_pallet_no, from_container_no, to_container_no, moved_qty, description,
+    create_user, create_time, update_user, update_time, submit_user, submit_time, refer_no,
+    is_del
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id != null and entity.id != 0">
+                AND id = #{entity.id,jdbcType = BIGINT}
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId != 0">
+                AND cargo_owner_id = #{entity.cargoOwnerId,jdbcType = BIGINT}
+            </if>
+            <if test="entity.datasourceCode != null and entity.datasourceCode != ''">
+                AND datasource_code = #{entity.datasourceCode,jdbcType = BIGINT}
+            </if>
+            <if test="entity.statusCode != null and entity.statusCode != ''">
+                AND status_code = #{entity.statusCode,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset >=0 and entity.pageSize !=null and entity.pageSize > 0">
+          LIMIT ${entity.offset},${entity.pageSize}
+        </if>
+    </sql>
+
+    <select id="queryMovePages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.inwh.TWmsMoveEntity">
+        select
+        <include refid="Base_Column_List"/>
+        FROM  t_smart_move
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="queryMovePageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.inwh.TWmsMoveEntity">
+        select count(1)
+        FROM t_smart_move
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        FROM t_smart_move
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteMove" >
+        DELETE
+        FROM t_smart_move
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    
+    <insert id="insertMove" parameterType="com.huamengtong.wms.entity.inwh.TWmsMoveEntity">
+        insert into t_smart_move
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=0">
+                id,
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId != 0">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != 0">
+                warehouse_id,
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId != 0">
+                cargo_owner_id,
+            </if>
+            <if test="entity.moveReason != null and entity.moveReason !=''">
+                move_reason,
+            </if>
+            <if test="entity.datasourceCode != null and entity.datasourceCode !=''">
+                datasource_code,
+            </if>
+            <if test="entity.statusCode != null and entity.statusCode !=''">
+                status_code,
+            </if>
+            <if test="entity.skuId != null and entity.skuId != 0">
+                sku_id,
+            </if>
+            <if test="entity.fromRoomId != null and entity.fromRoomId != ''">
+                from_room_id,
+            </if>
+            <if test="entity.toRoomId != null and entity.toRoomId !=''">
+                to_room_id,
+            </if>
+            <if test="entity.fromZoneId != null and entity.fromZoneId !=''">
+                from_zone_id,
+            </if>
+            <if test="entity.toZoneId != null and entity.toZoneId != ''">
+                to_zone_id,
+            </if>
+            <if test="entity.fromLocationId != null and entity.fromLocationId !=''">
+                from_location_id,
+            </if>
+            <if test="entity.toLocationId != null and entity.toLocationId != ''">
+                to_location_id,
+            </if>
+            <if test="entity.fromPalletNo != null and entity.fromPalletNo != ''">
+                from_pallet_no,
+            </if>
+            <if test="entity.toPalletNo != null and entity.toPalletNo !=''">
+                to_pallet_no,
+            </if>
+            <if test="entity.fromContainerNo != null and entity.fromContainerNo !=''">
+                from_container_no,
+            </if>
+            <if test="entity.toContainerNo != null and entity.toContainerNo !=''">
+                to_container_no,
+            </if>
+            <if test="entity.movedQty != null and entity.movedQty !=''">
+                moved_qty,
+            </if>
+            <if test="entity.description != null and entity.description !=''">
+                description,
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                create_user,
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                update_time,
+            </if>
+            <if test="entity.submitUser != null and entity.submitUser != ''">
+                submit_user,
+            </if>
+            <if test="entity.submitTime != null and entity.submitTime !=''">
+                submit_time,
+            </if>
+            <if test="entity.referNo != null and entity.referNo !=''">
+                refer_no,
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=0">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId !=0">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != 0">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId !=0">
+                #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.moveReason != null and entity.moveReason != ''">
+                #{entity.moveReason,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.datasourceCode != null and entity.datasourceCode != ''">
+                #{entity.datasourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null and entity.statusCode !=''">
+                #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuId != null and entity.skuId !=''">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromRoomId != null and entity.fromRoomId !=''">
+                #{entity.fromRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toRoomId != null and entity.toRoomId !=''">
+                #{entity.toRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromZoneId != null and entity.fromZoneId != ''">
+                #{entity.fromZoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toZoneId != null and entity.toZoneId !=''">
+                #{entity.toZoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromLocationId != null and entity.fromLocationId != ''">
+                #{entity.fromLocationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toLocationId != null and entity.toLocationId !=''">
+                #{entity.toLocationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromPalletNo != null and entity.fromPalletNo != ''">
+                #{entity.fromPalletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.toPalletNo != null and entity.toPalletNo !=''">
+                #{entity.toPalletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromContainerNo != null and entity.fromContainerNo !=''">
+                #{entity.fromContainerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.toContainerNo != null and entity.toContainerNo !=''">
+                #{entity.toContainerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.movedQty != null and entity.movedQty !=''">
+                #{entity.movedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.description != null and entity.description != ''">
+                #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.submitUser != null and entity.submitUser !=''">
+                #{entity.submitUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.submitTime != null and entity.submitTime !=''">
+                #{entity.submitTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.referNo != null and entity.referNo !=''">
+                #{entity.referNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                #{entity.isDel,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateMove" parameterType="com.huamengtong.wms.entity.inwh.TWmsMoveEntity">
+        update t_smart_move
+        <set>
+            <if test="entity.tenantId != null and entity.tenantId != 0">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != 0">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId != null and entity.cargoOwnerId != 0">
+                cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.moveReason != null and entity.moveReason !=''">
+                move_reason = #{entity.moveReason,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.datasourceCode != null and entity.datasourceCode !=''">
+                datasource_code = #{entity.datasourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null and entity.statusCode !=''">
+                status_code = #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuId != null and entity.skuId != 0">
+                sku_id = #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromRoomId != null and entity.fromRoomId != 0">
+                from_room_id = #{entity.fromRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toRoomId != null and entity.toRoomId != 0">
+                to_room_id = #{entity.toRoomId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromZoneId != null and entity.fromZoneId != 0">
+                from_zone_id = #{entity.fromZoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toZoneId != null and entity.toZoneId != 0">
+                to_zone_id = #{entity.toZoneId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromLocationId != null and entity.fromLocationId != 0">
+                from_location_id = #{entity.fromLocationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.toLocationId != null and entity.toLocationId != 0">
+                to_location_id = #{entity.toLocationId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.fromPalletNo != null and entity.fromPalletNo !=''">
+                from_pallet_no = #{entity.fromPalletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.toPalletNo != null and entity.toPalletNo !=''">
+                to_pallet_no = #{entity.toPalletNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.fromContainerNo != null and entity.fromContainerNo !=''">
+                from_container_no = #{entity.fromContainerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.toContainerNo != null and entity.toContainerNo != ''">
+                to_container_no = #{entity.toContainerNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.movedQty != null and entity.movedQty !=''">
+                moved_qty = #{entity.movedQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.description != null and entity.description !=''">
+                description = #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.submitUser != null and entity.submitUser !=''">
+                submit_user = #{entity.submitUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.submitTime != null and entity.submitTime !=''">
+                submit_time = #{entity.submitTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.referNo != null and entity.referNo != ''">
+                refer_no = #{entity.referNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isDel != null and entity.isDel != ''">
+                is_del = #{entity.isDel,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

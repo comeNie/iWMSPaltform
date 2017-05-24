@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.inwh.mapper.AdjustmentHeaderMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inwh.TWmsAdjustmentHeaderEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="cargo_owner_id" jdbcType="BIGINT" property="cargoOwnerId" />
+        <result column="refer_no" jdbcType="VARCHAR" property="referNo" />
+        <result column="reson_code" jdbcType="VARCHAR" property="resonCode" />
+        <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="audited_user" jdbcType="VARCHAR" property="auditedUser" />
+        <result column="audited_time" jdbcType="BIGINT" property="auditedTime" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+            id, tenant_id, warehouse_id, cargo_owner_id, refer_no, reson_code, status_code, description,
+    create_user, create_time, update_user, update_time, audited_user, audited_time, is_del
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id != null and entity.id != 0">
+                AND id = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.cargoOwnerId !=null and entity.cargoOwnerId != ''">
+                AND cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT}
+            </if>
+            <if test="entity.statusCode != null and entity.statusCode != ''">
+                AND status_code = #{entity.statusCode,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+    <if test="entity.orderBy != null">
+        ORDER BY ${entity.orderBy}
+    </if>
+    <if test="entity.orderBy == null">
+        ORDER BY create_time desc
+    </if>
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset >= 0 and entity.pageSize != null and entity.pageSize>0">
+            LIMIT ${entity.offset},${entity.pageSize}
+        </if>
+    </sql>
+
+    <select id="queryAdjustmentHeaderPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.inwh.TWmsAdjustmentHeaderEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_adjustment_header
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="queryAdjustmentHeaderPageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.inwh.TWmsAdjustmentHeaderEntity">
+        SELECT count(1) FROM
+        t_smart_adjustment_header
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM t_smart_adjustment_header
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteAdjustmentHeader">
+        delete
+        FROM t_smart_adjustment_header
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insertAdjustmentHeader" parameterType="com.huamengtong.wms.entity.inwh.TWmsAdjustmentHeaderEntity">
+        insert into t_smart_adjustment_header
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=0">
+                id,
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId !=''">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId != ''">
+                warehouse_id,
+            </if>
+            <if test="entity.cargoOwnerId !=null and entity.cargoOwnerId != ''">
+                cargo_owner_id,
+            </if>
+            <if test="entity.referNo != null and entity.referNo !=''">
+                refer_no,
+            </if>
+            <if test="entity.resonCode != null and entity.resonCode !=''">
+                reson_code,
+            </if>
+            <if test="entity.statusCode != null and entity.statusCode !=''">
+                status_code,
+            </if>
+            <if test="entity.description != null and entity.description !=''">
+                description,
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                create_user,
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser != ''">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                update_time,
+            </if>
+            <if test="entity.auditedUser != null and entity.auditedUser !=''">
+                audited_user,
+            </if>
+            <if test="entity.auditedTime != null and entity.auditedTime !=''">
+                audited_time,
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id !=''">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId !=''">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId !=''">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId !=null and entity.cargoOwnerId != ''">
+                #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.referNo != null and entity.referNo !=''">
+                #{entity.referNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.resonCode != null and entity.resonCode != ''">
+                #{entity.resonCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null and entity.statusCode !=''">
+                #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.description != null and entity.description != ''">
+                #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime != ''">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime != ''">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.auditedUser != null and entity.auditedUser !=''">
+                #{entity.auditedUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.auditedTime != null and entity.auditedTime !=''">
+                #{entity.auditedTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                #{entity.isDel,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateAdjustmentHeader" parameterType="com.huamengtong.wms.entity.inwh.TWmsAdjustmentHeaderEntity">
+        update t_smart_adjustment_header
+        <set>
+            <if test="entity.tenantId != null and entity.tenantId != 0 ">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId !=0">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.cargoOwnerId !=null and entity.cargoOwnerId != ''">
+                cargo_owner_id = #{entity.cargoOwnerId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.referNo != null and entity.referNo !=''">
+                refer_no = #{entity.referNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.resonCode != null and entity.resonCode !=''">
+                reson_code = #{entity.resonCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null and entity.statusCode != ''">
+                status_code = #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.description != null and entity.description != ''">
+                description = #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.auditedUser != null and entity.auditedUser !=''">
+                audited_user = #{entity.auditedUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.auditedTime != null and entity.auditedTime !=''">
+                audited_time = #{entity.auditedTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isDel != null and entity.isDel != ''">
+                is_del = #{entity.isDel,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+</mapper>
+

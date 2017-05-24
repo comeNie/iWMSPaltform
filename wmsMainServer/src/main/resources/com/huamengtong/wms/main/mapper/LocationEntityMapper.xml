@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.huamengtong.wms.main.mapper.LocationMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.main.TWmsLocationEntity">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="zone_id" jdbcType="BIGINT" property="zoneId" />
+        <result column="location_no" jdbcType="VARCHAR" property="locationNo" />
+        <result column="is_active" jdbcType="BIT" property="isActive" />
+        <result column="type_code" jdbcType="VARCHAR" property="typeCode" />
+        <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+        <result column="handling_code" jdbcType="VARCHAR" property="handlingCode" />
+        <result column="category_code" jdbcType="VARCHAR" property="categoryCode" />
+        <result column="abc_code" jdbcType="VARCHAR" property="abcCode" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="is_multisku" jdbcType="BIT" property="isMultisku" />
+        <result column="is_multilot" jdbcType="BIT" property="isMultilot" />
+        <result column="putaway_seq" jdbcType="INTEGER" property="putawaySeq" />
+        <result column="pickup_seq" jdbcType="INTEGER" property="pickupSeq" />
+        <result column="volume" jdbcType="DECIMAL" property="volume" />
+        <result column="length" jdbcType="DECIMAL" property="length" />
+        <result column="width" jdbcType="DECIMAL" property="width" />
+        <result column="height" jdbcType="DECIMAL" property="height" />
+        <result column="weightcapacity" jdbcType="DECIMAL" property="weightcapacity" />
+        <result column="is_default" jdbcType="BIT" property="isDefault" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="is_del" jdbcType="BIT" property="isDel" />
+        <result column="is_used" jdbcType="BIT" property="isUsed" />
+    </resultMap>
+
+
+
+     <sql id="Base_Column_List">
+      `id`,`warehouse_id`,`zone_id`,`location_no`,`is_active`,`type_code`,`class_code`,`handling_code`,`category_code`,
+      `abc_code`,`description`,`is_multisku`,`is_multilot`,`putaway_seq`,`pickup_seq`,`volume`,`length`,`width`,`height`,
+      `weightcapacity` ,`is_default`, `create_user`,`create_time`,`update_user`,`update_time`,`is_del`,`is_used`
+    </sql>
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+     <where>
+         <if test="id !=null and id != 0">
+             AND  id = #{id,jdbcType=BIGINT}
+         </if>
+         <if test="locationNo != null" >
+             AND location_no = #{locationNo,jdbcType=VARCHAR}
+         </if>
+          <if test="description != null">
+              AND description LIKE CONCAT('%', #{description}, '%')
+          </if>
+         <if test="zone_id !=null">
+                 AND  zone_id = #{zone_id,jdbcType=VARCHAR}
+         </if>
+     </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause" >
+      <if test="orderBy != null">
+           ORDER BY ${orderBy}
+      </if>
+      <if test="orderBy == null">
+            ORDER BY create_time desc
+      </if>
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+            LIMIT ${offset},${pageSize}
+        </if>
+    </sql>
+
+    <select id="queryLocationPages"  resultMap="BaseResultMap"    parameterType="com.huamengtong.wms.entity.main.TWmsLocationEntity">
+          select
+         <include refid="Base_Column_List"  />
+          from  t_smart_location
+          <include refid="queryWhereClause" />
+          <include refid="queryOrderByClause"/>
+          <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="queryLocationPageCount"   resultType="java.lang.Integer"   parameterType="com.huamengtong.wms.entity.main.TWmsLocationEntity">
+          SELECT count(1) from  t_smart_location
+              <include refid="queryWhereClause"  />
+              LIMIT 1
+    </select>
+
+       <select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+           select
+                <include refid="Base_Column_List"/>
+           from t_smart_location
+           where id = #{id,jdbcType=BIGINT}
+       </select>
+
+    <select id="selectLocationList"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from t_smart_location
+        where warehouse_id = #{warehouseId,jdbcType=BIGINT}
+    </select>
+
+        <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+            delete
+               from t_smart_location
+               where id = #{id,jdbcType=BIGINT}
+        </delete>
+
+    <insert id="insertLocation" parameterType="com.huamengtong.wms.entity.main.TWmsLocationEntity">
+        insert into t_smart_location
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="zoneId != null">
+                zone_id,
+            </if>
+            <if test="locationNo != null">
+                location_no,
+            </if>
+            <if test="isActive != null">
+                is_active,
+            </if>
+            <if test="typeCode != null">
+                type_code,
+            </if>
+            <if test="classCode != null">
+                class_code,
+            </if>
+            <if test="handlingCode != null">
+                handling_code,
+            </if>
+            <if test="categoryCode != null">
+                category_code,
+            </if>
+            <if test="abcCode != null">
+                abc_code,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="isMultisku != null">
+                is_multisku,
+            </if>
+            <if test="isMultilot != null">
+                is_multilot,
+            </if>
+            <if test="putawaySeq != null">
+                putaway_seq,
+            </if>
+            <if test="pickupSeq != null">
+                pickup_seq,
+            </if>
+            <if test="volume != null">
+                volume,
+            </if>
+            <if test="length != null">
+                length,
+            </if>
+            <if test="width != null">
+                width,
+            </if>
+            <if test="height != null">
+                height,
+            </if>
+            <if test="weightcapacity != null">
+                weightcapacity,
+            </if>
+
+            <if test="isDefault != null">
+                is_default,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="isUsed != null">
+                is_used,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="zoneId != null">
+                #{zoneId,jdbcType=BIGINT},
+            </if>
+            <if test="locationNo != null">
+                #{locationNo,jdbcType=VARCHAR},
+            </if>
+            <if test="isActive != null">
+                #{isActive,jdbcType=TINYINT},
+            </if>
+            <if test="typeCode != null">
+                #{typeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="classCode != null">
+                #{classCode,jdbcType=VARCHAR},
+            </if>
+            <if test="handlingCode != null">
+                #{handlingCode,jdbcType=VARCHAR},
+            </if>
+            <if test="categoryCode != null">
+                #{categoryCode,jdbcType=VARCHAR},
+            </if>
+            <if test="abcCode != null">
+                #{abcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="isMultisku != null">
+                #{isMultisku,jdbcType=TINYINT},
+            </if>
+            <if test="isMultilot != null">
+                #{isMultilot,jdbcType=TINYINT},
+            </if>
+            <if test="putawaySeq != null">
+                #{putawaySeq,jdbcType=INTEGER},
+            </if>
+            <if test="pickupSeq != null">
+                #{pickupSeq,jdbcType=INTEGER},
+            </if>
+            <if test="volume != null">
+                #{volume,jdbcType=DECIMAL},
+            </if>
+            <if test="length != null">
+                #{length,jdbcType=DECIMAL},
+            </if>
+            <if test="width != null">
+                #{width,jdbcType=DECIMAL},
+            </if>
+            <if test="height != null">
+                #{height,jdbcType=DECIMAL},
+            </if>
+            <if test="weightcapacity != null">
+                #{weightcapacity,jdbcType=DECIMAL},
+            </if>
+
+            <if test="isDefault != null">
+                #{isDefault,jdbcType=TINYINT},
+            </if>
+
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=TINYINT},
+            </if>
+            <if test="isUsed != null">
+                #{isUsed,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateLocation" parameterType="com.huamengtong.wms.entity.main.TWmsLocationEntity">
+      update t_smart_location
+      <set>
+          <if test="warehouseId != null">
+              warehouse_id = #{warehouseId,jdbcType=BIGINT},
+          </if>
+          <if test="zoneId != null">
+              zone_id = #{zoneId,jdbcType=BIGINT},
+          </if>
+          <if test="locationNo != null">
+              location_no = #{locationNo,jdbcType=VARCHAR},
+          </if>
+          <if test="isActive != null ">
+              is_active = #{isActive,jdbcType=BIT},
+          </if>
+          <if test="typeCode !=null">
+              type_code = #{typeCode,jdbcType=VARCHAR},
+          </if>
+          <if test="classCode != null ">
+              class_code = #{classCode,jdbcType=VARCHAR},
+          </if>
+          <if test="handlingCode != null ">
+              handling_code = #{handlingCode,jdbcType=VARCHAR},
+          </if>
+          <if test="categoryCode != null ">
+              category_code = #{categoryCode,jdbcType=VARCHAR},
+          </if>
+          <if test="abcCode != null">
+              abc_code = #{abcCode,jdbcType=VARCHAR},
+          </if>
+          <if test="description != null">
+              description = #{description,jdbcType=VARCHAR},
+          </if>
+          <if test="isMultisku != null">
+              is_multisku = #{isMultisku,jdbcType=BIT},
+          </if>
+          <if test="isMultilot != null">
+              is_multilot = #{isMultilot,jdbcType=BIT},
+          </if>
+          <if test="putawaySeq != null">
+              putaway_seq = #{putawaySeq,jdbcType=INTEGER},
+          </if>
+          <if test="pickupSeq != null">
+              pickup_seq = #{pickupSeq,jdbcType=INTEGER},
+          </if>
+          <if test="volume != null">
+              volume = #{volume,jdbcType=DECIMAL},
+          </if>
+          <if test="length != null">
+              length = #{length,jdbcType=DECIMAL},
+          </if>
+          <if test="width != null">
+              width = #{width,jdbcType=DECIMAL},
+          </if>
+          <if test="height != null">
+              height = #{height,jdbcType=DECIMAL},
+          </if>
+          <if test="weightcapacity != null">
+              weightcapacity = #{weightcapacity,jdbcType=DECIMAL},
+          </if>
+          <if test="isDefault != null">
+              is_default = #{isDefault,jdbcType=BIT},
+          </if>
+          <if test="createUser != null">
+              create_user = #{createUser,jdbcType=VARCHAR},
+          </if>
+          <if test="createTime != null">
+              create_time = #{createTime,jdbcType=BIGINT},
+          </if>
+          <if test="updateUser != null">
+              update_user = #{updateUser,jdbcType=VARCHAR},
+          </if>
+          <if test="updateTime != null ">
+              update_time = #{updateTime,jdbcType=BIGINT},
+          </if>
+          <if test="isDel != null">
+              is_del = #{isDel,jdbcType=BIT},
+          </if>
+          <if test="isUsed != null">
+              is_used = #{isUsed,jdbcType=BIT}
+          </if>
+      </set>
+      where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectAllLocations" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_smart_location
+        WHERE zone_id = #{zoneId,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryLocationsByZonePages" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_location tb_b
+        WHERE tb_b.zone_id = #{zoneId,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryLocationsByZonePageCount"  resultType="java.lang.Integer" parameterType="java.util.Map" >
+        SELECT count(1)
+        FROM t_smart_location tb_b
+        WHERE tb_b.zone_id = #{zoneId,jdbcType=BIGINT}
+        LIMIT 1
+    </select>
+
+
+</mapper>

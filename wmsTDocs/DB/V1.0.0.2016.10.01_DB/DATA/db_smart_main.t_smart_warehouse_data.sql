@@ -1,0 +1,2 @@
+/***仓库初始化数据***/
+insert into `t_smart_warehouse` (`tenant_id`, `warehouse_no`, `warehouse_name`, `is_active`, `type_code`, `country`, `province`, `city`, `district`, `zip`, `address`, `contact`, `telephone`, `fax`, `email`, `description`, `is_del`, `create_user`, `create_time`, `update_user`, `update_time`) values('88','KEL','新疆库尔勒仓储基地','1','CDC','中国','新疆','库尔勒市',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'0','admin',now(),'admin',now());

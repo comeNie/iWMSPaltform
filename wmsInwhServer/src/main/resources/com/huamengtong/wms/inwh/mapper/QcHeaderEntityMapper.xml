@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.inwh.mapper.QcHeaderMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inwh.TWmsQcHeaderEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="asn_id" jdbcType="BIGINT" property="asnId" />
+        <result column="total_qty" jdbcType="INTEGER" property="totalQty" />
+        <result column="total_category_qty" jdbcType="INTEGER" property="totalCategoryQty" />
+        <result column="qc_principal_user" jdbcType="VARCHAR" property="qcPrincipalUser" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="submit_user" jdbcType="VARCHAR" property="submitUser" />
+        <result column="submit_date" jdbcType="BIGINT" property="submitDate" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        id, tenant_id, warehouse_id, asn_id, total_qty, total_category_qty, qc_principal_user, description,
+        status_code, create_user, create_time, update_user, update_time, submit_user, submit_date,
+        is_del
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id !=null and entity.id != 0">
+                AND id = #{entity.id,jdbcType=BIGINT}
+            </if>
+            <if test="entity.statusCode !=null ">
+                AND status_code = #{entity.statusCode,jdbcType=VARCHAR}
+            </if>
+            <if test="entity.startTime !=null  ">
+                AND create_time &gt;= #{entity.startTime,jdbcType=BIGINT}
+            </if>
+            <if test="entity.endTime !=null ">
+                AND create_time &lt;= #{entity.endTime,jdbcType=BIGINT}
+            </if>
+
+        </where>
+    </sql>
+
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset>=0 and entity.pageSize != null and entity.pageSize>0">
+            LIMIT ${entity.offset}, ${entity.pageSize}
+        </if>
+    </sql>
+
+    <select id="queryQcHeaderPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.inwh.TWmsQcHeaderEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_qc_header
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryQcHeadersPageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.inwh.TWmsQcHeaderEntity">
+        SELECT count(1) FROM t_smart_qc_header
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap"   >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_qc_header
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey"  >
+        delete
+        from t_smart_qc_header
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+    <insert id="insertQcHeader" parameterType="com.huamengtong.wms.entity.inwh.TWmsQcHeaderEntity">
+        insert into t_smart_qc_header
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null ">
+                id,
+            </if>
+            <if test="entity.tenantId != null ">
+                tenant_id,
+            </if>
+            <if test="entity.warehouseId != null ">
+                warehouse_id,
+            </if>
+            <if test="entity.asnId != null ">
+                asn_id,
+            </if>
+            <if test="entity.totalQty != null ">
+                total_qty,
+            </if>
+            <if test="entity.totalCategoryQty != null ">
+                total_category_qty,
+            </if>
+            <if test="entity.qcPrincipalUser != null ">
+                qc_principal_user,
+            </if>
+            <if test="entity.description != null ">
+                description,
+            </if>
+            <if test="entity.statusCode != null ">
+                status_code,
+            </if>
+            <if test="entity.createUser != null ">
+                create_user,
+            </if>
+            <if test="entity.createTime != null ">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null ">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null ">
+                update_time,
+            </if>
+            <if test="entity.submitUser != null ">
+                submit_user,
+            </if>
+            <if test="entity.submitDate != null ">
+                submit_date,
+            </if>
+            <if test="entity.isDel != null ">
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null ">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null ">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null ">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.asnId != null ">
+                #{entity.asnId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.totalQty != null ">
+                #{entity.totalQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.totalCategoryQty != null ">
+                #{entity.totalCategoryQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.qcPrincipalUser != null ">
+                #{entity.qcPrincipalUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.description != null ">
+                #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null ">
+                #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null ">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null ">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null ">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null ">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.submitUser != null ">
+                #{entity.submitUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.submitDate != null ">
+                #{entity.submitDate,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isDel != null ">
+                #{entity.isDel,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateQcHeader" parameterType="com.huamengtong.wms.entity.inwh.TWmsQcHeaderEntity">
+        update t_smart_qc_header
+        <set>
+            <if test="entity.id != null ">
+                id = #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null ">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null ">
+                warehouse_id = #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.asnId != null ">
+                asn_id = #{entity.asnId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.totalQty != null ">
+                total_qty = #{entity.totalQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.totalCategoryQty != null ">
+                total_category_qty = #{entity.totalCategoryQty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.qcPrincipalUser != null ">
+                qc_principal_user = #{entity.qcPrincipalUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.description != null ">
+                description = #{entity.description,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.statusCode != null ">
+                status_code = #{entity.statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createUser != null ">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null ">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null ">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null ">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.submitUser != null ">
+                submit_user = #{entity.submitUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.submitDate != null ">
+                submit_date = #{entity.submitDate,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isDel != null ">
+                is_del = #{entity.isDel,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="selectByAsnId"  resultMap="BaseResultMap"   >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_qc_header
+        where asn_id = #{asnId,jdbcType=BIGINT}
+    </select>
+
+
+</mapper>

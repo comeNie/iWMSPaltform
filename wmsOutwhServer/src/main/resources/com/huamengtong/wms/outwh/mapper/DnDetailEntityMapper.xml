@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.outwh.mapper.DnDetailMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.outwh.TWmsDnDetailEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="dn_id" jdbcType="BIGINT" property="dnId" />
+        <result column="refer_line_no" jdbcType="VARCHAR" property="referLineNo" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+        <result column="sku_barcode" jdbcType="VARCHAR" property="skuBarcode" />
+        <result column="inventory_status_code" jdbcType="VARCHAR" property="inventoryStatusCode" />
+        <result column="is_group" jdbcType="TINYINT" property="isGroup" />
+        <result column="group_no" jdbcType="VARCHAR" property="groupNo" />
+        <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+        <result column="qty" jdbcType="INTEGER" property="qty" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="payment" jdbcType="DECIMAL" property="payment" />
+        <result column="discount_fee" jdbcType="DECIMAL" property="discountFee" />
+        <result column="adjust_fee" jdbcType="DECIMAL" property="adjustFee" />
+        <result column="is_gift" jdbcType="TINYINT" property="isGift" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+        <result column="is_cancelled" jdbcType="TINYINT" property="isCancelled" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+        <result column="storage_room_id" jdbcType="TINYINT" property="storageRoomId" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, tenant_id, dn_id, refer_line_no, sku_id, sku, sku_name, sku_barcode,
+        inventory_status_code, is_group, group_no, group_name, qty, price, amount,
+        payment, discount_fee, adjust_fee, is_gift, create_user, create_time, update_user,
+        update_time, is_cancelled, is_del,storage_room_id
+    </sql>
+
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id !=null and entity.id != 0">
+                AND  id = #{entity.id,jdbcType=BIGINT}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset >= 0 and entity.pageSize != null and entity.pageSize > 0">
+            LIMIT ${entity.offset}, ${entity.pageSize}
+        </if>
+    </sql>
+
+    <sql id="queryLimitClauseCondition">
+        <if test="offset != null and offset>=0 and pageSize != null and pageSize>0">
+            LIMIT ${offset}, ${pageSize}
+        </if>
+    </sql>
+
+    <select id="queryDnDetailPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.outwh.TWmsDnDetailEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_dn_detail
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryDnDetails"  resultMap="BaseResultMap"   parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"  />
+        from  t_smart_dn_detail
+        where dn_id= #{headerId,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryDnDetailPageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.outwh.TWmsDnDetailEntity">
+        SELECT count(1)
+        FROM t_smart_dn_detail
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Long"  >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_dn_detail
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete
+        from t_smart_dn_detail
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteDnDetails" >
+        DELETE FROM t_smart_dn_detail WHERE dn_id = #{dnId,jdbcType=BIGINT}
+    </delete>
+
+    <update id="UpdateDnDetail" parameterType="com.huamengtong.wms.entity.outwh.TWmsDnDetailEntity">
+        update t_smart_dn_detail
+        <set>
+            <if test="entity.tenantId != null">
+                tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.dnId != null">
+                dn_id = #{entity.dnId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.referLineNo != null">
+                refer_line_no = #{entity.referLineNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuId != null">
+                sku_id = #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null">
+                sku = #{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuName != null">
+                sku_name = #{entity.skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuBarcode != null">
+                sku_barcode = #{entity.skuBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.inventoryStatusCode != null">
+                inventory_status_code = #{entity.inventoryStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isGroup != null">
+                is_group = #{entity.isGroup,jdbcType=TINYINT},
+            </if>
+            <if test="entity.groupNo != null">
+                group_no = #{entity.groupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.groupName != null">
+                group_name = #{entity.groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.qty != null">
+                qty = #{entity.qty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.price != null">
+                price = #{entity.price,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.amount != null">
+                amount = #{entity.amount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.payment != null">
+                payment = #{entity.payment,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.discountFee != null">
+                discount_fee = #{entity.discountFee,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.adjustFee != null">
+                adjust_fee = #{entity.adjustFee,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.isGift != null">
+                is_gift = #{entity.isGift,jdbcType=TINYINT},
+            </if>
+            <if test="entity.createUser != null">
+                create_user = #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null">
+                create_time = #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null">
+                update_user = #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null">
+                update_time = #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isCancelled != null">
+                is_cancelled = #{entity.isCancelled,jdbcType=TINYINT},
+            </if>
+            <if test="entity.isDel != null">
+                is_del = #{entity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="entity.storageRoomId != null">
+                storage_room_id = #{entity.storageRoomId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+    <insert id="insertDnDetail" parameterType="com.huamengtong.wms.entity.outwh.TWmsDnDetailEntity">
+        insert into t_smart_dn_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null">
+                id,
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId !='' ">
+                tenant_id,
+            </if>
+            <if test="entity.dnId != null and entity.dnId != ''">
+                dn_id,
+            </if>
+            <if test="entity.referLineNo != null and entity.referLineNo != ''">
+                refer_line_no,
+            </if>
+            <if test="entity.skuId != null and entity.skuId !=''">
+                sku_id,
+            </if>
+            <if test="entity.sku != null and entity.sku !=''">
+                sku,
+            </if>
+            <if test="entity.skuName != null and entity.skuName !=''">
+                sku_name,
+            </if>
+            <if test="entity.skuBarcode != null and entity.skuBarcode != ''">
+                sku_barcode,
+            </if>
+            <if test="entity.inventoryStatusCode != null and entity.inventoryStatusCode != ''">
+                inventory_status_code,
+            </if>
+            <if test="entity.isGroup != null and entity.isGroup != ''">
+                is_group,
+            </if>
+            <if test="entity.groupNo != null and entity.groupNo !=''">
+                group_no,
+            </if>
+            <if test="entity.groupName != null and entity.groupName !=''">
+                group_name,
+            </if>
+            <if test="entity.qty != null and entity.qty !=''">
+                qty,
+            </if>
+            <if test="entity.price != null and entity.price !=''">
+                price,
+            </if>
+            <if test="entity.amount != null and entity.amount !=''">
+                amount,
+            </if>
+            <if test="entity.payment != null and entity.payment !=''">
+                payment,
+            </if>
+            <if test="entity.discountFee != null and entity.discountFee != ''">
+                discount_fee,
+            </if>
+            <if test="entity.adjustFee != null and entity.adjustFee != ''">
+                adjust_fee,
+            </if>
+            <if test="entity.isGift != null and entity.isGift != ''">
+                is_gift,
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                create_user,
+            </if>
+            <if test="entity.createTime != null and entity.createTime != ''">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser !=''">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime != ''">
+                update_time,
+            </if>
+            <if test="entity.isCancelled != null and entity.isCancelled !=''">
+                is_cancelled,
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                is_del,
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId !=''">
+                storage_room_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null and entity.id != 0">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null and entity.tenantId != ''">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.dnId != null and entity.dnId !=''">
+                #{entity.dnId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.referLineNo != null and entity.referLineNo != ''">
+                #{entity.referLineNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuId != null and entity.skuId !=''">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.sku != null and entity.sku !=''">
+                #{entity.sku,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuName != null and entity.skuName !=''">
+                #{entity.skuName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.skuBarcode != null and entity.skuBarcode !=''">
+                #{entity.skuBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.inventoryStatusCode != null and entity.inventoryStatusCode !=''">
+                #{entity.inventoryStatusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.isGroup != null and entity.isGroup !=''">
+                #{entity.isGroup,jdbcType=TINYINT},
+            </if>
+            <if test="entity.groupNo != null and entity.groupNo !=''">
+                #{entity.groupNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.groupName != null and entity.groupName != ''">
+                #{entity.groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.qty != null and entity.qty != ''">
+                #{entity.qty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.price != null and entity.price != ''">
+                #{entity.price,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.amount != null and entity.amount !=''">
+                #{entity.amount,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.payment != null and entity.payment !=''">
+                #{entity.payment,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.discountFee != null and entity.discountFee !=''">
+                #{entity.discountFee,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.adjustFee != null and entity.adjustFee != ''">
+                #{entity.adjustFee,jdbcType=DECIMAL},
+            </if>
+            <if test="entity.isGift != null and entity.isGift != ''">
+                #{entity.isGift,jdbcType=TINYINT},
+            </if>
+            <if test="entity.createUser != null and entity.createUser !=''">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null and entity.createTime !=''">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null and entity.updateUser != ''">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null and entity.updateTime !=''">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.isCancelled != null and entity.isCancelled != ''">
+                #{entity.isCancelled,jdbcType=TINYINT},
+            </if>
+            <if test="entity.isDel != null and entity.isDel !=''">
+                #{entity.isDel,jdbcType=TINYINT},
+            </if>
+            <if test="entity.storageRoomId != null and entity.storageRoomId !=''">
+                #{entity.storageRoomId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryDetailsPages" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_dn_detail
+        WHERE dn_id = #{dnId,jdbcType=BIGINT}
+        <include refid="queryLimitClauseCondition"/>
+    </select>
+
+    <select id="queryDetailPageCount"  resultType="java.lang.Integer" >
+        SELECT count(1)
+        FROM t_smart_dn_detail
+        WHERE dn_id= #{dnId,jdbcType=BIGINT}
+        LIMIT 1
+    </select>
+</mapper>

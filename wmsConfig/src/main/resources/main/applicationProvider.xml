@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+
+    <!-- 监控中心配置 -->
+    <!--<dubbo:monitor protocol="registry"/>-->
+
+    <!-- Application name -->
+    <dubbo:application name="wmsMainServer" />
+
+    <dubbo:provider timeout="5000" cluster="failfast"/>
+
+    <!-- registry address, used for service to register itself -->
+    <dubbo:registry  client="zkclient" address="${zookeeper.address}" />
+
+    <!-- 用dubbo协议在20881端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="20881" accepts="1000"/>
+
+    <!-- Service interface   Concurrent Control 生产者服务  -->
+    <dubbo:service interface="com.huamengtong.wms.main.service.IUserService" ref="userService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IRoleService" ref="roleService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IPermissionService" ref="permissionService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IWarehouseService" ref="warehouseService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IModuleService" ref="moduleService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.ITenantService" ref="tenantService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.ICodeService" ref="codeService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IZoneService" ref="zoneService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.ILocationService" ref="locationService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IStorageRoomService" ref="storageRoomService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.ICargoOwnerService" ref="cargoOwnerService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IPrintTempService" ref="printTempService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IPrintMapService" ref="printMapService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.ICustomerService" ref="customerService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IOrganizationsService" ref="organizationsService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IOperationLogService" ref="operationLogService"/>
+    <dubbo:service interface="com.huamengtong.wms.main.service.IAllocationStrategyService" ref="allocationStrategyService"/>
+
+
+</beans>

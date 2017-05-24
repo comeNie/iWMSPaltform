@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huamengtong.wms.inventory.mapper.InventoryLogMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.inventory.TWmsInventoryLogEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+        <result column="inventory_id" jdbcType="BIGINT" property="inventoryId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+        <result column="type_code" jdbcType="VARCHAR" property="typeCode" />
+        <result column="order_id" jdbcType="BIGINT" property="orderId" />
+        <result column="detail_id" jdbcType="BIGINT" property="detailId" />
+        <result column="qty" jdbcType="INTEGER" property="qty" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id, tenant_id, inventory_id, warehouse_id, sku_id, type_code, order_id, detail_id, qty, create_user,
+        create_time, update_user, update_time
+    </sql>
+
+    <!--query Where  语句-->
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id != null and entity.id != 0">
+                AND id = #{entity.id,jdbcType =BIGINT}
+            </if>
+            <if test="entity.skuId != null and entity.skuId != 0">
+                AND sku_id = #{entity.skuId,jdbcType =BIGINT}
+            </if>
+            <if test="entity.typeCode != null">
+                AND type_code = #{entity.typeCode,jdbcType =VARCHAR}
+            </if>
+            <if test="entity.orderId != null and entity.orderId != 0">
+                AND order_id = #{entity.orderId,jdbcType =BIGINT}
+            </if>
+            <if test="entity.inventoryId != null and entity.inventoryId != 0">
+                AND inventory_id = #{entity.inventoryId,jdbcType =BIGINT}
+            </if>
+            <if test="skuIds != null and skuIds.size() > 0">
+                AND sku_id in
+                <foreach collection="skuIds" item="id" open="(" separator="," close=")" >
+                    #{id}
+                </foreach>
+            </if>
+            <if test="fromTime != null and fromTime != 0">
+                <![CDATA[AND create_time > #{fromTime,jdbcType=BIGINT}]]>
+            </if>
+            <if test="toTime != null and toTime != 0">
+                <![CDATA[AND create_time < #{toTime,jdbcType=BIGINT}]]>
+            </if>
+        </where>
+    </sql>
+
+    <!--query limit 语句-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset >= 0 and entity.pageSize != null and entity.pageSize > 0">
+            LIMIT ${entity.offset}, ${entity.pageSize}
+        </if>
+    </sql>
+
+    <!--query orderby 语句-->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+
+    <!--查询记录条数-->
+    <select id="selectInventoryLogPageCounts" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryLogEntity">
+        SELECT COUNT(1)
+        FROM t_smart_inventory_log
+        <include refid="queryWhereClause" />
+        LIMIT 1
+    </select>
+
+    <!--分页查询-->
+    <select id="selectInventoryLogPage" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryLogEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_inventory_log
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="selectInventoryLogByPrimaryKey" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_inventory_log
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <insert id="insertInventoryLogMapper" parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryLogEntity">
+        insert into t_smart_inventory_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null">
+                id,
+            </if>
+            <if test="entity.tenantId != null">
+                tenant_id,
+            </if>
+            <if test="entity.inventoryId != null">
+                inventory_id,
+            </if>
+            <if test="entity.warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="entity.skuId != null">
+                sku_id,
+            </if>
+            <if test="entity.typeCode != null">
+                type_code,
+            </if>
+            <if test="entity.orderId != null">
+                order_id,
+            </if>
+            <if test="entity.detailId != null">
+                detail_id,
+            </if>
+            <if test="entity.qty != null">
+                qty,
+            </if>
+            <if test="entity.createUser != null">
+                create_user,
+            </if>
+            <if test="entity.createTime != null">
+                create_time,
+            </if>
+            <if test="entity.updateUser != null">
+                update_user,
+            </if>
+            <if test="entity.updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entity.id != null">
+                #{entity.id,jdbcType=BIGINT},
+            </if>
+            <if test="entity.tenantId != null">
+                #{entity.tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.inventoryId != null">
+                #{entity.inventoryId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.warehouseId != null">
+                #{entity.warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.skuId != null">
+                #{entity.skuId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.typeCode != null">
+                #{entity.typeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.orderId != null">
+                #{entity.orderId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.detailId != null">
+                #{entity.detailId,jdbcType=BIGINT},
+            </if>
+            <if test="entity.qty != null">
+                #{entity.qty,jdbcType=INTEGER},
+            </if>
+            <if test="entity.createUser != null">
+                #{entity.createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.createTime != null">
+                #{entity.createTime,jdbcType=BIGINT},
+            </if>
+            <if test="entity.updateUser != null">
+                #{entity.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="entity.updateTime != null">
+                #{entity.updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectInventoryInOutPage" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryLogEntity">
+        SELECT  inventory_id,sku_id,type_code,SUM(qty) qty
+        FROM  t_smart_inventory_log
+        <include refid="queryWhereClause"/>
+        GROUP BY sku_id,type_code
+        <include refid="queryOrderByClause"/>
+
+    </select>
+
+    <select id="selectInventorySkuIdPage" resultMap="BaseResultMap"   parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryLogEntity">
+        select sku_id
+        FROM t_smart_inventory_log
+        GROUP  BY sku_id
+        <include refid="queryLimitClause"/>
+    </select>
+
+    <select id="selectInventorySkuIdPageCount" resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.inventory.TWmsInventoryLogEntity">
+        SELECT COUNT(1)
+        FROM (SELECT COUNT(1)
+        FROM t_smart_inventory_log
+        GROUP BY sku_id)temp
+    </select>
+
+
+
+
+
+
+</mapper>

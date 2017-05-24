@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.outwh.mapper.SaleOrderMapper">
+    <resultMap id="BaseResultMap" type="com.huamengtong.wms.entity.outwh.TWmsSaleOrderEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId"/>
+        <result column="refer_no" jdbcType="VARCHAR" property="referNo" />
+        <result column="trade_no" jdbcType="VARCHAR" property="tradeNo" />
+        <result column="is_urgent" jdbcType="TINYINT" property="isUrgent" />
+        <result column="order_time" jdbcType="BIGINT" property="orderTime" />
+        <result column="payment_time" jdbcType="BIGINT" property="paymentTime" />
+        <result column="expected_date" jdbcType="BIGINT" property="expectedDate" />
+        <result column="shop_no" jdbcType="VARCHAR" property="shopNo" />
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+        <result column="distributor_no" jdbcType="VARCHAR" property="distributorNo" />
+        <result column="distributor_name" jdbcType="VARCHAR" property="distributorName" />
+        <result column="post_pay_typecode" jdbcType="VARCHAR" property="postPayTypecode" />
+        <result column="post_fee" jdbcType="DECIMAL" property="postFee" />
+        <result column="actual_payment" jdbcType="DECIMAL" property="actualPayment" />
+        <result column="total_fee" jdbcType="DECIMAL" property="totalFee" />
+        <result column="discount_fee" jdbcType="DECIMAL" property="discountFee" />
+        <result column="is_cod" jdbcType="TINYINT" property="isCod" />
+        <result column="is_need_delivery" jdbcType="TINYINT" property="isNeedDelivery" />
+        <result column="is_need_invoice" jdbcType="TINYINT" property="isNeedInvoice" />
+        <result column="buyer_nick" jdbcType="VARCHAR" property="buyerNick" />
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName" />
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName" />
+        <result column="country_code" jdbcType="VARCHAR" property="countryCode" />
+        <result column="country_name" jdbcType="VARCHAR" property="countryName" />
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+        <result column="zip" jdbcType="VARCHAR" property="zip" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+        <result column="seller_remark" jdbcType="VARCHAR" property="sellerRemark" />
+        <result column="buyer_remark" jdbcType="VARCHAR" property="buyerRemark" />
+        <result column="order_remark" jdbcType="VARCHAR" property="orderRemark" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            id, tenant_id, refer_no, trade_no, is_urgent, order_time, payment_time, expected_date,
+    shop_no, shop_name, distributor_no, distributor_name, post_pay_typecode, post_fee,
+    actual_payment, total_fee, discount_fee, is_cod, is_need_delivery, is_need_invoice,
+    buyer_nick, buyer_name, receiver_name, country_code, country_name, province_code,
+    province_name, city_code, city_name, area_code, area_name, zip, address, email, mobile,
+    telephone, seller_remark, buyer_remark, order_remark, remark,
+     is_del, create_user, create_time, update_user, update_time
+    </sql>
+
+    <sql id="queryWhereClause">
+        <where>
+            <if test="entity.id !=null and entity.id != 0">
+                AND  id = #{entity.id,jdbcType=BIGINT}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="entity.orderBy != null">
+            ORDER BY ${entity.orderBy}
+        </if>
+        <if test="entity.orderBy == null">
+            ORDER BY create_time desc
+        </if>
+    </sql>
+    <!-- query limit 子句，传递offset参数使用offset，如果不传递通过page和pageSize计算获得offset-->
+    <sql id="queryLimitClause">
+        <if test="entity.offset != null and entity.offset>0 and entity.pageSize != null and entity.pageSize>0">
+            LIMIT ${entity.offset}, ${entity.pageSize}
+        </if>
+    </sql>
+
+    <select id="querySaleOrderPages" resultMap="BaseResultMap" parameterType="com.huamengtong.wms.entity.outwh.TWmsSaleOrderEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_sale_order
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="querySaleOrderPageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.outwh.TWmsSaleOrderEntity">
+        SELECT count(1) FROM t_smart_sale_order
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Long"  >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_sale_order
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete
+        from t_smart_sale_order
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <update id="updateSaleOrder" parameterType="com.huamengtong.wms.entity.outwh.TWmsSaleOrderEntity">
+        update t_smart_sale_order
+        <set>
+
+        <if test="entity.tenantId != null  and entity.tenantId != ''">
+            tenant_id = #{entity.tenantId,jdbcType=BIGINT},
+        </if>
+        <if test="entity.referNo != null and entity.referNo != ''">
+            refer_no = #{entity.referNo,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.tradeNo != null and entity.tradeNo !=''">
+            trade_no = #{entity.tradeNo,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.isUrgent != null and entity.isUrgent !=''">
+            is_urgent = #{entity.isUrgent,jdbcType=TINYINT},
+        </if>
+        <if test="entity.orderTime != null and entity.orderTime != ''">
+            order_time = #{entity.orderTime,jdbcType=BIGINT},
+        </if>
+        <if test="entity.paymentTime != null and entity.paymentTime != ''">
+            payment_time = #{entity.paymentTime,jdbcType=BIGINT},
+        </if>
+        <if test="entity.expectedDate != null and entity.expectedDate != ''">
+            expected_date = #{entity.expectedDate,jdbcType=BIGINT},
+        </if>
+        <if test="entity.shopNo != null and entity.shopNo != ''">
+            shop_no = #{entity.shopNo,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.shopName != null and entity.shopName != ''">
+            shop_name = #{entity.shopName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.distributorNo != null and entity.distributorNo != ''">
+            distributor_no = #{entity.distributorNo,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.distributorName != null and entity.distributorName != ''">
+            distributor_name = #{entity.distributorName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.postPayTypecode != null and entity.postPayTypecode != ''">
+            post_pay_typecode = #{entity.postPayTypecode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.postFee != null and entity.postFee != ''">
+            post_fee = #{entity.postFee,jdbcType=DECIMAL},
+        </if>
+        <if test="entity.actualPayment != null and entity.actualPayment != ''">
+            actual_payment = #{entity.actualPayment,jdbcType=DECIMAL},
+        </if>
+        <if test="entity.totalFee != null and entity.totalFee != ''">
+            total_fee = #{entity.totalFee,jdbcType=DECIMAL},
+        </if>
+        <if test="entity.discountFee != null and entity.discountFee != ''">
+            discount_fee = #{entity.discountFee,jdbcType=DECIMAL},
+        </if>
+        <if test="entity.isCod != null and entity.isCod != ''">
+            is_cod = #{entity.isCod,jdbcType=TINYINT},
+        </if>
+        <if test="entity.isNeedDelivery != null and  entity.isNeedDelivery !=''">
+            is_need_delivery = #{entity.isNeedDelivery,jdbcType=TINYINT},
+        </if>
+        <if test="entity.isNeedInvoice != null and entity.isNeedInvoice != ''">
+            is_need_invoice = #{entity.isNeedInvoice,jdbcType=TINYINT},
+        </if>
+        <if test="entity.buyerNick != null and entity.buyerNick != ''">
+            buyer_nick = #{entity.buyerNick,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.buyerName != null and entity.buyerName !=''">
+            buyer_name = #{entity.buyerName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.receiverName != null and  entity.receiverName != ''">
+            receiver_name = #{entity.receiverName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.countryCode != null and entity.countryCode != ''">
+            country_code = #{entity.countryCode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.countryName != null and entity.countryName != ''">
+            country_name = #{entity.countryName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.provinceCode != null and entity.provinceCode != ''">
+            province_code = #{entity.provinceCode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.provinceName != null and entity.provinceName != ''">
+            province_name = #{entity.provinceName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.cityCode != null and entity.cityCode != ''">
+            city_code = #{entity.cityCode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.cityName != null and entity.cityName != ''">
+            city_name = #{entity.cityName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.areaCode != null and entity.areaCode != ''">
+            area_code = #{entity.areaCode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.areaName != null and entity.areaName != ''">
+            area_name = #{entity.areaName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.zip != null and entity.zip != ''">
+            zip = #{entity.zip,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.address != null and entity.address != ''">
+            address = #{entity.address,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.email != null and entity.email != ''">
+            email = #{entity.email,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.mobile != null and entity.mobile != ''">
+            mobile = #{entity.mobile,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.telephone != null and entity.telephone !=''">
+            telephone = #{entity.telephone,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.sellerRemark != null and entity.sellerRemark != ''">
+            seller_remark = #{entity.sellerRemark,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.buyerRemark != null and entity.buyerRemark != ''">
+            buyer_remark = #{entity.buyerRemark,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.orderRemark != null and entity.orderRemark !=''">
+            order_remark = #{entity.orderRemark,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.remark != null and entity.remark != ''">
+            remark = #{entity.remark,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.isDel != null and entity.isDel != ''">
+            is_del = #{entity.isDel,jdbcType=TINYINT},
+        </if>
+        <if test="entity.createUser != null and entity.createUser != ''">
+            create_user = #{entity.createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.createTime != null and entity.createTime !=''">
+            create_time = #{entity.createTime,jdbcType=BIGINT},
+        </if>
+        <if test="entity.updateUser != null and entity.updateUser != ''">
+            update_user = #{entity.updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.updateTime != null and entity.updateTime !=''">
+            update_time = #{entity.updateTime,jdbcType=BIGINT},
+        </if>
+        </set>
+        where id = #{entity.id,jdbcType=BIGINT}
+    </update>
+
+<insert id="insertSaleOrder" parameterType="com.huamengtong.wms.entity.outwh.TWmsSaleOrderEntity">
+    insert into t_smart_sale_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="entity.id != null and entity.id !=''">
+            id,
+        </if>
+        <if test="entity.tenantId != null and entity.tenantId != ''">
+            tenant_id,
+        </if>
+        <if test="entity.referNo != null and entity.referNo !=''">
+            refer_no,
+        </if>
+        <if test="entity.tradeNo != null and entity.tradeNo !=''">
+            trade_no,
+        </if>
+        <if test="entity.isUrgent != null and entity.isUrgent !=''">
+            is_urgent,
+        </if>
+        <if test="entity.orderTime != null and entity.orderTime !=''">
+            order_time,
+        </if>
+        <if test="entity.paymentTime != null and entity.paymentTime !=''">
+            payment_time,
+        </if>
+        <if test="entity.expectedDate != null and entity.expectedDate !=''">
+            expected_date,
+        </if>
+        <if test="entity.shopNo != null and entity.shopNo !=''">
+            shop_no,
+        </if>
+        <if test="entity.shopName != null and entity.shopName !=''">
+            shop_name,
+        </if>
+        <if test="entity.distributorNo != null and entity.distributorNo !=''">
+            distributor_no,
+        </if>
+        <if test="entity.distributorName != null and entity.distributorName !=''">
+            distributor_name,
+        </if>
+        <if test="entity.postPayTypecode != null and entity.postPayTypecode !=''">
+            post_pay_typecode,
+        </if>
+        <if test="entity.postFee != null and entity.postFee !=''">
+            post_fee,
+        </if>
+        <if test="entity.actualPayment != null and entity.actualPayment !=''">
+            actual_payment,
+        </if>
+        <if test="entity.totalFee != null and entity.totalFee != ''">
+            total_fee,
+        </if>
+        <if test="entity.discountFee != null and entity.discountFee !=''">
+            discount_fee,
+        </if>
+        <if test="entity.isCod != null and entity.isCod !=''">
+            is_cod,
+        </if>
+        <if test="entity.isNeedDelivery != null and entity.isNeedDelivery !=''">
+            is_need_delivery,
+        </if>
+        <if test="entity.isNeedInvoice != null and entity.isNeedInvoice !=''">
+            is_need_invoice,
+        </if>
+        <if test="entity.buyerNick != null and entity.buyerNick !=''">
+            buyer_nick,
+        </if>
+        <if test="entity.buyerName != null and entity.buyerName !=''">
+            buyer_name,
+        </if>
+        <if test="entity.receiverName != null and entity.receiverName !=''">
+            receiver_name,
+        </if>
+        <if test="entity.countryCode != null and entity.countryCode !=''">
+            country_code,
+        </if>
+        <if test="entity.countryName != null and entity.countryName !=''">
+            country_name,
+        </if>
+        <if test="entity.provinceCode != null and entity.provinceCode !=''">
+            province_code,
+        </if>
+        <if test="entity.provinceName != null and entity.provinceName !=''">
+            province_name,
+        </if>
+        <if test="entity.cityCode != null and entity.cityCode !=''">
+            city_code,
+        </if>
+        <if test="entity.cityName != null and entity.cityName !=''">
+            city_name,
+        </if>
+        <if test="entity.areaCode != null and entity.areaCode !=''">
+            area_code,
+        </if>
+        <if test="entity.areaName != null and entity.areaName !=''">
+            area_name,
+        </if>
+        <if test="entity.zip != null and entity.zip !=''">
+            zip,
+        </if>
+        <if test="entity.address != null and entity.address !=''">
+            address,
+        </if>
+        <if test="entity.email != null and entity.email !=''">
+            email,
+        </if>
+        <if test="entity.mobile != null and entity.mobile !=''">
+            mobile,
+        </if>
+        <if test="entity.telephone != null and entity.telephone !=''">
+            telephone,
+        </if>
+        <if test="entity.sellerRemark != null and entity.sellerRemark !=''">
+            seller_remark,
+        </if>
+        <if test="entity.buyerRemark != null and entity.buyerRemark !=''">
+            buyer_remark,
+        </if>
+        <if test="entity.orderRemark != null and entity.orderRemark != ''">
+            order_remark,
+        </if>
+        <if test="entity.remark != null and entity.remark !=''">
+            remark,
+        </if>
+        <if test="entity.isDel != null and entity.isDel !=''">
+            is_del,
+        </if>
+        <if test="entity.createUser != null and entity.createUser != ''">
+            create_user,
+        </if>
+        <if test="entity.createTime != null and entity.createTime !=''">
+            create_time,
+        </if>
+        <if test="entity.updateUser != null and entity.updateUser !=''">
+            update_user,
+        </if>
+        <if test="entity.updateTime != null and entity.updateTime != ''">
+            update_time,
+        </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="entity.id != null">
+            #{entity.id,jdbcType=BIGINT},
+        </if>
+        <if test="entity.tenantId != null and entity.tenantId !=''">
+            #{entity.tenantId,jdbcType=BIGINT},
+        </if>
+        <if test="entity.referNo != null and entity.referNo !=''">
+            #{entity.referNo,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.tradeNo != null and entity.tradeNo !=''">
+            #{entity.tradeNo,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.isUrgent != null and entity.isUrgent !=''">
+            #{entity.isUrgent,jdbcType=TINYINT},
+        </if>
+        <if test="entity.orderTime != null and entity.orderTime != ''">
+            #{entity.orderTime,jdbcType=BIGINT},
+        </if>
+        <if test="entity.paymentTime != null and entity.paymentTime !=''">
+            #{entity.paymentTime,jdbcType=BIGINT},
+        </if>
+        <if test="entity.expectedDate != null and entity.expectedDate != ''">
+            #{entity.expectedDate,jdbcType=BIGINT},
+        </if>
+        <if test="entity.shopNo != null and entity.shopNo !=''">
+            #{entity.shopNo,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.shopName != null and entity.shopName != ''">
+            #{entity.shopName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.distributorNo != null and entity.distributorNo != ''">
+            #{entity.distributorNo,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.distributorName != null and entity.distributorName !=''">
+            #{entity.distributorName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.postPayTypecode != null and entity.postPayTypecode !=''">
+            #{entity.postPayTypecode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.postFee != null and entity.postFee !=''">
+            #{entity.postFee,jdbcType=DECIMAL},
+        </if>
+        <if test="entity.actualPayment != null and entity.actualPayment != ''">
+            #{entity.actualPayment,jdbcType=DECIMAL},
+        </if>
+        <if test="entity.totalFee != null and entity.totalFee !=''">
+            #{entity.totalFee,jdbcType=DECIMAL},
+        </if>
+        <if test="entity.discountFee != null and entity.discountFee !=''">
+            #{entity.discountFee,jdbcType=DECIMAL},
+        </if>
+        <if test="entity.isCod != null and entity.isCod != ''">
+            #{entity.isCod,jdbcType=TINYINT},
+        </if>
+        <if test="entity.isNeedDelivery != null and entity.isNeedDelivery !=''">
+            #{entity.isNeedDelivery,jdbcType=TINYINT},
+        </if>
+        <if test="entity.isNeedInvoice != null and entity.isNeedInvoice !=''">
+            #{entity.isNeedInvoice,jdbcType=TINYINT},
+        </if>
+        <if test="entity.buyerNick != null and entity.buyerNick != ''">
+            #{entity.buyerNick,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.buyerName != null and entity.buyerName != ''">
+            #{entity.buyerName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.receiverName != null and entity.receiverName !=''">
+            #{entity.receiverName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.countryCode != null and entity.countryCode != ''">
+            #{entity.countryCode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.countryName != null and entity.countryName != ''">
+            #{entity.countryName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.provinceCode != null and entity.provinceCode != ''">
+            #{entity.provinceCode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.provinceName != null and entity.provinceName != ''">
+            #{entity.provinceName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.cityCode != null and entity.cityCode != ''">
+            #{entity.cityCode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.cityName != null and entity.cityName != ''">
+            #{entity.cityName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.areaCode != null and entity.areaCode != ''">
+            #{entity.areaCode,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.areaName != null and entity.areaName != ''">
+            #{entity.areaName,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.zip != null and entity.zip !=''">
+            #{entity.zip,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.address != null and entity.address !=''">
+            #{entity.address,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.email != null  and entity.email != ''">
+            #{entity.email,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.mobile != null and entity.mobile != ''">
+            #{entity.mobile,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.telephone != null and entity.telephone != ''">
+            #{entity.telephone,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.sellerRemark != null and entity.sellerRemark != ''">
+            #{entity.sellerRemark,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.buyerRemark != null and entity.buyerRemark != ''">
+            #{entity.buyerRemark,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.orderRemark != null and entity.orderRemark !=''">
+            #{entity.orderRemark,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.remark != null and entity.remark != ''">
+            #{entity.remark,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.isDel != null and entity.isDel != ''">
+            #{entity.isDel,jdbcType=TINYINT},
+        </if>
+        <if test="entity.createUser != null and entity.createUser != ''">
+            #{entity.createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.createTime != null and entity.createTime != ''">
+            #{entity.createTime,jdbcType=BIGINT},
+        </if>
+        <if test="entity.updateUser != null and entity.updateUser !=''">
+            #{entity.updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="entity.updateTime != null and entity.updateTime != ''">
+            #{entity.updateTime,jdbcType=BIGINT},
+        </if>
+    </trim>
+</insert>
+    <!--根据id批量查询-->
+    <select id="selectByPrimaryKeyList"  resultMap="BaseResultMap" parameterType="java.util.List"  >
+        select
+        <include refid="Base_Column_List" />
+        from t_smart_sale_order
+        where id  IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

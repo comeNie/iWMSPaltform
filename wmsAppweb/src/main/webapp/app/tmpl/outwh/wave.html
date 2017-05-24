@@ -1,0 +1,60 @@
+<div class="content-wrap" ng-controller="waveController">
+    <div class="panel panel-default">
+        <panel_heading_search bind-ui="waveGrid">
+            <div class="panel-group">
+                <label>波次单号</label>
+                <input type="text" ng-model="query.id"/>
+            </div>
+            <!--<div class="panel-group">-->
+                <!--<label>订单来源</label>-->
+                <!--<div class="select-wrapper">-->
+                    <!--<div class="select-border"></div>-->
+                    <!--<l-select src="ShipmentFrom" name="query.fromtypeCode" id="query.fromtypeCode"></l-select>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="panel-group">-->
+                <!--<label>波次状态</label>-->
+                <!--<div class="select-wrapper">-->
+                    <!--<div class="select-border"></div>-->
+                    <!--<l-select src="OrderOperationStatus" name="query.deliveryStatuscode" id="query.deliveryStatuscode"></l-select>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="panel-group">-->
+                <!--<label>捡货人</label>-->
+                <!--<input type="text" ng-model="query.expressNo"/>-->
+            <!--</div>-->
+            <!--<div class="panel-group">-->
+                <!--<label>承运商</label>-->
+                <!--<input id="expressName" name="expressName" type="text" src="CarrierCode" ng-click="windowOpenCarrier(this)" readonly="readonly"/>-->
+            <!--</div>-->
+        </panel_heading_search>
+
+        <div class="panel-body">
+            <div kendo-grid="waveGrid" options="mainGridOptions">
+                <div>
+                    <div k-detail-template>
+                        <div kendo-grid="shipmentHeaderGrid" k-options="detailGridOptions(dataItem)"></div>
+                    </div>
+                </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增/编辑模版 -->
+<script id="wave-kendo-template" type="text/x-kendo-template">
+</script>
+
+<script id="shipmentHeader-kendo-template" type="text/x-kendo-template">
+
+</script>
+
+
+<!--承运商选择-->
+<div kendo-window="organizationsPopup" k-title="'承运商'" k-modal="true"
+     k-resizable="false"
+     k-width="700" k-height="500" k-visible="false"
+     k-content="{ url:'./tmpl/popup/organizations.html'}"></div>
+
+
+

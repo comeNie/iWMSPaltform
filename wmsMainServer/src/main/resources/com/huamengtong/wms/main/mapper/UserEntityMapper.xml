@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huamengtong.wms.main.mapper.UserMapper">
+    <resultMap id="UserResultMap" type="com.huamengtong.wms.entity.main.TWmsUserEntity">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="tenant_id" property="tenantId" jdbcType="BIGINT" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="real_name" property="realName" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="is_admin" property="isAdmin" jdbcType="BIT" />
+        <result column="is_active" property="isActive" jdbcType="BIT" />
+        <result column="is_del" property="isDel" jdbcType="BIT" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="BIGINT" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="BIGINT" />
+    </resultMap>
+
+    <resultMap id="RoleUsersResultMap" type="java.util.LinkedHashMap">
+        <result column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_id" property="userId" jdbcType="BIGINT" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="real_name" property="realName" jdbcType="VARCHAR" />
+        <result column="is_admin" property="isAdmin" jdbcType="BIT" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        `id`,`tenant_id`,`user_name`,`real_name`, `password`,`email`,`telephone`,`mobile`,`is_admin`,
+        `is_active`,`is_del`,`create_user`,`create_time`,`update_user`,`update_time`
+    </sql>
+
+    <!-- query where 子句 -->
+    <sql id="queryWhereClause">
+        <where>
+            <if test=" id != null and id != 0">
+                AND id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userName != null">
+                AND user_name = #{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="realName != null">
+                AND real_name = #{realName,jdbcType=VARCHAR}
+            </if>
+            <if test="telephone != null" >
+                AND telephone = #{telephone,jdbcType=VARCHAR}
+            </if>
+            <if test="mobile != null" >
+                AND mobile = #{mobile,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!-- order by 子句 -->
+    <sql id="queryOrderByClause">
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="orderBy == null">
+            ORDER BY create_time desc
+        </if>
+
+    </sql>
+
+    <!-- query limit 子句 -->
+    <sql id="queryLimitClause">
+        <if test="offset != null and offset >= 0 and pageSize != null and pageSize > 0">
+            LIMIT ${offset}, ${pageSize}
+        </if>
+    </sql>
+
+    <select id="findByUserName" resultMap="UserResultMap" parameterType="java.lang.String">
+        SELECT
+        `id`,`tenant_id`,`user_name`,`real_name`, `password`,`email`,`telephone`,`mobile`,`is_admin`, `is_active`,
+        `create_user`,`create_time`,`update_user`,`update_time`
+        FROM t_smart_user
+        WHERE user_name = #{userName,jdbcType=VARCHAR} AND  is_active = 1 AND  is_del = 0
+        limit 1
+    </select>
+
+    <select id="selectUser" resultMap="UserResultMap">
+        SELECT
+        `id`,`tenant_id`,`user_name`,`real_name`,`email`,`telephone`,`mobile`,`is_admin`, `is_active`,
+        `create_user`,`create_time`,`update_user`,`update_time`
+        FROM t_smart_user
+        WHERE  is_active = 1 AND  is_del = 0
+        AND  user_name = #{userName,jdbcType=VARCHAR} AND password = #{password,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+
+    <select id="selectUsersByWarehouse" resultMap="UserResultMap">
+        SELECT
+        `id`,`tenant_id`,`user_name`,`real_name`,`email`,`telephone`,`mobile`,`is_admin`, `is_active`
+        FROM t_smart_user tb_a
+        WHERE
+          NOT EXISTS ( SELECT 1 FROM t_smart_user_warehouse tb_b WHERE tb_b.user_id = tb_a.id
+             AND  warehouse_id = #{warehouseId,jdbcType=BIGINT}
+          )
+        AND  tb_a.is_active = 1 AND  tb_a.is_del = 0
+    </select>
+
+
+    <select id="selectUserById" resultMap="UserResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_user
+        WHERE id = #{userId,jdbcType=BIGINT}
+        limit 1
+    </select>
+
+    <select id="selectUserRolesById" resultType="String" parameterType="java.lang.Long">
+        SELECT role_id FROM t_smart_user_role WHERE user_id = #{userId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteUser" parameterType="java.lang.Long" >
+        delete
+        from t_smart_user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <select id="queryUserPages" resultMap="UserResultMap" parameterType="com.huamengtong.wms.entity.main.TWmsUserEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_smart_user
+        <include refid="queryWhereClause"/>
+        <include refid="queryOrderByClause"/>
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryUserPageCount"  resultType="java.lang.Integer" parameterType="com.huamengtong.wms.entity.main.TWmsUserEntity">
+        SELECT count(1) FROM t_smart_user
+        <include refid="queryWhereClause"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="queryUserByRolePages" resultMap="RoleUsersResultMap" parameterType="java.util.Map">
+        SELECT
+        tb_b.`id`,tb_b.`user_id`,tb_a.`user_name`,tb_a.`real_name`,tb_a.`is_admin`
+        FROM t_smart_user_role tb_b LEFT JOIN t_smart_user tb_a
+        ON tb_b.user_id = tb_a.id
+        WHERE tb_b.role_id = #{roleId,jdbcType=BIGINT} and tb_a.tenant_id = #{tenantId,jdbcType=BIGINT}
+        <include refid="queryLimitClause" />
+    </select>
+
+    <select id="queryUserByRolePageCount"  resultType="java.lang.Integer" parameterType="java.util.Map" >
+        SELECT count(1)
+        FROM t_smart_user_role tb_b LEFT JOIN t_smart_user tb_a
+        ON tb_b.user_id = tb_a.id
+        WHERE tb_b.role_id = #{roleId,jdbcType=BIGINT} and tb_a.tenant_id = #{tenantId,jdbcType=BIGINT}
+        LIMIT 1
+    </select>
+
+
+    <insert id="insertUser" parameterType="com.huamengtong.wms.entity.main.TWmsUserEntity" >
+        insert into t_smart_user
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tenantId != null" >
+                tenant_id,
+            </if>
+            <if test="userName != null" >
+                user_name,
+            </if>
+            <if test="realName != null" >
+                real_name,
+            </if>
+            <if test="password != null" >
+                password,
+            </if>
+            <if test="email != null" >
+                email,
+            </if>
+            <if test="telephone != null" >
+                telephone,
+            </if>
+            <if test="mobile != null" >
+                mobile,
+            </if>
+            <if test="isAdmin != null" >
+                is_admin,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+            <if test="isActive != null" >
+                is_active,
+            </if>
+            <if test="createUser != null" >
+                create_user,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateUser != null" >
+                update_user,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tenantId != null" >
+                #{tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="userName != null" >
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null" >
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null" >
+                #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null" >
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="isAdmin != null" >
+                #{isAdmin,jdbcType=BIT},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=BIT},
+            </if>
+            <if test="isActive != null" >
+                #{isActive,jdbcType=BIT},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateUser" parameterType="com.huamengtong.wms.entity.main.TWmsUserEntity" >
+        update t_smart_user
+        <set >
+            <if test="tenantId != null" >
+                tenant_id = #{tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="userName != null" >
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null" >
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null" >
+                telephone = #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null" >
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="isAdmin != null" >
+                is_admin = #{isAdmin,jdbcType=BIT},
+            </if>
+            <if test="isDel != null" >
+                is_del = #{isDel,jdbcType=BIT},
+            </if>
+            <if test="isActive != null" >
+                is_active = #{isActive,jdbcType=BIT},
+            </if>
+            <if test="createUser != null" >
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null" >
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateUserPwd" parameterType="com.huamengtong.wms.entity.main.TWmsUserEntity" >
+        update t_smart_user
+        <set >
+            <if test="password != null" >
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+     </update>
+</mapper>
